@@ -1,1 +1,9 @@
 Este es el archivo README del proyecto de Sistemas informáticos de Infiniware
+
+Para crear la clave rsa en Linux:
+- ssh-keygen -t rsa
+
+Una vez tengais la clave, en la cuenta de bitbucket introducís la clave
+- cat .ssh/id_rsa.pub
+
+Para sacar la clave y lo pegais en la cuenta.
