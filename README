@@ -7,3 +7,11 @@ Una vez tengais la clave, en la cuenta de bitbucket introducís la clave
 - cat .ssh/id_rsa.pub
 
 Para sacar la clave y lo pegais en la cuenta.
+
+Tareas ant:
+base: lanza el scada y el maestro
+esclavo1: lanza el esclavo1
+esclavo2: lanza el esclavo2
+esclavo3: lanza el esclavo3
+
+parallel: lanza todos los automatas en paralelo

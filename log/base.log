@@ -1,0 +1,64 @@
+JVM args ignored when same JVM is used.
+running infiniware.Sistema with default permissions (exit forbidden)
+Running in same VM Executing 'infiniware.Sistema' with arguments:
+'base'
+
+The ' characters around the executable and arguments are
+not part of the command.
+Iniciando proceso "base".
+Servicio de registro RMI creado para "Maestro" en 127.0.0.1:1024
+Automata "Maestro" registrado en 127.0.0.1:1024
+Conexion con el automata "Esclavo1" desde "Maestro" establecida.
+Conexion con el automata "Esclavo2" desde "Maestro" establecida.
+Conexion con el automata "Esclavo3" desde "Maestro" establecida.
+Conexion con los esclavos establecida.
+Opciones disponibles:	00: arrancar
+	01: cargarConfiguracion
+	02: configurar
+	03: emergencia
+	04: generarInforme
+	05: guardarConfiguracion
+	06: iniciar
+	07: limpiarCPD
+	08: parada
+	09: provocarFalloEsclavo1
+	10: provocarFalloEsclavo2
+	11: provocarFalloEsclavo3
+	12: recuperarFalloEsclavo1
+	13: recuperarFalloEsclavo2
+	14: recuperarFalloEsclavo3
+
+scada@base: Ejecutando iniciar
+java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at infiniware.scada.ui.consola.Consola.run(Consola.java:53)
+	at java.lang.Thread.run(Thread.java:722)
+Caused by: java.lang.NullPointerException
+	at infiniware.automatas.maestro.Maestro.ciclo(Maestro.java:31)
+	at infiniware.scada.Scada.ciclo(Scada.java:51)
+	at infiniware.scada.Scada.arrancar(Scada.java:72)
+	at infiniware.scada.Scada.iniciar(Scada.java:62)
+	at infiniware.scada.ui.Ui.iniciar(Ui.java:24)
+	... 6 more
+Sintaxis incorrecta.
+Opciones disponibles:	00: arrancar
+	01: cargarConfiguracion
+	02: configurar
+	03: emergencia
+	04: generarInforme
+	05: guardarConfiguracion
+	06: iniciar
+	07: limpiarCPD
+	08: parada
+	09: provocarFalloEsclavo1
+	10: provocarFalloEsclavo2
+	11: provocarFalloEsclavo3
+	12: recuperarFalloEsclavo1
+	13: recuperarFalloEsclavo2
+	14: recuperarFalloEsclavo3
+
+Deteniendo proceso "base".
+"Maestro" desconectado.
