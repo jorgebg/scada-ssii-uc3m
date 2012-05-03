@@ -2,5 +2,762 @@ package infiniware.scada.ui.gui;
 
 import infiniware.scada.ui.Ui;
 
-public abstract class GUI extends Ui {
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import org.eclipse.wb.swing.FocusTraversalOnArray;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JTabbedPane;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JTextPane;
+import javax.swing.UIManager;
+import javax.swing.border.EtchedBorder;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.TitledBorder;
+import java.awt.Color;
+import javax.swing.JToggleButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import java.awt.Component;
+import javax.swing.Box;
+import java.awt.Dimension;
+import javax.swing.JSlider;
+import java.awt.Font;
+import javax.swing.JScrollBar;
+import java.awt.event.ContainerAdapter;
+import java.awt.event.ContainerEvent;
+import java.awt.Rectangle;
+import java.awt.ComponentOrientation;
+import java.awt.Frame;
+import java.awt.SystemColor;
+
+public class GUI extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField txtLongitudCen;
+	private JTextField txtVelocidadCen;
+	private JTextField txtCapacidadCen;
+	private JTextField txtLongitudCej;
+	private JTextField txtVelocidadCej;
+	private JTextField txtCapacidadCej;
+	private JTextField txtTiempoEm;
+	private JTextField txtLongitudCt;
+	private JTextField txtVelocidadCt;
+	private JTextField txtTiempoEs;
+	private JTextField txtLongitudCok;
+	private JTextField txtVelocidadCok;
+	private JTextField txtLongitudCnok;
+	private JTextField txtVelocidadCnok;
+	private JTextField txtTiempoEv;
+	private JTextField txtTRecogidaEnej;
+	private JTextField txtTTransporteEnej;
+	private JTextField txtTTransporteCm1;
+	private JTextField txtTRecogidaCm;
+	private JTextField txtTTransporteCm2;
+	private JTextField txtTTransporteCs;
+	private JTextField txtConjuntosOk;
+	private JTextField txtConjuntosNok;
+	private JTextField txtConjuntosOkTotales;
+	private JTextField txtConjuntosNokTotales;
+	private JTextField txtParadasNormales;
+	private JTextField txtParadasEmergencia;
+	private JTextField txtArranques;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					GUI frame = new GUI();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public GUI() {
+		setExtendedState(Frame.MAXIMIZED_BOTH);
+		setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		setBounds(new Rectangle(0, 0, 1024, 1000));
+		setSize(new Dimension(1280, 1000));
+		setTitle("SCADA");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 1280, 968);
+		
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JMenu mnMenu = new JMenu("Menu");
+		menuBar.add(mnMenu);
+		
+		JMenuItem mntmGuardarParametros = new JMenuItem("Guardar Parametros");
+		mnMenu.add(mntmGuardarParametros);
+		
+		JMenuItem mntmCargarParametros = new JMenuItem("Cargar Parametros");
+		mnMenu.add(mntmCargarParametros);
+		
+		JMenu mnAyuda = new JMenu("Ayuda");
+		menuBar.add(mnAyuda);
+		
+		JMenuItem mntmAyuda = new JMenuItem("Ayuda");
+		mnAyuda.add(mntmAyuda);
+		
+		JMenuItem mntmManual = new JMenuItem("Manual");
+		mnAyuda.add(mntmManual);
+		contentPane = new JPanel();
+		contentPane.setSize(new Dimension(1280, 1024));
+		contentPane.setBackground(new Color(169, 169, 169));
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JPanel panel = new JPanel();
+		panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Registro de Cambios", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setBounds(10, 695, 1244, 203);
+		contentPane.add(panel);
+		panel.setLayout(null);
+		
+		JTextPane txtLog = new JTextPane();
+		txtLog.setEditable(false);
+		txtLog.setDragEnabled(true);
+		txtLog.setBounds(6, 14, 1062, 173);
+		panel.add(txtLog);
+		
+		JButton btnStart = new JButton("Start");
+		btnStart.setForeground(new Color(0, 128, 0));
+		btnStart.setBounds(1078, 19, 144, 23);
+		panel.add(btnStart);
+		
+		JButton btnStop = new JButton("Stop");
+		btnStop.setForeground(new Color(255, 0, 0));
+		btnStop.setBounds(1078, 53, 144, 23);
+		panel.add(btnStop);
+		
+		JButton btnEmergencyStop = new JButton("Emergency Stop");
+		btnEmergencyStop.setBackground(new Color(255, 0, 0));
+		btnEmergencyStop.setForeground(new Color(0, 0, 0));
+		btnEmergencyStop.setBounds(1078, 138, 144, 49);
+		panel.add(btnEmergencyStop);
+		panel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtLog, btnStart, btnStop, btnEmergencyStop}));
+		
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setBounds(10, 0, 1244, 689);
+		contentPane.add(tabbedPane);
+		
+		JPanel panelSimulador = new JPanel();
+		tabbedPane.addTab("Simulador", null, panelSimulador, null);
+		panelSimulador.setLayout(null);
+		
+		JPanel panelInstalacion = new JPanel();
+		panelInstalacion.setBackground(Color.LIGHT_GRAY);
+		panelInstalacion.setBounds(6, 6, 1068, 642);
+		panelSimulador.add(panelInstalacion);
+		
+		JPanel panelControlAutomatas = new JPanel();
+		panelControlAutomatas.setBackground(Color.LIGHT_GRAY);
+		panelControlAutomatas.setBounds(1084, 6, 145, 642);
+		panelSimulador.add(panelControlAutomatas);
+		panelControlAutomatas.setLayout(null);
+		
+		JButton btnVaciarConjuntosDefectuosos = new JButton("Vaciar CNOK");
+		btnVaciarConjuntosDefectuosos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnVaciarConjuntosDefectuosos.setBounds(10, 537, 122, 38);
+		panelControlAutomatas.add(btnVaciarConjuntosDefectuosos);
+		
+		JSlider falloEsclavo1 = new JSlider();
+		falloEsclavo1.setMaximum(1);
+		falloEsclavo1.setBounds(10, 85, 122, 23);
+		panelControlAutomatas.add(falloEsclavo1);
+		
+		JSlider falloEsclavo2 = new JSlider();
+		falloEsclavo2.setMaximum(1);
+		falloEsclavo2.setBounds(10, 183, 122, 23);
+		panelControlAutomatas.add(falloEsclavo2);
+		
+		JSlider slider = new JSlider();
+		slider.setMaximum(1);
+		slider.setBounds(10, 291, 122, 23);
+		panelControlAutomatas.add(slider);
+		
+		JLabel lblEsclavo = new JLabel("Esclavo 1");
+		lblEsclavo.setBounds(44, 60, 62, 14);
+		panelControlAutomatas.add(lblEsclavo);
+		
+		JLabel lblEsclavo_1 = new JLabel("Esclavo 2");
+		lblEsclavo_1.setBounds(44, 158, 62, 14);
+		panelControlAutomatas.add(lblEsclavo_1);
+		
+		JLabel lblEsclavo_2 = new JLabel("Esclavo 3");
+		lblEsclavo_2.setBounds(44, 266, 62, 14);
+		panelControlAutomatas.add(lblEsclavo_2);
+		
+		JLabel lblOn = new JLabel("ON");
+		lblOn.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		lblOn.setBounds(117, 108, 15, 14);
+		panelControlAutomatas.add(lblOn);
+		
+		JLabel label_5 = new JLabel("ON");
+		label_5.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		label_5.setBounds(117, 206, 15, 14);
+		panelControlAutomatas.add(label_5);
+		
+		JLabel label_6 = new JLabel("ON");
+		label_6.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		label_6.setBounds(114, 314, 21, 14);
+		panelControlAutomatas.add(label_6);
+		
+		JLabel lblOff = new JLabel("OFF");
+		lblOff.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		lblOff.setBounds(10, 108, 21, 14);
+		panelControlAutomatas.add(lblOff);
+		
+		JLabel label_12 = new JLabel("OFF");
+		label_12.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		label_12.setBounds(10, 206, 21, 14);
+		panelControlAutomatas.add(label_12);
+		
+		JLabel label_13 = new JLabel("OFF");
+		label_13.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		label_13.setBounds(10, 314, 21, 14);
+		panelControlAutomatas.add(label_13);
+		
+		JPanel panelParametros = new JPanel();
+		tabbedPane.addTab("Parametros", null, panelParametros, null);
+		panelParametros.setLayout(null);
+		
+		JPanel panelEsclavo1 = new JPanel();
+		panelEsclavo1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Esclavo 1", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelEsclavo1.setLayout(null);
+		panelEsclavo1.setBackground(new Color(128, 128, 128));
+		panelEsclavo1.setBounds(21, 11, 1208, 236);
+		panelParametros.add(panelEsclavo1);
+		
+		JLabel label_20 = new JLabel("s");
+		label_20.setBounds(755, 203, 38, 16);
+		panelEsclavo1.add(label_20);
+		
+		JLabel lblTiempoEm = new JLabel("Tiempo EM (t1)");
+		lblTiempoEm.setBounds(450, 203, 101, 16);
+		panelEsclavo1.add(lblTiempoEm);
+		
+		txtTiempoEm = new JTextField();
+		txtTiempoEm.setBounds(620, 197, 134, 28);
+		panelEsclavo1.add(txtTiempoEm);
+		txtTiempoEm.setText("3");
+		txtTiempoEm.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTiempoEm.setColumns(10);
+		
+		JPanel panelCej = new JPanel();
+		panelCej.setBounds(10, 36, 392, 156);
+		panelEsclavo1.add(panelCej);
+		panelCej.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Cinta de Ejes", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelCej.setLayout(null);
+		panelCej.setBackground(UIManager.getColor("Button.background"));
+		
+		JLabel lblUds = new JLabel("uds");
+		lblUds.setBounds(320, 115, 50, 16);
+		panelCej.add(lblUds);
+		
+		JLabel lblMmin = new JLabel("m/min");
+		lblMmin.setBounds(320, 75, 50, 16);
+		panelCej.add(lblMmin);
+		
+		JLabel lblM = new JLabel("m");
+		lblM.setBounds(320, 35, 50, 16);
+		panelCej.add(lblM);
+		
+		JLabel lblLongitudCej = new JLabel("Longitud CEJ");
+		lblLongitudCej.setBounds(30, 35, 101, 16);
+		panelCej.add(lblLongitudCej);
+		
+		txtLongitudCej = new JTextField();
+		txtLongitudCej.setBounds(185, 29, 134, 28);
+		panelCej.add(txtLongitudCej);
+		txtLongitudCej.setText("10");
+		txtLongitudCej.setHorizontalAlignment(SwingConstants.CENTER);
+		txtLongitudCej.setColumns(10);
+		
+		txtVelocidadCej = new JTextField();
+		txtVelocidadCej.setBounds(185, 69, 134, 28);
+		panelCej.add(txtVelocidadCej);
+		txtVelocidadCej.setText("20");
+		txtVelocidadCej.setHorizontalAlignment(SwingConstants.CENTER);
+		txtVelocidadCej.setColumns(10);
+		
+		JLabel lblVelocidadCej = new JLabel("Velocidad CEJ");
+		lblVelocidadCej.setBounds(30, 75, 101, 16);
+		panelCej.add(lblVelocidadCej);
+		
+		JLabel lblCapacidadCej = new JLabel("Capacidad CEJ");
+		lblCapacidadCej.setBounds(30, 115, 101, 16);
+		panelCej.add(lblCapacidadCej);
+		
+		txtCapacidadCej = new JTextField();
+		txtCapacidadCej.setBounds(185, 109, 134, 28);
+		panelCej.add(txtCapacidadCej);
+		txtCapacidadCej.setText("50");
+		txtCapacidadCej.setHorizontalAlignment(SwingConstants.CENTER);
+		txtCapacidadCej.setColumns(10);
+		
+		JPanel panelCen = new JPanel();
+		panelCen.setBounds(412, 36, 392, 156);
+		panelEsclavo1.add(panelCen);
+		panelCen.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Cinta de Engranajes", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelCen.setBackground(UIManager.getColor("Button.background"));
+		panelCen.setLayout(null);
+		
+		JLabel lblLongitudCen = new JLabel("Longitud CEN");
+		lblLongitudCen.setBounds(30, 35, 101, 16);
+		panelCen.add(lblLongitudCen);
+		
+		JLabel lblVelocidadCen = new JLabel("Velocidad CEN");
+		lblVelocidadCen.setBounds(30, 75, 101, 16);
+		panelCen.add(lblVelocidadCen);
+		
+		JLabel lblCapacidadCen = new JLabel("Capacidad CEN");
+		lblCapacidadCen.setBounds(30, 115, 101, 16);
+		panelCen.add(lblCapacidadCen);
+		
+		txtLongitudCen = new JTextField();
+		txtLongitudCen.setHorizontalAlignment(SwingConstants.CENTER);
+		txtLongitudCen.setText("10");
+		txtLongitudCen.setBounds(185, 29, 134, 28);
+		panelCen.add(txtLongitudCen);
+		txtLongitudCen.setColumns(10);
+		
+		txtVelocidadCen = new JTextField();
+		txtVelocidadCen.setText("20");
+		txtVelocidadCen.setHorizontalAlignment(SwingConstants.CENTER);
+		txtVelocidadCen.setColumns(10);
+		txtVelocidadCen.setBounds(185, 69, 134, 28);
+		panelCen.add(txtVelocidadCen);
+		
+		txtCapacidadCen = new JTextField();
+		txtCapacidadCen.setText("50");
+		txtCapacidadCen.setHorizontalAlignment(SwingConstants.CENTER);
+		txtCapacidadCen.setColumns(10);
+		txtCapacidadCen.setBounds(185, 109, 134, 28);
+		panelCen.add(txtCapacidadCen);
+		
+		JLabel label_17 = new JLabel("m");
+		label_17.setBounds(320, 35, 38, 16);
+		panelCen.add(label_17);
+		
+		JLabel label_18 = new JLabel("m/min");
+		label_18.setBounds(320, 75, 51, 16);
+		panelCen.add(label_18);
+		
+		JLabel label_19 = new JLabel("uds");
+		label_19.setBounds(320, 115, 38, 16);
+		panelCen.add(label_19);
+		
+		JPanel panelRobot1 = new JPanel();
+		panelRobot1.setBounds(812, 36, 386, 156);
+		panelEsclavo1.add(panelRobot1);
+		panelRobot1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Robot 1", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelRobot1.setBackground(UIManager.getColor("Button.background"));
+		panelRobot1.setLayout(null);
+		
+		JLabel lblTRecogidaEnej = new JLabel("T Recogida EN-EJ");
+		lblTRecogidaEnej.setBounds(30, 35, 144, 16);
+		panelRobot1.add(lblTRecogidaEnej);
+		
+		JLabel lblTTransporteEnej = new JLabel("T Transporte EN-EJ");
+		lblTTransporteEnej.setBounds(30, 75, 144, 16);
+		panelRobot1.add(lblTTransporteEnej);
+		
+		JLabel lblTTransporteCm = new JLabel("T Transporte CM");
+		lblTTransporteCm.setBounds(30, 115, 144, 16);
+		panelRobot1.add(lblTTransporteCm);
+		
+		txtTRecogidaEnej = new JTextField();
+		txtTRecogidaEnej.setText("5");
+		txtTRecogidaEnej.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTRecogidaEnej.setColumns(10);
+		txtTRecogidaEnej.setBounds(200, 29, 134, 28);
+		panelRobot1.add(txtTRecogidaEnej);
+		
+		txtTTransporteEnej = new JTextField();
+		txtTTransporteEnej.setText("5");
+		txtTTransporteEnej.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTTransporteEnej.setColumns(10);
+		txtTTransporteEnej.setBounds(200, 69, 134, 28);
+		panelRobot1.add(txtTTransporteEnej);
+		
+		txtTTransporteCm1 = new JTextField();
+		txtTTransporteCm1.setText("5");
+		txtTTransporteCm1.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTTransporteCm1.setColumns(10);
+		txtTTransporteCm1.setBounds(200, 109, 134, 28);
+		panelRobot1.add(txtTTransporteCm1);
+		
+		JLabel lblS = new JLabel("s");
+		lblS.setBounds(335, 35, 38, 16);
+		panelRobot1.add(lblS);
+		
+		JLabel label = new JLabel("s");
+		label.setBounds(335, 75, 38, 16);
+		panelRobot1.add(label);
+		
+		JLabel label_1 = new JLabel("s");
+		label_1.setBounds(335, 115, 38, 16);
+		panelRobot1.add(label_1);
+		
+		JPanel panelEsclavo2 = new JPanel();
+		panelEsclavo2.setBorder(new TitledBorder(null, "Esclavo 2", TitledBorder.CENTER, TitledBorder.TOP, null, null));
+		panelEsclavo2.setBounds(21, 258, 343, 83);
+		panelParametros.add(panelEsclavo2);
+		panelEsclavo2.setLayout(null);
+		panelEsclavo2.setBackground(Color.GRAY);
+		
+		JLabel lblTiempoEs = new JLabel("Tiempo ES (t2)");
+		lblTiempoEs.setBounds(10, 36, 101, 16);
+		panelEsclavo2.add(lblTiempoEs);
+		
+		txtTiempoEs = new JTextField();
+		txtTiempoEs.setBounds(180, 30, 134, 28);
+		panelEsclavo2.add(txtTiempoEs);
+		txtTiempoEs.setText("3");
+		txtTiempoEs.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTiempoEs.setColumns(10);
+		
+		JLabel label_21 = new JLabel("s");
+		label_21.setBounds(315, 36, 38, 16);
+		panelEsclavo2.add(label_21);
+		
+		JPanel panelMaestro = new JPanel();
+		panelMaestro.setBorder(new TitledBorder(null, "Maestro", TitledBorder.CENTER, TitledBorder.TOP, null, null));
+		panelMaestro.setLayout(null);
+		panelMaestro.setBackground(Color.GRAY);
+		panelMaestro.setBounds(21, 462, 1208, 188);
+		panelParametros.add(panelMaestro);
+		
+		JPanel panelRobot2 = new JPanel();
+		panelRobot2.setBounds(110, 22, 392, 156);
+		panelMaestro.add(panelRobot2);
+		panelRobot2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Robot 2", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelRobot2.setBackground(UIManager.getColor("Button.background"));
+		panelRobot2.setLayout(null);
+		
+		JLabel lblTRecogidaCm = new JLabel("T Recogida CM");
+		lblTRecogidaCm.setBounds(30, 35, 144, 16);
+		panelRobot2.add(lblTRecogidaCm);
+		
+		JLabel lblTTransporteCm_1 = new JLabel("T Transporte CM");
+		lblTTransporteCm_1.setBounds(30, 75, 144, 16);
+		panelRobot2.add(lblTTransporteCm_1);
+		
+		JLabel lblTTransporteCs = new JLabel("T Transporte CS");
+		lblTTransporteCs.setBounds(30, 115, 144, 16);
+		panelRobot2.add(lblTTransporteCs);
+		
+		txtTRecogidaCm = new JTextField();
+		txtTRecogidaCm.setText("5");
+		txtTRecogidaCm.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTRecogidaCm.setColumns(10);
+		txtTRecogidaCm.setBounds(200, 30, 134, 28);
+		panelRobot2.add(txtTRecogidaCm);
+		
+		txtTTransporteCm2 = new JTextField();
+		txtTTransporteCm2.setText("5");
+		txtTTransporteCm2.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTTransporteCm2.setColumns(10);
+		txtTTransporteCm2.setBounds(200, 69, 134, 28);
+		panelRobot2.add(txtTTransporteCm2);
+		
+		txtTTransporteCs = new JTextField();
+		txtTTransporteCs.setText("5");
+		txtTTransporteCs.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTTransporteCs.setColumns(10);
+		txtTTransporteCs.setBounds(200, 109, 134, 28);
+		panelRobot2.add(txtTTransporteCs);
+		
+		JLabel label_2 = new JLabel("s");
+		label_2.setBounds(335, 35, 38, 16);
+		panelRobot2.add(label_2);
+		
+		JLabel label_3 = new JLabel("s");
+		label_3.setBounds(335, 75, 38, 16);
+		panelRobot2.add(label_3);
+		
+		JLabel label_4 = new JLabel("s");
+		label_4.setBounds(335, 115, 38, 16);
+		panelRobot2.add(label_4);
+		
+		JPanel panelCt = new JPanel();
+		panelCt.setBounds(713, 22, 392, 117);
+		panelMaestro.add(panelCt);
+		panelCt.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Cinta de Transporte", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelCt.setBackground(UIManager.getColor("Button.background"));
+		panelCt.setLayout(null);
+		
+		JLabel lblLongitudCt = new JLabel("Longitud CT");
+		lblLongitudCt.setBounds(30, 35, 101, 16);
+		panelCt.add(lblLongitudCt);
+		
+		JLabel lblVelocidadCt = new JLabel("Velocidad CT");
+		lblVelocidadCt.setBounds(30, 75, 101, 16);
+		panelCt.add(lblVelocidadCt);
+		
+		txtLongitudCt = new JTextField();
+		txtLongitudCt.setText("10");
+		txtLongitudCt.setHorizontalAlignment(SwingConstants.CENTER);
+		txtLongitudCt.setColumns(10);
+		txtLongitudCt.setBounds(185, 29, 134, 28);
+		panelCt.add(txtLongitudCt);
+		
+		txtVelocidadCt = new JTextField();
+		txtVelocidadCt.setText("20");
+		txtVelocidadCt.setHorizontalAlignment(SwingConstants.CENTER);
+		txtVelocidadCt.setColumns(10);
+		txtVelocidadCt.setBounds(185, 69, 134, 28);
+		panelCt.add(txtVelocidadCt);
+		
+		JLabel label_8 = new JLabel("m");
+		label_8.setBounds(320, 35, 38, 16);
+		panelCt.add(label_8);
+		
+		JLabel label_9 = new JLabel("m/min");
+		label_9.setBounds(320, 75, 51, 16);
+		panelCt.add(label_9);
+		
+		JPanel panelEsclavo3 = new JPanel();
+		panelEsclavo3.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Esclavo 3", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelEsclavo3.setLayout(null);
+		panelEsclavo3.setBackground(Color.GRAY);
+		panelEsclavo3.setBounds(374, 258, 855, 193);
+		panelParametros.add(panelEsclavo3);
+		
+		JPanel panelCnok = new JPanel();
+		panelCnok.setBounds(24, 30, 392, 117);
+		panelEsclavo3.add(panelCnok);
+		panelCnok.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Cinta de Conjuntos Defectuosos", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelCnok.setLayout(null);
+		panelCnok.setBackground(UIManager.getColor("Button.background"));
+		
+		JLabel label_7 = new JLabel("m");
+		label_7.setBounds(320, 35, 38, 16);
+		panelCnok.add(label_7);
+		
+		JLabel label_14 = new JLabel("m/min");
+		label_14.setBounds(320, 75, 51, 16);
+		panelCnok.add(label_14);
+		
+		JLabel lblLongitudCnok = new JLabel("Longitud CNOK");
+		lblLongitudCnok.setBounds(30, 35, 111, 16);
+		panelCnok.add(lblLongitudCnok);
+		
+		JLabel lblVelocidadCnok = new JLabel("Velocidad CNOK");
+		lblVelocidadCnok.setBounds(30, 75, 111, 16);
+		panelCnok.add(lblVelocidadCnok);
+		
+		txtLongitudCnok = new JTextField();
+		txtLongitudCnok.setBounds(185, 29, 134, 28);
+		panelCnok.add(txtLongitudCnok);
+		txtLongitudCnok.setText("10");
+		txtLongitudCnok.setHorizontalAlignment(SwingConstants.CENTER);
+		txtLongitudCnok.setColumns(10);
+		
+		txtVelocidadCnok = new JTextField();
+		txtVelocidadCnok.setBounds(185, 69, 134, 28);
+		panelCnok.add(txtVelocidadCnok);
+		txtVelocidadCnok.setEditable(false);
+		txtVelocidadCnok.setText("9.8");
+		txtVelocidadCnok.setHorizontalAlignment(SwingConstants.CENTER);
+		txtVelocidadCnok.setColumns(10);
+		
+		JPanel panelCok = new JPanel();
+		panelCok.setBounds(426, 30, 392, 117);
+		panelEsclavo3.add(panelCok);
+		panelCok.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Cinta de Conjuntos Validos", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelCok.setBackground(UIManager.getColor("Button.background"));
+		panelCok.setLayout(null);
+		
+		JLabel lblLongitudCok = new JLabel("Longitud COK");
+		lblLongitudCok.setBounds(30, 35, 111, 16);
+		panelCok.add(lblLongitudCok);
+		
+		JLabel lblVelocidadCok = new JLabel("Velocidad COK");
+		lblVelocidadCok.setBounds(30, 75, 111, 16);
+		panelCok.add(lblVelocidadCok);
+		
+		txtLongitudCok = new JTextField();
+		txtLongitudCok.setText("10");
+		txtLongitudCok.setHorizontalAlignment(SwingConstants.CENTER);
+		txtLongitudCok.setColumns(10);
+		txtLongitudCok.setBounds(185, 29, 134, 28);
+		panelCok.add(txtLongitudCok);
+		
+		txtVelocidadCok = new JTextField();
+		txtVelocidadCok.setText("10");
+		txtVelocidadCok.setHorizontalAlignment(SwingConstants.CENTER);
+		txtVelocidadCok.setColumns(10);
+		txtVelocidadCok.setBounds(185, 69, 134, 28);
+		panelCok.add(txtVelocidadCok);
+		
+		JLabel label_10 = new JLabel("s");
+		label_10.setBounds(320, 35, 38, 16);
+		panelCok.add(label_10);
+		
+		JLabel label_11 = new JLabel("s");
+		label_11.setBounds(320, 75, 38, 16);
+		panelCok.add(label_11);
+		
+		JLabel label_22 = new JLabel("s");
+		label_22.setBounds(576, 160, 38, 16);
+		panelEsclavo3.add(label_22);
+		
+		txtTiempoEv = new JTextField();
+		txtTiempoEv.setBounds(440, 154, 134, 28);
+		panelEsclavo3.add(txtTiempoEv);
+		txtTiempoEv.setText("3");
+		txtTiempoEv.setHorizontalAlignment(SwingConstants.CENTER);
+		txtTiempoEv.setColumns(10);
+		
+		JLabel lblTiempoEv = new JLabel("Tiempo EV (t3)");
+		lblTiempoEv.setBounds(271, 160, 101, 16);
+		panelEsclavo3.add(lblTiempoEv);
+		
+		JLabel lblInfiware = new JLabel("InfiniWare");
+		lblInfiware.setAlignmentX(Component.CENTER_ALIGNMENT);
+		lblInfiware.setFont(new Font("Papyrus", Font.PLAIN, 50));
+		lblInfiware.setBounds(89, 352, 237, 83);
+		panelParametros.add(lblInfiware);
+		
+		JPanel panelInformes = new JPanel();
+		tabbedPane.addTab("Informes", null, panelInformes, null);
+		panelInformes.setLayout(null);
+		
+		JPanel panelUltimaFabricacion = new JPanel();
+		panelUltimaFabricacion.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Informe de la  Ultima Tanda de Fabricacion", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelUltimaFabricacion.setBackground(UIManager.getColor("Button.background"));
+		panelUltimaFabricacion.setBounds(289, 19, 729, 160);
+		panelInformes.add(panelUltimaFabricacion);
+		panelUltimaFabricacion.setLayout(null);
+		
+		JLabel lblConjuntosCorrectos = new JLabel("Conjuntos Correctos");
+		lblConjuntosCorrectos.setBounds(80, 50, 213, 16);
+		panelUltimaFabricacion.add(lblConjuntosCorrectos);
+		
+		JLabel lblConjuntosDefectuosos = new JLabel("Conjuntos Defectuosos");
+		lblConjuntosDefectuosos.setBounds(80, 100, 213, 16);
+		panelUltimaFabricacion.add(lblConjuntosDefectuosos);
+		
+		txtConjuntosOk = new JTextField();
+		txtConjuntosOk.setEditable(false);
+		txtConjuntosOk.setHorizontalAlignment(SwingConstants.CENTER);
+		txtConjuntosOk.setText("10");
+		txtConjuntosOk.setBounds(540, 44, 134, 28);
+		panelUltimaFabricacion.add(txtConjuntosOk);
+		txtConjuntosOk.setColumns(10);
+		
+		txtConjuntosNok = new JTextField();
+		txtConjuntosNok.setEditable(false);
+		txtConjuntosNok.setText("1");
+		txtConjuntosNok.setHorizontalAlignment(SwingConstants.CENTER);
+		txtConjuntosNok.setColumns(10);
+		txtConjuntosNok.setBounds(540, 94, 134, 28);
+		panelUltimaFabricacion.add(txtConjuntosNok);
+		
+		JPanel panelFabricacion = new JPanel();
+		panelFabricacion.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Informe de la Fabricacion Total", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelFabricacion.setBackground(UIManager.getColor("Button.background"));
+		panelFabricacion.setBounds(289, 221, 729, 160);
+		panelInformes.add(panelFabricacion);
+		panelFabricacion.setLayout(null);
+		
+		JLabel lblConjuntosDefectuososTotal = new JLabel("Conjuntos Defectuosos");
+		lblConjuntosDefectuososTotal.setBounds(80, 100, 213, 16);
+		panelFabricacion.add(lblConjuntosDefectuososTotal);
+		
+		JLabel lblConjuntosCorrectosTotal = new JLabel("Conjuntos Correctos");
+		lblConjuntosCorrectosTotal.setBounds(80, 50, 213, 16);
+		panelFabricacion.add(lblConjuntosCorrectosTotal);
+		
+		txtConjuntosOkTotales = new JTextField();
+		txtConjuntosOkTotales.setEditable(false);
+		txtConjuntosOkTotales.setText("100");
+		txtConjuntosOkTotales.setHorizontalAlignment(SwingConstants.CENTER);
+		txtConjuntosOkTotales.setColumns(10);
+		txtConjuntosOkTotales.setBounds(550, 44, 134, 28);
+		panelFabricacion.add(txtConjuntosOkTotales);
+		
+		txtConjuntosNokTotales = new JTextField();
+		txtConjuntosNokTotales.setText("10");
+		txtConjuntosNokTotales.setHorizontalAlignment(SwingConstants.CENTER);
+		txtConjuntosNokTotales.setEditable(false);
+		txtConjuntosNokTotales.setColumns(10);
+		txtConjuntosNokTotales.setBounds(550, 94, 134, 28);
+		panelFabricacion.add(txtConjuntosNokTotales);
+		
+		JPanel panelFuncionamiento = new JPanel();
+		panelFuncionamiento.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Informe de Funcionamiento del Sistema", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelFuncionamiento.setBackground(UIManager.getColor("Button.background"));
+		panelFuncionamiento.setBounds(289, 423, 729, 210);
+		panelInformes.add(panelFuncionamiento);
+		panelFuncionamiento.setLayout(null);
+		
+		JLabel lblNumeroTotalDe = new JLabel("Numero Total de Paradas Normales");
+		lblNumeroTotalDe.setBounds(80, 50, 285, 16);
+		panelFuncionamiento.add(lblNumeroTotalDe);
+		
+		JLabel lblNumeroTotalDe_1 = new JLabel("Numero Total de Paradas de Emergencia");
+		lblNumeroTotalDe_1.setBounds(80, 100, 285, 16);
+		panelFuncionamiento.add(lblNumeroTotalDe_1);
+		
+		JLabel lblNumeroTotalDe_2 = new JLabel("Numero Total de Arranques");
+		lblNumeroTotalDe_2.setBounds(80, 150, 213, 16);
+		panelFuncionamiento.add(lblNumeroTotalDe_2);
+		
+		txtParadasNormales = new JTextField();
+		txtParadasNormales.setText("10");
+		txtParadasNormales.setHorizontalAlignment(SwingConstants.CENTER);
+		txtParadasNormales.setEditable(false);
+		txtParadasNormales.setColumns(10);
+		txtParadasNormales.setBounds(550, 44, 134, 28);
+		panelFuncionamiento.add(txtParadasNormales);
+		
+		txtParadasEmergencia = new JTextField();
+		txtParadasEmergencia.setText("10");
+		txtParadasEmergencia.setHorizontalAlignment(SwingConstants.CENTER);
+		txtParadasEmergencia.setEditable(false);
+		txtParadasEmergencia.setColumns(10);
+		txtParadasEmergencia.setBounds(550, 94, 134, 28);
+		panelFuncionamiento.add(txtParadasEmergencia);
+		
+		txtArranques = new JTextField();
+		txtArranques.setText("10");
+		txtArranques.setHorizontalAlignment(SwingConstants.CENTER);
+		txtArranques.setEditable(false);
+		txtArranques.setColumns(10);
+		txtArranques.setBounds(550, 144, 134, 28);
+		panelFuncionamiento.add(txtArranques);
+		
+		Component verticalStrut = Box.createVerticalStrut(20);
+		verticalStrut.setBounds(525, 686, 35, 8);
+		contentPane.add(verticalStrut);
+		
+		Component verticalStrut_1 = Box.createVerticalStrut(20);
+		verticalStrut_1.setBounds(525, 901, 35, 8);
+		contentPane.add(verticalStrut_1);
+	}
 }
