@@ -1,35 +1,45 @@
 package infiniware.scada.simulador;
 
-import infiniware.automatas.Transicion;
+public abstract class Simulacion implements Runnable {
 
-public class Simulacion implements Runnable {
-
-    private final Transicion transicion;
-
-    public Simulacion(Transicion transicion) {
-        this.transicion = transicion;
-    }
+    int acciones = 1;
 
     public void run() {
-        transicion.subautomata.automata.actualizar(transicion.precondiciones);
-        long tiempoSimulado = calcularTiempo();
-        try {
-            Thread.sleep(tiempoSimulado);
-        } catch (InterruptedException ex) {
-            System.err.println("Error al simular el tiempo: " + ex.getMessage());
+        for (int accion = 0; accion < acciones; accion++) {
+            presimular(accion);
+            simular(accion);
+            postsimular(accion);
         }
-        
-        transicion.subautomata.estado = transicion.destino;
-        transicion.subautomata.automata.actualizar(transicion.postcondiciones);
-    }
-
-    private long calcularTiempo() {
-        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     public Thread lanzar() {
         Thread thread = new Thread(this);
         thread.start();
         return thread;
+    }
+
+    public long tiempo(int accion) {
+        return 0;
+    }
+
+    public void presimular(int accion) {
+        
+    }
+
+    public void postsimular(int accion){
+        
+    }
+
+    protected void simular(int accion) {
+        long tiempoSimulado = tiempo(accion);
+        dormir(tiempoSimulado);
+    }
+
+    protected void dormir(long tiempo) {
+        try {
+            Thread.sleep(tiempo);
+        } catch (InterruptedException ex) {
+            System.err.println("Error al dormir la simulacion: " + ex.getMessage());
+        }
     }
 }

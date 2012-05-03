@@ -1,10 +1,16 @@
 package infiniware.automatas.maestro;
 
 import infiniware.automatas.Automata;
+import infiniware.automatas.GestorSubAutomatas;
 import infiniware.automatas.esclavos.*;
 import infiniware.automatas.sensores.Sensores;
+import infiniware.automatas.subautomatas.Cinta;
+import infiniware.automatas.subautomatas.Robot2;
 import infiniware.scada.Scada;
+import infiniware.scada.modelos.ConjuntoParametros;
 import infiniware.scada.modelos.Parametros;
+import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Maestro extends Automata implements infiniware.scada.IMaestro, infiniware.automatas.esclavos.IMaestro {
@@ -13,7 +19,13 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
     GestorEsclavos esclavos;
     Scada scada;
     public static Maestro INSTANCIA = new Maestro();
+    GestorSubAutomatas subautomatas = new GestorSubAutomatas() {
 
+        {
+            put("CT", new Cinta(INSTANCIA, "R2"));
+            put("R2", new Robot2(INSTANCIA));
+        }
+    };
 
     /*
      * infiniware.automatas.esclavos.IMaestro {{{
@@ -38,7 +50,6 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
 
     public void inicializar() {
     }
-
 
     public void emergencia() {
     }
@@ -79,5 +90,28 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
     @Override
     public byte getId() {
         return 0;
+    }
+
+    public void configurarAutomatas(ConjuntoParametros parametros) {
+        for (Map.Entry<Integer, HashMap<String, Parametros>> automata : parametros.entrySet()) {
+            if (automata.getKey() == 0) {
+                configurar(automata.getValue());
+            } else {
+                try {
+                    esclavos.get(automata).configurar(automata.getValue());
+                } catch (RemoteException ex) {
+                    System.err.println("Error al configurar el esclavo " + automata + ":");
+                    ex.printStackTrace(System.err);
+                }
+            }
+        }
+    }
+
+    public void provocarFalloEsclavo(byte esclavo) {
+        esclavos.get(esclavo).fallar();
+    }
+
+    public void recuperarFalloEsclavo(byte esclavo) {
+        esclavos.get(esclavo).recuperar();
     }
 }

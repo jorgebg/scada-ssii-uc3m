@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 public abstract class Automata implements Profibus, IProcesable, IConexion, IRegistrable {
 
     public Sensores sensores;
-    public Map<String, SubAutomata> subautomatas;
+    public GestorSubAutomatas subautomatas;
     public static final HashMap<String, Automata> INSTANCIAS = new HashMap<String, Automata>() {
 
         {

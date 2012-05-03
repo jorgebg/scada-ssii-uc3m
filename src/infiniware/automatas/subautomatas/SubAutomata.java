@@ -4,21 +4,32 @@ import infiniware.automatas.Automata;
 import infiniware.automatas.Transicion;
 import infiniware.scada.modelos.Parametros;
 import infiniware.scada.simulador.Simulacion;
+import infiniware.scada.simulador.Simulaciones;
+import java.lang.reflect.Modifier;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class SubAutomata {
 
     public List<String> estados;
     public List<Transicion> transiciones;
-    public final String nombre;
     public int estado = 0;
+    Parametros parametros = new Parametros();
+    Simulaciones simulaciones = new Simulaciones();
+    
     public final Automata automata;
-    Parametros parametros;
-    static final String[] configuracion = new String[] {};
 
-    public SubAutomata(Automata automata, String nombre) {
+    public SubAutomata(Automata automata) {
         this.automata = automata;
-        this.nombre = nombre;
+        for(Class cls : this.getClass().getDeclaredClasses())
+            try {
+                if(!Modifier.isAbstract(cls.getModifiers()) && 
+                    cls.isAssignableFrom(Simulacion.class))
+                    simulaciones.put(cls.getSimpleName(), (Simulacion)cls.newInstance());
+        } catch (Exception ex) {
+            ex.printStackTrace(System.err);
+        }
     }
 
     public int ciclo() {
@@ -32,10 +43,16 @@ public abstract class SubAutomata {
         }
         return estado;
     }
-    
+
     public void configurar(Parametros parametros) {
-        this.parametros = parametros.get(configuracion);
+        this.parametros = parametros.extraer(parametros.keySet());
     }
-    
-    public abstract void simular();
+
+    public void simular() {
+        String estado = this.estados.get(this.estado);
+        Simulacion simulacion = simulaciones.get(estado);
+        if (simulacion != null) {
+            simulacion.lanzar();
+        }
+    }
 }

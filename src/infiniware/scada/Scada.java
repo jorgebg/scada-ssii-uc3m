@@ -6,6 +6,7 @@ import infiniware.procesos.IProcesable;
 import infiniware.remoto.Ethernet;
 import infiniware.remoto.Registrador;
 import infiniware.scada.informes.Informes;
+import infiniware.scada.modelos.ConjuntoParametros;
 import infiniware.scada.modelos.Parametros;
 import infiniware.scada.simulador.Simulador;
 
@@ -15,7 +16,7 @@ public class Scada implements Ethernet, IProcesable, IScada {
     public Sensores sensores;
     Simulador simulador;
     GestorAlmacenamiento almacenamiento;
-    IMaestro maestro;
+    public IMaestro maestro;
     long timestamp;
     boolean emergencia = false;
     public Acciones acciones;
@@ -77,8 +78,8 @@ public class Scada implements Ethernet, IProcesable, IScada {
      * @UC 003
      */
     @Override
-    public void configurar(Parametros parametros) {
-        maestro.configurar(parametros);
+    public void configurar(ConjuntoParametros parametros) {
+        maestro.configurarAutomatas(parametros);
     }
     
     /**

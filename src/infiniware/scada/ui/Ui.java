@@ -7,6 +7,7 @@ package infiniware.scada.ui;
 import infiniware.scada.IScada;
 import infiniware.scada.Scada;
 import infiniware.scada.informes.Informes;
+import infiniware.scada.modelos.ConjuntoParametros;
 import infiniware.scada.modelos.Parametros;
 import infiniware.scada.simulador.ISimulador;
 import infiniware.scada.simulador.Simulador;
@@ -32,7 +33,7 @@ public abstract class Ui implements IUi {
         return scada.cargarConfiguracion(nombre);
     }
 
-    public void configurar(Parametros parametros) {
+    public void configurar(ConjuntoParametros parametros) {
         scada.configurar(parametros);
     }
 

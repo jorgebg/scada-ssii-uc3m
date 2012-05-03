@@ -4,6 +4,11 @@
  */
 package infiniware.automatas.subautomatas;
 
+import infiniware.automatas.Automata;
+import infiniware.automatas.sensores.Sensores;
+import infiniware.scada.modelos.Parametros;
+import infiniware.scada.simulador.Simulacion;
+
 /**
  *
  * @author jorge
@@ -11,8 +16,32 @@ package infiniware.automatas.subautomatas;
 
 public class Estacion extends SubAutomata {
 
-    /**
-     * tiempo
-     */
+    Parametros parametros = new Parametros("tiempo");
+    final String entrada;
+    final String salida;
     
+    class Montaje extends Simulacion {
+
+        @Override
+        public long tiempo(int accion) {
+            return parametros.get("velocidad");
+        }
+
+        @Override
+        public void presimular(int accion) {
+            Sensores sensores = new Sensores(entrada.split("\\s+"));
+            automata.actualizar(sensores);
+        }
+
+        @Override
+        public void postsimular(int accion) {
+            automata.actualizar(salida, true);
+        }
+    };
+
+    public Estacion(Automata automata, String entrada, String salida) {
+        super(automata);
+        this.entrada = entrada;
+        this.salida = salida;
+    }
 }

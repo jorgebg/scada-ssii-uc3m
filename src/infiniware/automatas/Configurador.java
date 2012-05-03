@@ -35,11 +35,10 @@ public class Configurador {
         for (String nombreAutomata : configuracion.keySet()) {
             Map<String, Object> configuracionAutomata = (Map<String, Object>) configuracion.get(nombreAutomata);
             Automata automata = Automata.INSTANCIAS.get(nombreAutomata);
-            automata.subautomatas = new HashMap<String, SubAutomata>();
             Map<String, SubAutomata> subautomatas = new HashMap<String, SubAutomata>();
             for (String nombreSubAutomata : configuracionAutomata.keySet()) {
                 Map<String, Object> configuracionSubAutomata = (Map<String, Object>) configuracionAutomata.get(nombreSubAutomata);
-                SubAutomata subautomata = new SubAutomata(automata, nombreSubAutomata);
+                SubAutomata subautomata = automata.subautomatas.get(nombreSubAutomata);
                 Set<String> sensores = new HashSet<String>();
                 List<String> estados = new ArrayList<String>();
                 List<Transicion> transiciones = new ArrayList<Transicion>();
@@ -64,7 +63,6 @@ public class Configurador {
                     }
                     subautomata.estados = estados;
                     subautomata.transiciones = transiciones;
-                    automata.subautomatas.put(nombreSubAutomata, subautomata);
                 }
             }
             //set automata.sensores

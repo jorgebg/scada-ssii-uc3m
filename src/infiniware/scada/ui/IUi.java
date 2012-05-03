@@ -1,6 +1,7 @@
 package infiniware.scada.ui;
 
 import infiniware.scada.informes.Informes;
+import infiniware.scada.modelos.ConjuntoParametros;
 import infiniware.scada.modelos.Parametros;
 
 public interface IUi {
@@ -24,7 +25,11 @@ public interface IUi {
     /**
      * @UC 003
      */
-    void configurar(Parametros parametros);
+    /**
+     * 
+     * @param parametros Mapa tal que IdAutomata => NombreSubAutomata => Parametros
+     */
+    void configurar(ConjuntoParametros parametros);
 
 
     /**

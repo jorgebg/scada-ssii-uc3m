@@ -1,6 +1,7 @@
 package infiniware.scada;
 
 import infiniware.scada.informes.Informes;
+import infiniware.scada.modelos.ConjuntoParametros;
 import infiniware.scada.modelos.Parametros;
 
 public interface IScada {
@@ -18,7 +19,7 @@ public interface IScada {
     /**
      * @UC 003
      */
-    void configurar(Parametros parametros);
+    void configurar(ConjuntoParametros parametros);
 
     void detenerProceso();
 
