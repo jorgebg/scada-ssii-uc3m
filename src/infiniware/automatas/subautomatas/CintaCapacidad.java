@@ -11,29 +11,55 @@ import infiniware.scada.modelos.Parametros;
  *
  * @author jorge
  */
-
 public class CintaCapacidad extends Cinta {
 
-
     Parametros parametros = new Parametros("velocidad", "longitud", "capacidad");
-    
+    Boolean[] contenido;
+
     class Movimiento extends Cinta.Movimiento {
-        
+
+        int acciones = 2;
+        static final int MOVER = 0;
+        static final int CARGAR = 1;
 
         @Override
-        public void presimular(int accion) {
-            super.presimular(accion);
-            //TODO controlar capacidad
+        public long tiempo(int accion) {
+            switch (accion) {
+                case MOVER:
+                    return super.tiempo(accion);
+                case CARGAR:
+                    return 2000;
+            }
+            return -1;
         }
 
         @Override
-        public void postsimular(int accion) {
-            super.postsimular(accion);
-            //TODO controlar capacidad
+        public void postaccion(int accion) {
+            switch (accion) {
+                case MOVER:
+                    desplazar();
+                    if(contenido[contenido.length-1])
+                        automata.actualizar(salida, true);
+                    break;
+                case CARGAR:
+                    contenido[0] = Math.random() > 0.75;
+                    break;
+            }
+        }
+
+        private void desplazar() {
+            for (int i = contenido.length-1; i > 0; i++) {
+                contenido[i] = contenido[i-1];
+            }
         }
     }
-    
-    public CintaCapacidad(Automata automata, String robot) {
-        super(automata, robot);
+
+    public CintaCapacidad(Automata automata, String salida) {
+        super(automata, salida);
+    }
+
+    public void configurar(Parametros parametros) {
+        super.configurar(parametros);
+        contenido = new Boolean[parametros.get("capacidad")];
     }
 }

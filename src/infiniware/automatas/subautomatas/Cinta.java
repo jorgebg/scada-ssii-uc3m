@@ -15,7 +15,7 @@ import infiniware.scada.simulador.Simulacion;
 public class Cinta extends SubAutomata {
 
     Parametros parametros = new Parametros("velocidad", "longitud");
-    final String robot;
+    final String salida;
 
     class Movimiento extends Simulacion {
 
@@ -25,18 +25,13 @@ public class Cinta extends SubAutomata {
         }
 
         @Override
-        public void presimular(int accion) {
-            automata.actualizar(robot, true);
-        }
-
-        @Override
-        public void postsimular(int accion) {
-            automata.actualizar(robot, false);
+        public void postaccion(int accion) {
+            automata.actualizar(salida, true);
         }
     };
 
     public Cinta(Automata automata, String robot) {
         super(automata);
-        this.robot = robot;
+        this.salida = robot;
     }
 }

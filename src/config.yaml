@@ -1,0 +1,16 @@
+UI: CLI
+#UI: GUI
+
+Maestro:
+  Port: ~
+  Host: ~
+
+Esclavo1:
+  Port: ~
+  Host: ~
+Esclavo2:
+  Port: ~
+  Host: ~
+Esclavo3:
+  Port: ~
+  Host: ~

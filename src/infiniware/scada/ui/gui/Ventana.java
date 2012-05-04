@@ -40,7 +40,7 @@ import java.awt.ComponentOrientation;
 import java.awt.Frame;
 import java.awt.SystemColor;
 
-public class GUI extends JFrame {
+public class Ventana extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtLongitudCen;
@@ -79,7 +79,7 @@ public class GUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					GUI frame = new GUI();
+					Ventana frame = new Ventana();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -91,8 +91,8 @@ public class GUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public GUI() {
-		setExtendedState(Frame.MAXIMIZED_BOTH);
+	public Ventana() {
+		setExtendedState(Ventana.MAXIMIZED_BOTH);
 		setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		setBounds(new Rectangle(0, 0, 1024, 1000));
 		setSize(new Dimension(1280, 1000));

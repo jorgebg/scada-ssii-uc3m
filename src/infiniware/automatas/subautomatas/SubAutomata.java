@@ -7,8 +7,6 @@ import infiniware.scada.simulador.Simulacion;
 import infiniware.scada.simulador.Simulaciones;
 import java.lang.reflect.Modifier;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public abstract class SubAutomata {
 
@@ -32,7 +30,7 @@ public abstract class SubAutomata {
         }
     }
 
-    public int ciclo() {
+    public int ejecutar() {
         for (Transicion transicion : transiciones) {
             if (transicion.cumple()) {
                 //new Simulacion(transicion).lanzar();

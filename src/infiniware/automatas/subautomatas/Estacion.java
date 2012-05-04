@@ -28,13 +28,13 @@ public class Estacion extends SubAutomata {
         }
 
         @Override
-        public void presimular(int accion) {
+        public void preaccion(int accion) {
             Sensores sensores = new Sensores(entrada.split("\\s+"));
             automata.actualizar(sensores);
         }
 
         @Override
-        public void postsimular(int accion) {
+        public void postaccion(int accion) {
             automata.actualizar(salida, true);
         }
     };

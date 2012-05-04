@@ -5,38 +5,20 @@
 package infiniware.automatas.subautomatas;
 
 import infiniware.automatas.Automata;
+import infiniware.automatas.subautomatas.Robot.Transporte;
 import infiniware.scada.modelos.Parametros;
-import infiniware.scada.simulador.Simulacion;
 
 /**
  *
  * @author jorge
  */
-public class Robot1 extends SubAutomata {
+public class Robot1 extends Robot {
 
-    Parametros parametros = new Parametros("tiempo-recogida", "tiempo-transporte", "tiempo-transporte-montado");
-
-    abstract class Transporte extends Simulacion {
-
-        int acciones = 2;
-        static final int RECOGER = 0;
-        static final int TRANSPORTAR = 1;
-
-        @Override
-        public long tiempo(int accion) {
-            switch (accion) {
-                case RECOGER:
-                    return parametros.get("tiempo-recogida");
-                case TRANSPORTAR:
-                    return parametros.get("tiempo-transporte");
-            }
-            return -1;
-        }
-    }
+    Parametros parametros = super.parametros.mezclar("tiempo-transporte-montado");
 
     class TransporteEngranaje1 extends Transporte {
 
-        public void postsimular(int accion) {
+        public void postaccion(int accion) {
             switch (accion) {
                 case RECOGER:
                     automata.actualizar("A", false);
@@ -45,13 +27,14 @@ public class Robot1 extends SubAutomata {
                     automata.actualizar("D", true);
                     break;
             }
+            super.postaccion(accion);
         }
     };
 
     class TransporteEje1 extends Transporte {
 
         @Override
-        public void postsimular(int accion) {
+        public void postaccion(int accion) {
             switch (accion) {
                 case RECOGER:
                     automata.actualizar("B", false);
@@ -60,6 +43,7 @@ public class Robot1 extends SubAutomata {
                     automata.actualizar("C", true);
                     break;
             }
+            super.postaccion(accion);
         }
     };
 
@@ -83,7 +67,7 @@ public class Robot1 extends SubAutomata {
         }
 
         @Override
-        public void postsimular(int accion) {
+        public void postaccion(int accion) {
             switch (accion) {
                 case RECOGER:
                     automata.actualizar("E", false);
@@ -92,10 +76,11 @@ public class Robot1 extends SubAutomata {
                     automata.actualizar("F", true);
                     break;
             }
+            super.postaccion(accion);
         }
     }
 
     public Robot1(Automata automata) {
-        super(automata);
+        super(automata, "R1");
     }
 }

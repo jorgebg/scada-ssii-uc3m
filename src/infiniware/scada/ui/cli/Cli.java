@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package infiniware.scada.ui.consola;
+package infiniware.scada.ui.cli;
 
 import infiniware.procesos.IProcesable;
 import infiniware.scada.ui.IUi;
@@ -20,12 +20,12 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author jorge
  */
-public class Consola extends Ui implements Runnable, IProcesable {
+public class Cli extends Ui implements Runnable, IProcesable {
 
-    public static final Consola INSTANCIA = new Consola();
+    public static final Cli INSTANCIA = new Cli();
     private Thread thread;
 
-    private Consola() {
+    private Cli() {
     }
 
     public void run() {

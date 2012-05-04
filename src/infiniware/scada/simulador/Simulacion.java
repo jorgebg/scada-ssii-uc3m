@@ -6,9 +6,9 @@ public abstract class Simulacion implements Runnable {
 
     public void run() {
         for (int accion = 0; accion < acciones; accion++) {
-            presimular(accion);
-            simular(accion);
-            postsimular(accion);
+            preaccion(accion);
+            actuar(accion);
+            postaccion(accion);
         }
     }
 
@@ -22,15 +22,15 @@ public abstract class Simulacion implements Runnable {
         return 0;
     }
 
-    public void presimular(int accion) {
+    public void preaccion(int accion) {
         
     }
 
-    public void postsimular(int accion){
+    public void postaccion(int accion){
         
     }
 
-    protected void simular(int accion) {
+    protected void actuar(int accion) {
         long tiempoSimulado = tiempo(accion);
         dormir(tiempoSimulado);
     }

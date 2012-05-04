@@ -6,37 +6,18 @@ package infiniware.automatas.subautomatas;
 
 import infiniware.automatas.Automata;
 import infiniware.scada.modelos.Parametros;
-import infiniware.scada.simulador.Simulacion;
 
 /**
  *
  * @author jorge
  */
-public class Robot2 extends SubAutomata {
+public class Robot2 extends Robot {
 
-    Parametros parametros = new Parametros("tiempo-recogida", "tiempo-transporte", "tiempo-transporte-soldado");
-
-    abstract class Transporte extends Simulacion {
-
-        int acciones = 2;
-        static final int RECOGER = 0;
-        static final int TRANSPORTAR = 1;
-
-        @Override
-        public long tiempo(int accion) {
-            switch (accion) {
-                case RECOGER:
-                    return parametros.get("tiempo-recogida");
-                case TRANSPORTAR:
-                    return parametros.get("tiempo-transporte");
-            }
-            return -1;
-        }
-    }
+    Parametros parametros = super.parametros.mezclar("tiempo-transporte-soldado");
 
     class MueveConjuntoMontado extends Transporte {
 
-        public void postsimular(int accion) {
+        public void postaccion(int accion) {
             switch (accion) {
                 case RECOGER:
                     automata.actualizar("G", false);
@@ -45,6 +26,7 @@ public class Robot2 extends SubAutomata {
                     automata.actualizar("H", true);
                     break;
             }
+            super.postaccion(accion);
         }
     };
 
@@ -62,7 +44,7 @@ public class Robot2 extends SubAutomata {
         }
 
         @Override
-        public void postsimular(int accion) {
+        public void postaccion(int accion) {
             switch (accion) {
                 case RECOGER:
                     automata.actualizar("I", false);
@@ -71,12 +53,14 @@ public class Robot2 extends SubAutomata {
                     automata.actualizar("J", true);
                     break;
             }
+            super.postaccion(accion);
         }
     }
 
     class MueveConjuntoValido extends Transporte {
+
         @Override
-        public void postsimular(int accion) {
+        public void postaccion(int accion) {
             switch (accion) {
                 case RECOGER:
                     automata.actualizar("K", false);
@@ -85,11 +69,14 @@ public class Robot2 extends SubAutomata {
                     automata.actualizar("L", true);
                     break;
             }
+            super.postaccion(accion);
         }
     }
+
     class MueveConjuntoNoValido extends Transporte {
+
         @Override
-        public void postsimular(int accion) {
+        public void postaccion(int accion) {
             switch (accion) {
                 case RECOGER:
                     automata.actualizar("K", false);
@@ -98,10 +85,11 @@ public class Robot2 extends SubAutomata {
                     automata.actualizar("M", true);
                     break;
             }
+            super.postaccion(accion);
         }
     }
 
     public Robot2(Automata automata) {
-        super(automata);
+        super(automata, "R2");
     }
 }

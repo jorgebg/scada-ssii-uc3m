@@ -17,7 +17,7 @@ public class Sistema {
         configurar(args);
 
         //Iniciamos el proceso
-        ejecutar(args);
+        iniciar(args);
     }
 
     private static void validar(String[] args) {
@@ -48,7 +48,7 @@ public class Sistema {
         Configurador.configurar();
     }
 
-    private static void ejecutar(String[] args) {
+    private static void iniciar(String[] args) {
         Procesos.iniciar(args[0]);
     }
 }

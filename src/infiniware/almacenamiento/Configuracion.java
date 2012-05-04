@@ -5,7 +5,7 @@ import infiniware.scada.modelos.Parametros;
 
 public class Configuracion extends Componente {
 
-    public static void configurar(Automata aThis) {
+    public static void configurar(Automata automata) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 

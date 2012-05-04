@@ -18,6 +18,7 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
     GestorSensores sensores;
     GestorEsclavos esclavos;
     Scada scada;
+    char[] estados = new char[4];
     public static Maestro INSTANCIA = new Maestro();
     GestorSubAutomatas subautomatas = new GestorSubAutomatas() {
 
@@ -40,12 +41,13 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
     /*
      * infiniware.scada.IMaestro {{{
      */
-    public void ciclo(Sensores sensores) {
+    public char[] ciclo(Sensores sensores) {
         this.sensores.actualizar(sensores);
-        super.ciclo(sensores);
+        estados[getId()] = ejecutar(sensores);
         for (int id = 1; id < esclavos.size(); id++) {
-            esclavos.ciclo(id, this.sensores.get(id));
+            estados[id] = esclavos.ejecutar(id, this.sensores.get(id));
         }
+        return estados;
     }
 
     public void inicializar() {
@@ -55,11 +57,11 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
     }
 
     public void arrancar() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //TODO es necesario? Ahora mismo no se esta llamando de ningun sitio
     }
 
     public void parada() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //TODO es necesario? Ahora mismo no se esta llamando de ningun sitio
     }
 
     public void desconectar() {

@@ -9,7 +9,7 @@ import infiniware.automatas.esclavos.Esclavo2;
 import infiniware.automatas.esclavos.Esclavo3;
 import infiniware.automatas.maestro.Maestro;
 import infiniware.scada.Scada;
-import infiniware.scada.ui.consola.Consola;
+import infiniware.scada.ui.cli.Cli;
 
 /**
  * Cuatro procesos: base (Scada & Maestro), esclavo1, esclavo2, esclavo3
@@ -64,7 +64,7 @@ public enum Procesos implements IProceso {
     };
     private static Procesos proceso;
     private static Thread thread;
-    private static IProcesable ui = Consola.INSTANCIA;
+    private static IProcesable ui = Cli.INSTANCIA;
 
     public static void iniciar(String proceso) {
         iniciar(Procesos.valueOf(proceso));

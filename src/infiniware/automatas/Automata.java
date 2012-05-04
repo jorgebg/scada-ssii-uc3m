@@ -1,26 +1,22 @@
 package infiniware.automatas;
 
-import infiniware.automatas.subautomatas.SubAutomata;
-import infiniware.remoto.IConexion;
 import infiniware.automatas.esclavos.Esclavo1;
 import infiniware.automatas.esclavos.Esclavo2;
 import infiniware.automatas.esclavos.Esclavo3;
 import infiniware.automatas.maestro.Maestro;
 import infiniware.automatas.sensores.Sensores;
+import infiniware.automatas.subautomatas.SubAutomata;
 import infiniware.procesos.IProcesable;
+import infiniware.remoto.IConexion;
 import infiniware.remoto.IRegistrable;
 import infiniware.remoto.Profibus;
 import infiniware.remoto.Registrador;
 import infiniware.scada.modelos.Parametros;
-import java.rmi.NotBoundException;
 import java.rmi.Remote;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public abstract class Automata implements Profibus, IProcesable, IConexion, IRegistrable {
 
@@ -34,6 +30,10 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
             put("Esclavo2", Esclavo2.INSTANCIA);
             put("Esclavo3", Esclavo3.INSTANCIA);
         }
+        public Automata get(int id) {
+            if(id==0) return get("Maestro");
+            else return get("Esclavo"+id);
+        }
     };
 
     protected Automata() {
@@ -43,20 +43,21 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
         this.sensores.inicializar(sensores);
     }
 
-    public void ciclo(char sensores) {
+    public char ejecutar(char sensores) {
         this.sensores.actualizar(sensores);
-        ciclo();
+        return ejecutar();
     }
 
-    public void ciclo(Sensores sensores) {
+    public char ejecutar(Sensores sensores) {
         this.sensores.actualizar(sensores);
-        ciclo();
+        return ejecutar();
     }
 
-    public void ciclo() {
+    public char ejecutar() {
         for (SubAutomata subautomata : subautomatas.values()) {
-            subautomata.ciclo();
+            subautomata.ejecutar();
         }
+        return subautomatas.codificarEstado();
     }
 
     /*

@@ -28,13 +28,13 @@ public class EstacionOperario extends Estacion {
             return -1;
         }
 
-        public void presimular(int accion) {
+        public void preaccion(int accion) {
             if (accion == PROCESAR) {
-                super.presimular(accion);
+                super.preaccion(accion);
             }
         }
 
-        public void postsimular(int accion) {
+        public void postaccion(int accion) {
             switch (accion) {
                 case PROCESAR:
                     automata.actualizar(salida, true);
