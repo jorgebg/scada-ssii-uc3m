@@ -28,6 +28,7 @@ public class Cli extends Ui implements Runnable, IProcesable {
     public void run() {
         Method[] methods = IUi.class.getDeclaredMethods();
         Arrays.sort(methods, new Comparator<Method>() {
+
             public int compare(Method m1, Method m2) {
                 return m1.getName().compareTo(m2.getName());
             }
@@ -35,27 +36,28 @@ public class Cli extends Ui implements Runnable, IProcesable {
         String ayuda = "Opciones disponibles:";
         for (int i = 0; i < methods.length; i++) {
             Method method = methods[i];
-            ayuda += "\t" + StringUtils.leftPad(i+"", 2, "0") + ": " + method.getName() + "\n";
+            ayuda += "\t" + StringUtils.leftPad(i + "", 2, "0") + ": " + method.getName() + "\n";
         }
 
 
         System.out.println(ayuda);
         int accion;
+        Scanner in = new Scanner(System.in);
         while (true) {
-            System.out.print("ui@scada: ");
-            Scanner in = new Scanner(System.in);
-            accion = Integer.parseInt(in.nextLine());
-            try {
-                System.out.println("Ejecutando [" + methods[accion].getName() + "]");
-                methods[accion].invoke(this);
-            } catch (InvocationTargetException ex) {
-                System.err.println("Excepcion capturada: ");
-                ex.printStackTrace(System.err);
-            } catch (Exception e) {
-                System.out.println("Sintaxis incorrecta.");
-                System.out.println(ayuda);
+            if (in.hasNext()) {
+                accion = Integer.parseInt(in.nextLine());
+                try {
+                    System.out.println("Ejecutando [" + methods[accion].getName() + "]");
+                    methods[accion].invoke(this);
+                } catch (InvocationTargetException ex) {
+                    System.err.println("Excepcion capturada: ");
+                    ex.printStackTrace(System.err);
+                } catch (Exception e) {
+                    System.out.println("Sintaxis incorrecta.");
+                    System.out.println(ayuda);
+                }
+                System.out.print("ui@scada: ");
             }
-
         }
     }
 
@@ -72,14 +74,13 @@ public class Cli extends Ui implements Runnable, IProcesable {
     }
 
     public void actualizar(char[] estados) {
-        Map<String,Map<String,String>> arbol = new HashMap<String, Map<String, String>>();
-       for (int id = 0; id < estados.length; id++) {
-           Automata automata = Automata.INSTANCIAS.get(id);
-           arbol.put(
-                   automata.getRemoteName(),
-                   automata.subautomatas.decodificarNombreEstados(estados[id])
-                   );
-       }
+        Map<String, Map<String, String>> arbol = new HashMap<String, Map<String, String>>();
+        for (int id = 0; id < estados.length; id++) {
+            Automata automata = Automata.INSTANCIAS.get(id);
+            arbol.put(
+                    automata.getRemoteName(),
+                    automata.subautomatas.decodificarNombreEstados(estados[id]));
+        }
         System.out.println(arbol);
     }
 }
