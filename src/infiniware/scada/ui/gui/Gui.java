@@ -28,4 +28,16 @@ public class Gui extends Ui {
         }
     }
 
+    public void actualizar(char[] estados) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Thread iniciarProceso() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void detenerProceso() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }

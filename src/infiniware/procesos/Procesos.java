@@ -23,7 +23,7 @@ public enum Procesos implements IProceso {
         public Thread iniciarProceso() {
             Thread thread = Maestro.INSTANCIA.iniciarProceso();
             Scada.INSTANCIA.iniciarProceso();
-            ui.iniciarProceso();
+            Scada.ui.iniciarProceso();
             return thread;
         }
 
@@ -64,7 +64,6 @@ public enum Procesos implements IProceso {
     };
     private static Procesos proceso;
     private static Thread thread;
-    private static IProcesable ui = Cli.INSTANCIA;
 
     public static void iniciar(String proceso) {
         iniciar(Procesos.valueOf(proceso));

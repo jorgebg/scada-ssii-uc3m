@@ -8,6 +8,7 @@ import infiniware.automatas.subautomatas.SubAutomata;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -36,7 +37,7 @@ public class GestorSubAutomatas extends HashMap<String, SubAutomata> {
         }
     }
 
-    public char codificarEstado() {
+    public char codificarEstados() {
         List<Integer> estado = new ArrayList<Integer>();
         for (SubAutomata subautomata : values()) {
             estado.add(subautomata.estado);
@@ -44,7 +45,19 @@ public class GestorSubAutomatas extends HashMap<String, SubAutomata> {
         return (char) estados.indexOf(estado);
     }
     
-    public List<Integer> decodificarEstado(char estado) {
+    public List<Integer> decodificarEstados(char estado) {
         return estados.get(estado);
+    }
+
+    public Map<String, String> decodificarNombreEstados(char estado) {
+        Map<String, String> nombreEstados = new HashMap<String, String>();
+        int id = 0;
+        for (Integer e : estados.get(estado)) {
+            String nombreSubAutomata = (String)this.keySet().toArray()[id];
+            String nombreEstado = get(id).estados.get(e);
+            nombreEstados.put(nombreSubAutomata, nombreEstado);
+            id++;
+        }
+        return nombreEstados;
     }
 }

@@ -4,16 +4,13 @@
  */
 package infiniware.scada.ui.cli;
 
+import infiniware.automatas.Automata;
 import infiniware.procesos.IProcesable;
 import infiniware.scada.ui.IUi;
 import infiniware.scada.ui.Ui;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.*;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -72,5 +69,17 @@ public class Cli extends Ui implements Runnable, IProcesable {
         synchronized (INSTANCIA) {
             thread.notify();
         }
+    }
+
+    public void actualizar(char[] estados) {
+        Map<String,Map<String,String>> arbol = new HashMap<String, Map<String, String>>();
+       for (int id = 0; id < estados.length; id++) {
+           Automata automata = Automata.INSTANCIAS.get(id);
+           arbol.put(
+                   automata.getRemoteName(),
+                   automata.subautomatas.decodificarNombreEstados(estados[id])
+                   );
+       }
+        System.out.println(arbol);
     }
 }

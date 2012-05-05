@@ -57,7 +57,7 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
         for (SubAutomata subautomata : subautomatas.values()) {
             subautomata.ejecutar();
         }
-        return subautomatas.codificarEstado();
+        return subautomatas.codificarEstados();
     }
 
     /*

@@ -1,6 +1,5 @@
 package infiniware.scada;
 
-import infiniware.automatas.Automata;
 import infiniware.automatas.maestro.Maestro;
 import infiniware.automatas.sensores.Sensores;
 import infiniware.procesos.IProcesable;
@@ -10,6 +9,8 @@ import infiniware.scada.informes.Informes;
 import infiniware.scada.modelos.ConjuntoParametros;
 import infiniware.scada.modelos.Parametros;
 import infiniware.scada.simulador.Simulador;
+import infiniware.scada.ui.IUi;
+import infiniware.scada.ui.cli.Cli;
 
 public class Scada implements Ethernet, IProcesable, IScada {
 
@@ -22,14 +23,15 @@ public class Scada implements Ethernet, IProcesable, IScada {
     boolean emergencia = false;
     public Acciones acciones;
     public static Scada INSTANCIA = new Scada();
+    public static IUi ui = Cli.INSTANCIA;
     
     /**
      * Estados de los automata: id {0..3} => estado {0..9}
      * Para obtener el nombre de los estados:
      * 
      *  for (int id = 0; id < estados.length; id++) {
-     *      char estado = estados[i];
-     *      Automata.INSTANCIAS.get(id).estados.get(estado);
+     *      char estado = estados[id];
+     *      Automata.INSTANCIAS.get(id).subautomatas.decodificarEstado(estados[id]);
      *  }
      * 
      */
@@ -63,6 +65,7 @@ public class Scada implements Ethernet, IProcesable, IScada {
             }
             simulador.ciclo();
             estados = maestro.ciclo(sensores);
+            ui.actualizar(estados);
             sincronizar();
         }
     }
@@ -156,4 +159,5 @@ public class Scada implements Ethernet, IProcesable, IScada {
         maestro = null;
     }
     /* }}} */
+
 }
