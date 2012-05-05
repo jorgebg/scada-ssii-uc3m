@@ -35,6 +35,13 @@ Esclavo1:
     TransporteConjuntoMontado:
       - Reposo => A*!E*R1
 
+Esclavo2:
+  ES:
+    Reposo:
+      - Soldadura => H*!I
+    Soldadura:
+      - Reposo => I
+      
 Esclavo3:
   COK:
     Reposo:
@@ -47,12 +54,6 @@ Esclavo3:
     Validacion:
       - Reposo => K
 
-Esclavo2:
-  ES:
-    Reposo:
-      - Soldadura => H*!I
-    Soldadura:
-      - Reposo => I
 
 Maestro:
   CT:
