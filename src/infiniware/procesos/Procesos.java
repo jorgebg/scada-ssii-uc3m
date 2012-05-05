@@ -9,7 +9,6 @@ import infiniware.automatas.esclavos.Esclavo2;
 import infiniware.automatas.esclavos.Esclavo3;
 import infiniware.automatas.maestro.Maestro;
 import infiniware.scada.Scada;
-import infiniware.scada.ui.cli.Cli;
 
 /**
  * Cuatro procesos: base (Scada & Maestro), esclavo1, esclavo2, esclavo3
