@@ -35,7 +35,6 @@ public class Configurador {
         for (String nombreAutomata : configuracion.keySet()) {
             Map<String, Object> configuracionAutomata = (Map<String, Object>) configuracion.get(nombreAutomata);
             Automata automata = Automata.INSTANCIAS.get(nombreAutomata);
-            Map<String, SubAutomata> subautomatas = new HashMap<String, SubAutomata>();
             for (String nombreSubAutomata : configuracionAutomata.keySet()) {
                 Map<String, Object> configuracionSubAutomata = (Map<String, Object>) configuracionAutomata.get(nombreSubAutomata);
                 SubAutomata subautomata = automata.subautomatas.get(nombreSubAutomata);

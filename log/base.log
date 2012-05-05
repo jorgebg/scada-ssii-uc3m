@@ -5,60 +5,41 @@ Running in same VM Executing 'infiniware.Sistema' with arguments:
 
 The ' characters around the executable and arguments are
 not part of the command.
-Iniciando proceso "base".
-Servicio de registro RMI creado para "Maestro" en 127.0.0.1:1024
-Automata "Maestro" registrado en 127.0.0.1:1024
-Conexion con el automata "Esclavo1" desde "Maestro" establecida.
-Conexion con el automata "Esclavo2" desde "Maestro" establecida.
-Conexion con el automata "Esclavo3" desde "Maestro" establecida.
-Conexion con los esclavos establecida.
-Opciones disponibles:	00: arrancar
-	01: cargarConfiguracion
-	02: configurar
-	03: emergencia
-	04: generarInforme
-	05: guardarConfiguracion
-	06: iniciar
-	07: limpiarCPD
-	08: parada
-	09: provocarFalloEsclavo1
-	10: provocarFalloEsclavo2
-	11: provocarFalloEsclavo3
-	12: recuperarFalloEsclavo1
-	13: recuperarFalloEsclavo2
-	14: recuperarFalloEsclavo3
-
-scada@base: Ejecutando iniciar
-java.lang.reflect.InvocationTargetException
+java.lang.NullPointerException
+	at org.apache.tools.ant.taskdefs.ExecuteJava.execute(ExecuteJava.java:194)
+	at org.apache.tools.ant.taskdefs.Java.run(Java.java:771)
+	at org.apache.tools.ant.taskdefs.Java.executeJava(Java.java:221)
+	at org.apache.tools.ant.taskdefs.Java.executeJava(Java.java:135)
+	at org.apache.tools.ant.taskdefs.Java.execute(Java.java:108)
+	at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
 	at java.lang.reflect.Method.invoke(Method.java:601)
-	at infiniware.scada.ui.consola.Consola.run(Consola.java:53)
-	at java.lang.Thread.run(Thread.java:722)
+	at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:106)
+	at org.apache.tools.ant.Task.perform(Task.java:348)
+	at org.apache.tools.ant.Target.execute(Target.java:390)
+	at org.apache.tools.ant.Target.performTasks(Target.java:411)
+	at org.apache.tools.ant.Project.executeSortedTargets(Project.java:1399)
+	at org.apache.tools.ant.Project.executeTarget(Project.java:1368)
+	at org.apache.tools.ant.helper.DefaultExecutor.executeTargets(DefaultExecutor.java:41)
+	at org.apache.tools.ant.Project.executeTargets(Project.java:1251)
+	at org.apache.tools.ant.Main.runBuild(Main.java:809)
+	at org.apache.tools.ant.Main.startAnt(Main.java:217)
+	at org.apache.tools.ant.launch.Launcher.run(Launcher.java:280)
+	at org.apache.tools.ant.launch.Launcher.main(Launcher.java:109)
 Caused by: java.lang.NullPointerException
-	at infiniware.automatas.maestro.Maestro.ciclo(Maestro.java:31)
-	at infiniware.scada.Scada.ciclo(Scada.java:51)
-	at infiniware.scada.Scada.arrancar(Scada.java:72)
-	at infiniware.scada.Scada.iniciar(Scada.java:62)
-	at infiniware.scada.ui.Ui.iniciar(Ui.java:24)
-	... 6 more
-Sintaxis incorrecta.
-Opciones disponibles:	00: arrancar
-	01: cargarConfiguracion
-	02: configurar
-	03: emergencia
-	04: generarInforme
-	05: guardarConfiguracion
-	06: iniciar
-	07: limpiarCPD
-	08: parada
-	09: provocarFalloEsclavo1
-	10: provocarFalloEsclavo2
-	11: provocarFalloEsclavo3
-	12: recuperarFalloEsclavo1
-	13: recuperarFalloEsclavo2
-	14: recuperarFalloEsclavo3
+	at infiniware.automatas.Configurador.configurar(Configurador.java:41)
+	at infiniware.Sistema.configurar(Sistema.java:48)
+	at infiniware.Sistema.main(Sistema.java:17)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at org.apache.tools.ant.taskdefs.ExecuteJava.run(ExecuteJava.java:217)
+	at org.apache.tools.ant.taskdefs.ExecuteJava.execute(ExecuteJava.java:152)
+	... 21 more
+Java Result: -1
+base:  duration 0 seconds
 
-Deteniendo proceso "base".
-"Maestro" desconectado.
+BUILD SUCCESSFUL

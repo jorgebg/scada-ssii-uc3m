@@ -20,13 +20,16 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
     Scada scada;
     char[] estados = new char[4];
     public static Maestro INSTANCIA = new Maestro();
-    GestorSubAutomatas subautomatas = new GestorSubAutomatas() {
 
-        {
-            put("CT", new Cinta(INSTANCIA, "R2"));
-            put("R2", new Robot2(INSTANCIA));
-        }
-    };
+    protected Maestro() {
+        super(new GestorSubAutomatas() {
+
+            {
+                put("CT", new Cinta(INSTANCIA, "R2"));
+                put("R2", new Robot2(INSTANCIA));
+            }
+        });
+    }
 
     /*
      * infiniware.automatas.esclavos.IMaestro {{{

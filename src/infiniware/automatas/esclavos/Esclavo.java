@@ -1,6 +1,7 @@
 package infiniware.automatas.esclavos;
 
 import infiniware.automatas.Automata;
+import infiniware.automatas.GestorSubAutomatas;
 import infiniware.automatas.maestro.Maestro;
 import infiniware.automatas.sensores.Sensores;
 import java.rmi.RemoteException;
@@ -8,7 +9,10 @@ import java.rmi.RemoteException;
 public abstract class Esclavo extends Automata implements IEsclavo {
 
     protected IMaestro maestro;
-
+    
+    protected Esclavo(GestorSubAutomatas subautomatas){
+        super(subautomatas);
+    }
     
     public void desconectar() {
         maestro = null;

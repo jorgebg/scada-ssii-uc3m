@@ -36,7 +36,8 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
         }
     };
 
-    protected Automata() {
+    protected Automata(GestorSubAutomatas subautomatas) {
+        this.subautomatas = subautomatas;
     }
 
     public void inicializar(char sensores) {

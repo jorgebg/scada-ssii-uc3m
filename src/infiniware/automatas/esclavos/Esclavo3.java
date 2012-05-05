@@ -7,13 +7,15 @@ import infiniware.automatas.subautomatas.EstacionOperario;
 public class Esclavo3 extends Esclavo {
 
     public static Esclavo3 INSTANCIA = new Esclavo3();
-    GestorSubAutomatas subautomatas = new GestorSubAutomatas() {
+    public Esclavo3() {
+        super(new GestorSubAutomatas() {
 
-        {
-            put("COK", new Cinta(INSTANCIA, "R2"));
-            put("ES", new EstacionOperario(INSTANCIA, "J", "K"));
-        }
-    };
+            {
+                put("COK", new Cinta(INSTANCIA, "R2"));
+                put("EV", new EstacionOperario(INSTANCIA, "J", "K"));
+            }
+        });
+    }
 
     @Override
     public byte getId() {
