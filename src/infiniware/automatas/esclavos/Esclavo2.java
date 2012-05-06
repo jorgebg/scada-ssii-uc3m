@@ -7,11 +7,12 @@ public class Esclavo2 extends Esclavo {
 
     public static Esclavo2 INSTANCIA = new Esclavo2();
     public Esclavo2() {
-        super(new GestorSubAutomatas() {
+        super();
+        this.subautomatas = new GestorSubAutomatas(this) {
             {
-                put("ES", new Estacion(INSTANCIA, "H", "I"));
+                instalar("ES", new Estacion("H", "I"));
             }
-        });
+        };
     }
 
     @Override

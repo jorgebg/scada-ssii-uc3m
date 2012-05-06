@@ -96,5 +96,4 @@ public interface IUi extends IProcesable {
      *      Automata.INSTANCIAS.get(id).subautomatas.decodificarEstado(estados[id]);
      *  }
      */
-    public void actualizar(char[] estados);
 }

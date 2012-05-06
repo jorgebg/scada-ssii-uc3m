@@ -8,13 +8,14 @@ public class Esclavo3 extends Esclavo {
 
     public static Esclavo3 INSTANCIA = new Esclavo3();
     public Esclavo3() {
-        super(new GestorSubAutomatas() {
+        super();
+        this.subautomatas = new GestorSubAutomatas(this) {
 
             {
-                put("COK", new Cinta(INSTANCIA, "R2"));
-                put("EV", new EstacionOperario(INSTANCIA, "J", "K"));
+                instalar("COK", new Cinta("R2"));
+                instalar("EV", new EstacionOperario("J", "K"));
             }
-        });
+        };
     }
 
     @Override

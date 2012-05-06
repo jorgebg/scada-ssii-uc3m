@@ -9,15 +9,19 @@ public class Esclavo1 extends Esclavo {
 
     public static Esclavo1 INSTANCIA = new Esclavo1();
     public Esclavo1() {
-        super(new GestorSubAutomatas() {
+        super();
+        this.subautomatas = new GestorSubAutomatas(this) {
 
             {
-                put("CEJ", new CintaCapacidad(INSTANCIA, "A"));
-                put("CEN", new CintaCapacidad(INSTANCIA, "B"));
-                put("EM", new Estacion(INSTANCIA, "C D", "E"));
-                put("R1", new Robot1(INSTANCIA));
+                instalar("CEJ", new CintaCapacidad("A"));
+                instalar("CEN", new CintaCapacidad("B"));
+                instalar("EM", new Estacion(
+                        new String[]{"C","D"},
+                        "E")
+                );
+                instalar("R1", new Robot1());
             }
-        });
+        };
     }
 
     @Override

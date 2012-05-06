@@ -44,7 +44,7 @@ public class EstacionOperario extends Estacion {
         }
     };
 
-    public EstacionOperario(Automata automata, String entrada, String salida) {
-        super(automata, entrada, salida);
+    public EstacionOperario(String entrada, String salida) {
+        super(entrada, salida);
     }
 }

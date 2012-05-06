@@ -1,7 +1,7 @@
 package infiniware.scada;
 
+import infiniware.automatas.maestro.GestorSensores;
 import infiniware.automatas.maestro.Maestro;
-import infiniware.automatas.sensores.Sensores;
 import infiniware.procesos.IProcesable;
 import infiniware.remoto.Ethernet;
 import infiniware.remoto.Registrador;
@@ -9,13 +9,13 @@ import infiniware.scada.informes.Informes;
 import infiniware.scada.modelos.ConjuntoParametros;
 import infiniware.scada.modelos.Parametros;
 import infiniware.scada.simulador.Simulador;
-import infiniware.scada.ui.IUi;
+import infiniware.scada.ui.Ui;
 import infiniware.scada.ui.cli.Cli;
 
 public class Scada implements Ethernet, IProcesable, IScada {
 
     private static final int CICLO = 200;
-    public Sensores sensores;
+    public GestorSensores sensores;
     Simulador simulador;
     GestorAlmacenamiento almacenamiento;
     public IMaestro maestro;
@@ -23,7 +23,7 @@ public class Scada implements Ethernet, IProcesable, IScada {
     boolean emergencia = false;
     public Acciones acciones;
     public static Scada INSTANCIA = new Scada();
-    public static IUi ui = Cli.INSTANCIA;
+    public static Ui ui = Cli.INSTANCIA;
     
     /**
      * Estados de los automata: id {0..3} => estado {0..9}
@@ -39,6 +39,7 @@ public class Scada implements Ethernet, IProcesable, IScada {
 
     private Scada() {
         acciones = new Acciones();
+        sensores = new GestorSensores();
     }
 
     private void sincronizar() {

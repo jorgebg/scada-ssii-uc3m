@@ -9,7 +9,11 @@ import java.util.*;
  */
 public class Sensores {
     
-    private final Map<String, Boolean> elementos;
+    protected final Map<String, Boolean> elementos;
+    
+    public Sensores() {
+        this.elementos = new HashMap<String, Boolean>();
+    }
     
     public Sensores(String[] nombres) {
         elementos = Collections.synchronizedMap(new TreeMap<String, Boolean>());
@@ -54,11 +58,11 @@ public class Sensores {
         return elementos.size();
     }
     
-    public char codificar() {
-        return (char) Integer.parseInt(toBinaryString(), 2);
+    public int codificar() {
+        return Integer.parseInt(toBinaryString(), 2);
     }
     
-    private String toBinaryString() {
+    protected String toBinaryString() {
         char[] chars = new char[Math.max(Profibus.SIZE, size())];
         Arrays.fill(chars, '0');
         for (int i = 0; i < size(); i++) {
@@ -68,9 +72,6 @@ public class Sensores {
         return str;
     }
 
-    public void actualizar(char sensores) {
-        actualizar(Integer.toBinaryString(sensores));
-    }
     
     public void actualizar(int sensores) {
         actualizar(Integer.toBinaryString(sensores));
@@ -91,7 +92,7 @@ public class Sensores {
     }
     
     public void inicializar() {
-        actualizar((char)0);
+        actualizar(0);
     }
 
     @Override

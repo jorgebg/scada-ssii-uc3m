@@ -15,9 +15,13 @@ import java.util.Map;
  * @author jorge
  */
 public class GestorSubAutomatas extends HashMap<String, SubAutomata> {
-
+    final Automata automata;
     final List<List<Integer>> estados = new ArrayList<List<Integer>>();
 
+    public GestorSubAutomatas(Automata automata) {
+        this.automata = automata;
+    }
+    
     public void indizarEstados() {
         estados.clear();
         indizarEstados(0, new ArrayList<Integer>());
@@ -60,4 +64,12 @@ public class GestorSubAutomatas extends HashMap<String, SubAutomata> {
         }
         return nombreEstados;
     }
+
+    public SubAutomata instalar(String key, SubAutomata value) {
+        if(value.automata == null)
+            value.automata = this.automata;
+        return put(key, value);
+    }
+    
+    
 }

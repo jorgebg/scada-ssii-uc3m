@@ -54,8 +54,8 @@ public class CintaCapacidad extends Cinta {
         }
     }
 
-    public CintaCapacidad(Automata automata, String salida) {
-        super(automata, salida);
+    public CintaCapacidad(String salida) {
+        super( salida);
     }
 
     public void configurar(Parametros parametros) {

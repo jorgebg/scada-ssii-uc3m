@@ -17,8 +17,9 @@ import infiniware.scada.simulador.Simulacion;
 public class Estacion extends SubAutomata {
 
     Parametros parametros = new Parametros("tiempo");
-    final String entrada;
+    final String[] entrada;
     final String salida;
+
     
     class Montaje extends Simulacion {
 
@@ -29,7 +30,7 @@ public class Estacion extends SubAutomata {
 
         @Override
         public void preaccion(int accion) {
-            Sensores sensores = new Sensores(entrada.split("\\s+"));
+            Sensores sensores = new Sensores(entrada);
             automata.actualizar(sensores);
         }
 
@@ -39,8 +40,15 @@ public class Estacion extends SubAutomata {
         }
     };
 
-    public Estacion(Automata automata, String entrada, String salida) {
-        super(automata);
+    public Estacion(String entrada, String salida) {
+        super();
+        this.entrada = new String[] { entrada };
+        this.salida = salida;
+    }
+    
+    
+    public Estacion(String[] entrada, String salida) {
+        super();
         this.entrada = entrada;
         this.salida = salida;
     }

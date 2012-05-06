@@ -4,8 +4,6 @@ import infiniware.automatas.esclavos.IEsclavo;
 import infiniware.automatas.sensores.Sensores;
 import java.rmi.RemoteException;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 class GestorEsclavos extends HashMap<Integer, IEsclavo> {
 
@@ -18,7 +16,7 @@ class GestorEsclavos extends HashMap<Integer, IEsclavo> {
     }
 
     public char ejecutar(int index, Sensores sensores) {
-        return ejecutar(index, sensores.codificar());
+        return ejecutar(index, (char)sensores.codificar());
     }
 
     public char ejecutar(int index, char sensores) {
@@ -31,9 +29,8 @@ class GestorEsclavos extends HashMap<Integer, IEsclavo> {
         }
         return 0;
     }
-    
-    public void put(byte index, IEsclavo esclavo) {
-        put((int)index, esclavo);
-    }
 
+    public void put(byte index, IEsclavo esclavo) {
+        put((int) index, esclavo);
+    }
 }

@@ -1,5 +1,6 @@
 package infiniware.automatas;
 
+import infiniware.automatas.sensores.Sensores;
 import infiniware.automatas.subautomatas.SubAutomata;
 import java.io.*;
 import java.util.*;
@@ -35,28 +36,30 @@ public class Configurador {
         for (String nombreAutomata : configuracion.keySet()) {
             Map<String, Object> configuracionAutomata = (Map<String, Object>) configuracion.get(nombreAutomata);
             Automata automata = Automata.INSTANCIAS.get(nombreAutomata);
+            Set<String> sensores = new HashSet<String>();
             for (String nombreSubAutomata : configuracionAutomata.keySet()) {
                 Map<String, Object> configuracionSubAutomata = (Map<String, Object>) configuracionAutomata.get(nombreSubAutomata);
                 SubAutomata subautomata = automata.subautomatas.get(nombreSubAutomata);
-                Set<String> sensores = new HashSet<String>();
                 List<String> estados = new ArrayList<String>();
                 List<Transicion> transiciones = new ArrayList<Transicion>();
                 for (String origen : configuracionSubAutomata.keySet()) {
                     if (!estados.contains(origen)) {
                         estados.add(origen);
                     }
-                    List<String> configuracionEstados = (List<String>)configuracionSubAutomata.get(origen);
+                    List<String> configuracionEstados = (List<String>) configuracionSubAutomata.get(origen);
                     for (String transicion : configuracionEstados) {
                         String[] partes = transicion.split("\\s+=>\\s+");
-                        String condicion = partes[0];
-                        String destino = partes[1];
+                        String destino = partes[0];
+                        String condicion = partes[1];
                         if (!estados.contains(destino)) {
                             estados.add(destino);
                         }
                         transiciones.add(new Transicion(subautomata, estados.indexOf(origen), condicion, estados.indexOf(destino)));
                         for (String sensor : condicion.split("[^\\p{L}\\p{N}]")) {
-                            if (!sensores.contains(sensor)) {
-                                sensores.add(sensor);
+                            if (!sensor.isEmpty()) {
+                                if (!sensores.contains(sensor)) {
+                                    sensores.add(sensor);
+                                }
                             }
                         }
                     }
@@ -64,8 +67,7 @@ public class Configurador {
                     subautomata.transiciones = transiciones;
                 }
             }
-            //set automata.sensores
+            automata.sensores = new Sensores((String[]) sensores.toArray(new String[sensores.size()]));
         }
     }
-
 }

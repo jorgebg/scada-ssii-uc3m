@@ -80,7 +80,7 @@ public class Robot1 extends Robot {
         }
     }
 
-    public Robot1(Automata automata) {
-        super(automata, "R1");
+    public Robot1() {
+        super("R1");
     }
 }

@@ -16,10 +16,9 @@ public abstract class SubAutomata {
     Parametros parametros = new Parametros();
     Simulaciones simulaciones = new Simulaciones();
     
-    public final Automata automata;
+    public Automata automata;
 
-    public SubAutomata(Automata automata) {
-        this.automata = automata;
+    public SubAutomata() {
         for(Class cls : this.getClass().getDeclaredClasses())
             try {
                 if(!Modifier.isAbstract(cls.getModifiers()) && 

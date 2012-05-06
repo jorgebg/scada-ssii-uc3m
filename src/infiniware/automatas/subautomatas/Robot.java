@@ -17,8 +17,8 @@ public abstract class Robot extends SubAutomata {
     Parametros parametros = new Parametros("tiempo-recogida", "tiempo-transporte");
     final String robot;
 
-    public Robot(Automata automata, String robot) {
-        super(automata);
+    public Robot(String robot) {
+        super();
         this.robot = robot;
     }
 

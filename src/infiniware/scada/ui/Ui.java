@@ -80,4 +80,6 @@ public abstract class Ui implements IUi {
     public void recuperarFalloEsclavo3() {
         simulador.recuperarFalloEsclavo((byte)3);
     }
+    
+    public abstract void actualizar(char[] estados);
 }

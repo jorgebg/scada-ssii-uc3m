@@ -30,8 +30,8 @@ public class Cinta extends SubAutomata {
         }
     };
 
-    public Cinta(Automata automata, String robot) {
-        super(automata);
+    public Cinta(String robot) {
+        super();
         this.salida = robot;
     }
 }

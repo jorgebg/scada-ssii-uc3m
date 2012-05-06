@@ -8,6 +8,8 @@ import infiniware.automatas.Automata;
 import infiniware.procesos.IProcesable;
 import infiniware.scada.ui.IUi;
 import infiniware.scada.ui.Ui;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -33,7 +35,7 @@ public class Cli extends Ui implements Runnable, IProcesable {
                 return m1.getName().compareTo(m2.getName());
             }
         });
-        String ayuda = "Opciones disponibles:";
+        String ayuda = "Opciones disponibles:\n";
         for (int i = 0; i < methods.length; i++) {
             Method method = methods[i];
             ayuda += "\t" + StringUtils.leftPad(i + "", 2, "0") + ": " + method.getName() + "\n";
@@ -41,23 +43,28 @@ public class Cli extends Ui implements Runnable, IProcesable {
 
 
         System.out.println(ayuda);
+        String linea = null;
         int accion;
-        Scanner in = new Scanner(System.in);
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
-            if (in.hasNext()) {
-                accion = Integer.parseInt(in.nextLine());
-                try {
-                    System.out.println("Ejecutando [" + methods[accion].getName() + "]");
-                    methods[accion].invoke(this);
-                } catch (InvocationTargetException ex) {
-                    System.err.println("Excepcion capturada: ");
-                    ex.printStackTrace(System.err);
-                } catch (Exception e) {
-                    System.out.println("Sintaxis incorrecta.");
-                    System.out.println(ayuda);
-                }
-                System.out.print("ui@scada: ");
+            System.out.print("ui@scada: ");
+            try {
+                linea = in.readLine();
+            } catch (Exception e) {
+                e.printStackTrace(System.err);
             }
+            accion = Integer.parseInt(linea);
+            try {
+                System.out.println("Ejecutando [" + methods[accion].getName() + "]");
+                methods[accion].invoke(this);
+            } catch (InvocationTargetException ex) {
+                System.err.println("Excepcion capturada: ");
+                ex.printStackTrace(System.err);
+            } catch (Exception e) {
+                System.out.println("Sintaxis incorrecta.");
+                System.out.println(ayuda);
+            }
+
         }
     }
 

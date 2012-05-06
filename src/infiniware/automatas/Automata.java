@@ -15,14 +15,13 @@ import infiniware.scada.modelos.Parametros;
 import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Automata implements Profibus, IProcesable, IConexion, IRegistrable {
 
     public Sensores sensores;
     public GestorSubAutomatas subautomatas;
-    public static final HashMap<String, Automata> INSTANCIAS = new HashMap<String, Automata>() {
+    public static final GestorInstancias INSTANCIAS = new GestorInstancias() {
 
         {
             put("Maestro", Maestro.INSTANCIA);
@@ -30,15 +29,7 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
             put("Esclavo2", Esclavo2.INSTANCIA);
             put("Esclavo3", Esclavo3.INSTANCIA);
         }
-        public Automata get(int id) {
-            if(id==0) return get("Maestro");
-            else return get("Esclavo"+id);
-        }
     };
-
-    protected Automata(GestorSubAutomatas subautomatas) {
-        this.subautomatas = subautomatas;
-    }
 
     public void inicializar(char sensores) {
         this.sensores.inicializar(sensores);
@@ -87,8 +78,8 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
         System.out.println("Automata \"" + getRemoteName() + "\" registrado en " + getHost() + ":" + getPort());
     }
 
-    public void actualizar(Sensores postcondiciones) {
-        this.sensores.actualizar(postcondiciones);
+    public void actualizar(Sensores sensores) {
+        this.sensores.actualizar(sensores);
     }
 
     public abstract byte getId();

@@ -10,10 +10,6 @@ public abstract class Esclavo extends Automata implements IEsclavo {
 
     protected IMaestro maestro;
     
-    protected Esclavo(GestorSubAutomatas subautomatas){
-        super(subautomatas);
-    }
-    
     public void desconectar() {
         maestro = null;
         super.desconectar();
@@ -41,7 +37,7 @@ public abstract class Esclavo extends Automata implements IEsclavo {
     private void notificar() {
        
         try {
-            maestro.notificar(getId(), sensores.codificar());
+            maestro.notificar(getId(), (char)sensores.codificar());
         } catch (RemoteException ex) {
             System.err.println("Error al notificar al maestro: ");
             ex.printStackTrace(System.err);

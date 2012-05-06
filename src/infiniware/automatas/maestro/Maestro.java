@@ -15,27 +15,30 @@ import java.util.Map;
 
 public class Maestro extends Automata implements infiniware.scada.IMaestro, infiniware.automatas.esclavos.IMaestro {
 
-    GestorSensores sensores;
     GestorEsclavos esclavos;
-    Scada scada;
+    Scada scada = Scada.INSTANCIA;
     char[] estados = new char[4];
+    public GestorSensores sensores;
     public static Maestro INSTANCIA = new Maestro();
 
     protected Maestro() {
-        super(new GestorSubAutomatas() {
+        super();
+        this.subautomatas = new GestorSubAutomatas(this) {
 
             {
-                put("CT", new Cinta(INSTANCIA, "R2"));
-                put("R2", new Robot2(INSTANCIA));
+                instalar("CT", new Cinta("R2"));
+                instalar("R2", new Robot2());
             }
-        });
+        };
+        this.sensores = new GestorSensores();
+        this.esclavos = new GestorEsclavos();
     }
 
     /*
      * infiniware.automatas.esclavos.IMaestro {{{
      */
     public void notificar(byte esclavo, char sensores) {
-        this.sensores.actualizar(esclavo, sensores);
+        this.sensores.actualizar(sensores);
     }
     /*
      * }}}
@@ -47,8 +50,10 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
     public char[] ciclo(Sensores sensores) {
         this.sensores.actualizar(sensores);
         estados[getId()] = ejecutar(sensores);
+        char estado;
         for (int id = 1; id < esclavos.size(); id++) {
-            estados[id] = esclavos.ejecutar(id, this.sensores.get(id));
+            estado = (char)Esclavo.INSTANCIAS.get(id).sensores.codificar();
+            estados[id] = esclavos.ejecutar(id, estado);
         }
         return estados;
     }
@@ -73,7 +78,6 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
     }
 
     public void conectar() {
-        esclavos = new GestorEsclavos();
         for (Esclavo esclavo : new Esclavo[]{
                     Esclavo1.INSTANCIA,
                     Esclavo2.INSTANCIA,
@@ -129,4 +133,5 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
             ex.printStackTrace(System.err);
         }
     }
+
 }
