@@ -32,11 +32,11 @@ public class Gui extends Ui {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public Thread iniciarProceso() {
+    public Thread mostrar() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public void detenerProceso() {
+    public void ocultar() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

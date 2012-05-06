@@ -1,11 +1,10 @@
 package infiniware.scada.ui;
 
-import infiniware.procesos.IProcesable;
 import infiniware.scada.informes.Informes;
 import infiniware.scada.modelos.ConjuntoParametros;
 import infiniware.scada.modelos.Parametros;
 
-public interface IUi extends IProcesable {
+public interface IUi {
     
     
     /**

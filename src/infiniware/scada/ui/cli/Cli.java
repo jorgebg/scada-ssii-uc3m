@@ -12,14 +12,17 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  *
  * @author jorge
  */
-public class Cli extends Ui implements Runnable, IProcesable {
+public class Cli extends Ui implements Runnable {
 
     public static final Cli INSTANCIA = new Cli();
     private Thread thread;
@@ -68,13 +71,13 @@ public class Cli extends Ui implements Runnable, IProcesable {
         }
     }
 
-    public Thread iniciarProceso() {
+    public Thread mostrar() {
         thread = new Thread(this);
         thread.start();
         return thread;
     }
 
-    public void detenerProceso() {
+    public void ocultar() {
         synchronized (INSTANCIA) {
             thread.notify();
         }

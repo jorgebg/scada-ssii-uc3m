@@ -151,6 +151,7 @@ public class Scada implements Ethernet, IProcesable, IScada {
     public Thread iniciarProceso() {
         simulador = Simulador.INSTANCIA;
         maestro = Maestro.INSTANCIA;
+        ui.mostrar();
         return Registrador.thread;
     }
     
@@ -158,6 +159,7 @@ public class Scada implements Ethernet, IProcesable, IScada {
     public void detenerProceso() {
         simulador = null;
         maestro = null;
+        ui.ocultar();
     }
     /* }}} */
 

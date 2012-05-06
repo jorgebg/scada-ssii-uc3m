@@ -82,4 +82,9 @@ public abstract class Ui implements IUi {
     }
     
     public abstract void actualizar(char[] estados);
+    
+    
+    public abstract Thread mostrar();
+
+    public abstract void ocultar();
 }

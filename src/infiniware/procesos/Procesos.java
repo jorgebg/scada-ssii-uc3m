@@ -22,7 +22,6 @@ public enum Procesos implements IProceso {
         public Thread iniciarProceso() {
             Thread thread = Maestro.INSTANCIA.iniciarProceso();
             Scada.INSTANCIA.iniciarProceso();
-            Scada.ui.iniciarProceso();
             return thread;
         }
 
