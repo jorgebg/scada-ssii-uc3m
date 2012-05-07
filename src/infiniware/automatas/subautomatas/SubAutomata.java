@@ -5,6 +5,7 @@ import infiniware.automatas.Transicion;
 import infiniware.scada.modelos.Parametros;
 import infiniware.scada.simulador.Simulacion;
 import infiniware.scada.simulador.Simulaciones;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
@@ -15,25 +16,29 @@ public abstract class SubAutomata {
     public int estado = 0;
     Parametros parametros = new Parametros();
     Simulaciones simulaciones = new Simulaciones();
-    
     public Automata automata;
     public String nombre;
 
     public SubAutomata() {
-        for(Class cls : this.getClass().getDeclaredClasses())
+        Class subautomata = this.getClass();
+        for (Class cls : subautomata.getDeclaredClasses()) {
             try {
-                if(!Modifier.isAbstract(cls.getModifiers()) && 
-                    cls.isAssignableFrom(Simulacion.class))
-                    simulaciones.put(cls.getSimpleName(), (Simulacion)cls.newInstance());
-        } catch (Exception ex) {
-            ex.printStackTrace(System.err);
+                if (!Modifier.isAbstract(cls.getModifiers())
+                        && Simulacion.class.isAssignableFrom(cls)) {
+                    Simulacion simulacion = (Simulacion) cls.getDeclaredConstructor(new Class[] { subautomata }).newInstance(new Object[] { this });
+                    simulaciones.put(cls.getSimpleName(), simulacion);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace(System.err);
+            }
         }
+        System.out.println(simulaciones);
     }
 
     public int ejecutar() {
         for (Transicion transicion : transiciones) {
             if (transicion.cumple()) {
-                //new Simulacion(transicion).lanzar();
+                System.out.println(nombre + ": Transitando de [" + estado + "]" + " a [" + transicion.destino + "]");
                 estado = transicion.destino;
                 simular();
                 break;
@@ -50,6 +55,7 @@ public abstract class SubAutomata {
         String estado = this.estados.get(this.estado);
         Simulacion simulacion = simulaciones.get(estado);
         if (simulacion != null) {
+            System.out.println(nombre + ": Iniciando simulacion " + simulacion);
             simulacion.lanzar();
         }
     }
