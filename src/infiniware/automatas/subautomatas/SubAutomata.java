@@ -32,7 +32,6 @@ public abstract class SubAutomata {
                 ex.printStackTrace(System.err);
             }
         }
-        System.out.println(simulaciones);
     }
 
     public int ejecutar() {
