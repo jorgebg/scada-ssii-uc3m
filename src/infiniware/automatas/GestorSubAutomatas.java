@@ -15,30 +15,42 @@ import java.util.Map;
  * @author jorge
  */
 public class GestorSubAutomatas extends HashMap<String, SubAutomata> {
+
     final Automata automata;
     final List<List<Integer>> estados = new ArrayList<List<Integer>>();
 
     public GestorSubAutomatas(Automata automata) {
         this.automata = automata;
     }
-    
+
     public void indizarEstados() {
         estados.clear();
         indizarEstados(0, new ArrayList<Integer>());
+        //System.out.println(estados);
     }
 
-    private void indizarEstados(int nivel, List<Integer> valores) {
-        if (nivel < size()) {
-            for (int subautomata = nivel; subautomata < this.size(); subautomata++) {
-                for (int estado = 0; estado < get(subautomata).estados.size(); estado++) {
-                    valores.add(estado);
-                    indizarEstados(nivel + 1, valores);
-                }
+    private void indizarEstados(int subautomata, List<Integer> valores) {
+        /*
+         * System.out.print("valores: "+valores); System.out.print(" nivel:
+         * "+nivel); System.out.println(" size: "+size());
+         */
+
+        //System.out.println("estados #" + subautomata + " " + get(subautomata).estados);
+        for (int estado = 0; estado < get(subautomata).estados.size(); estado++) {
+            //System.out.println("Entrando en: #" + subautomata+"."+estado+" " +get(subautomata).nombre+"."+ get(subautomata).estados.get(estado) );
+            valores.add(estado);
+            if (subautomata >= size() - 1) {
+                estados.add(new ArrayList<Integer>(valores));
+            } else {
+                indizarEstados(subautomata + 1, valores);
             }
-        } else {
-            estados.add(valores);
-            valores.clear();
+            valores.remove(valores.size() - 1);
         }
+        //System.out.println("cambio #" + subautomata);
+    }
+
+    public SubAutomata get(int id) {
+        return (SubAutomata) values().toArray()[id];
     }
 
     public char codificarEstados() {
@@ -48,7 +60,7 @@ public class GestorSubAutomatas extends HashMap<String, SubAutomata> {
         }
         return (char) estados.indexOf(estado);
     }
-    
+
     public List<Integer> decodificarEstados(char estado) {
         return estados.get(estado);
     }
@@ -57,7 +69,7 @@ public class GestorSubAutomatas extends HashMap<String, SubAutomata> {
         Map<String, String> nombreEstados = new HashMap<String, String>();
         int id = 0;
         for (Integer e : estados.get(estado)) {
-            String nombreSubAutomata = (String)this.keySet().toArray()[id];
+            String nombreSubAutomata = (String) this.keySet().toArray()[id];
             String nombreEstado = get(id).estados.get(e);
             nombreEstados.put(nombreSubAutomata, nombreEstado);
             id++;
@@ -66,10 +78,12 @@ public class GestorSubAutomatas extends HashMap<String, SubAutomata> {
     }
 
     public SubAutomata instalar(String key, SubAutomata value) {
-        if(value.automata == null)
+        if (value.automata == null) {
             value.automata = this.automata;
+        }
+        if (value.nombre == null) {
+            value.nombre = key;
+        }
         return put(key, value);
     }
-    
-    
 }

@@ -1,5 +1,7 @@
 package infiniware.automatas;
 
+import infiniware.automatas.esclavos.Esclavo;
+import infiniware.automatas.maestro.Maestro;
 import infiniware.automatas.sensores.Sensores;
 import infiniware.automatas.subautomatas.SubAutomata;
 import java.io.*;
@@ -32,10 +34,11 @@ public class Configurador {
     }
 
     public static void configurar() {
+        final GestorInstancias automatas = Automata.INSTANCIAS;
         cargar();
         for (String nombreAutomata : configuracion.keySet()) {
             Map<String, Object> configuracionAutomata = (Map<String, Object>) configuracion.get(nombreAutomata);
-            Automata automata = Automata.INSTANCIAS.get(nombreAutomata);
+            Automata automata = automatas.get(nombreAutomata);
             Set<String> sensores = new HashSet<String>();
             for (String nombreSubAutomata : configuracionAutomata.keySet()) {
                 Map<String, Object> configuracionSubAutomata = (Map<String, Object>) configuracionAutomata.get(nombreSubAutomata);
@@ -68,6 +71,16 @@ public class Configurador {
                 }
             }
             automata.sensores = new Sensores((String[]) sensores.toArray(new String[sensores.size()]));
+            automata.subautomatas.indizarEstados();
         }
+        Maestro.INSTANCIA.sensores.esclavos = new HashMap<Integer, Sensores>() {
+
+            {
+                for (int i = 1; i <= 3; i++) {
+                    put(i, automatas.get(i).sensores);
+                }
+
+            }
+        };
     }
 }

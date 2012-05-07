@@ -104,5 +104,6 @@ public class Sensores {
         this.inicializar();
         this.actualizar(sensores);
     }
+
     
 };

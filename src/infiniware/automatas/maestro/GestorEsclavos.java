@@ -24,7 +24,7 @@ class GestorEsclavos extends HashMap<Integer, IEsclavo> {
         try {
             return get(index).ejecutar(sensores);
         } catch (RemoteException ex) {
-            System.err.println("Error al llamar remotamente a 'ciclo' en el esclavo " + index + ".");
+            System.err.println("Error al llamar remotamente a 'ejecutar' en el esclavo " + index + ".");
             ex.printStackTrace(System.err);
         }
         return 0;

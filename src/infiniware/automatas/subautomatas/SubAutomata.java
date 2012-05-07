@@ -17,6 +17,7 @@ public abstract class SubAutomata {
     Simulaciones simulaciones = new Simulaciones();
     
     public Automata automata;
+    public String nombre;
 
     public SubAutomata() {
         for(Class cls : this.getClass().getDeclaredClasses())

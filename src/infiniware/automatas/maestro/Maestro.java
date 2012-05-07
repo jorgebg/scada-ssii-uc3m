@@ -52,7 +52,7 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
         estados[getId()] = ejecutar(sensores);
         char estado;
         for (int id = 1; id < esclavos.size(); id++) {
-            estado = (char)Esclavo.INSTANCIAS.get(id).sensores.codificar();
+            estado = this.sensores.codificar(id);
             estados[id] = esclavos.ejecutar(id, estado);
         }
         return estados;

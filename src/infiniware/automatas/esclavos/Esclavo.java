@@ -1,6 +1,7 @@
 package infiniware.automatas.esclavos;
 
 import infiniware.automatas.Automata;
+import infiniware.automatas.GestorInstancias;
 import infiniware.automatas.GestorSubAutomatas;
 import infiniware.automatas.maestro.Maestro;
 import infiniware.automatas.sensores.Sensores;
