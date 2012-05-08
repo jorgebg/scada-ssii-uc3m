@@ -16,7 +16,7 @@ public interface IMaestro extends Ethernet {
 
     public void configurarAutomatas(ConjuntoParametros parametros);
 
-    public char[] ciclo(Sensores sensores);
+    public char[] ciclo(int sensores);
 
     public void parada();
 

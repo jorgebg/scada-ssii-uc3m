@@ -19,25 +19,34 @@ public class Transicion {
 
     public boolean cumple() {
         boolean cumple = true;
-        char operacion = '+';
+        char operacion = 0;
         boolean negacion = false;
         String buffer = "";
+        //System.out.println(codicion);
         for (char token : this.codicion.toCharArray()) {
+            //System.out.println("{" + buffer + "}" + operacion);
             if (token == '!') {
                 negacion = true;
             } else {
                 if (esOperacion(token)) {
                     boolean valor = subautomata.automata.sensores.get(buffer);
                     buffer = "";
-                    if (negacion) {
-                        valor = !valor;
-                        negacion = false;
+                    if (operacion == 0) {
+                        operacion = token;
+                        cumple = valor;
+                    } else {
+                        if (negacion) {
+                            valor = !valor;
+                            negacion = false;
+                        }
+                        cumple = operar(operacion, cumple, valor);
                     }
-                    cumple = operar(operacion, cumple, valor);
+
                 } else {
                     buffer = buffer + token;
                 }
             }
+            //System.out.println("[" + cumple + "]");
         }
         return cumple;
     }

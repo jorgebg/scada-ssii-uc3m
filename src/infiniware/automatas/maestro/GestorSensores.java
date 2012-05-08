@@ -22,5 +22,9 @@ public class GestorSensores extends Sensores {
     public char codificar(int id) {
         return (char) esclavos.get(id).codificar();
     }
+
+    public void putAll(Sensores sensores) {
+        elementos.putAll(sensores.elementos);
+    }
     
 }

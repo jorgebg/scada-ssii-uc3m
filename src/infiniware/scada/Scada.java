@@ -65,7 +65,7 @@ public class Scada implements Ethernet, IProcesable, IScada {
                 accion.run();
             }
             simulador.ciclo();
-            estados = maestro.ciclo(sensores);
+            estados = maestro.ciclo(sensores.codificar());
             ui.actualizar(estados);
             sincronizar();
         }

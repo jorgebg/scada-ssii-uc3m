@@ -37,7 +37,7 @@ public abstract class SubAutomata {
     public int ejecutar() {
         for (Transicion transicion : transiciones) {
             if (transicion.cumple()) {
-                System.out.println(nombre + ": Transitando de [" + estados.get(estado) + "]" + " a [" + estados.get(transicion.destino) + "]");
+                System.out.println(nombre + ": Transitando de [" + estados.get(estado) + "]" + " a [" + estados.get(transicion.destino) + "] cumpliendose " + transicion.codicion + " (" + automata.sensores + ")");
                 estado = transicion.destino;
                 simular();
                 break;

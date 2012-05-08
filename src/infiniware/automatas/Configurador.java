@@ -72,6 +72,8 @@ public class Configurador {
             }
             automata.sensores = new Sensores((String[]) sensores.toArray(new String[sensores.size()]));
             automata.subautomatas.indizarEstados();
+            if(nombreAutomata.equals("Maestro"))
+                Maestro.INSTANCIA.sensores.putAll(automata.sensores);
         }
         Maestro.INSTANCIA.sensores.esclavos = new HashMap<Integer, Sensores>() {
 

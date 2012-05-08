@@ -9,7 +9,7 @@ import java.util.*;
  */
 public class Sensores {
     
-    protected final Map<String, Boolean> elementos;
+    public final Map<String, Boolean> elementos;
     
     public Sensores() {
         this.elementos = new HashMap<String, Boolean>();
