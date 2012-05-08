@@ -37,7 +37,7 @@ public abstract class SubAutomata {
     public int ejecutar() {
         for (Transicion transicion : transiciones) {
             if (transicion.cumple()) {
-                System.out.println(nombre + ": Transitando de [" + estado + "]" + " a [" + transicion.destino + "]");
+                System.out.println(nombre + ": Transitando de [" + estados.get(estado) + "]" + " a [" + estados.get(transicion.destino) + "]");
                 estado = transicion.destino;
                 simular();
                 break;
@@ -54,7 +54,7 @@ public abstract class SubAutomata {
         String estado = this.estados.get(this.estado);
         Simulacion simulacion = simulaciones.get(estado);
         if (simulacion != null) {
-            System.out.println(nombre + ": Iniciando simulacion " + simulacion);
+            System.out.println(nombre + ": Iniciando simulacion [" + simulacion.getClass().getSimpleName() + "]");
             simulacion.lanzar();
         }
     }

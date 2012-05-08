@@ -14,7 +14,7 @@ import infiniware.scada.simulador.Simulacion;
  */
 public class Cinta extends SubAutomata {
 
-    Parametros parametros = new Parametros("velocidad", "longitud");
+     
     final String salida;
 
     class Movimiento extends Simulacion {
@@ -33,5 +33,6 @@ public class Cinta extends SubAutomata {
     public Cinta(String robot) {
         super();
         this.salida = robot;
+        parametros = new Parametros("velocidad", "longitud");
     }
 }

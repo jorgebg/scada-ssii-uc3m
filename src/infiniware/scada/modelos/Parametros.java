@@ -24,4 +24,14 @@ public class Parametros extends HashMap<String, Integer> {
             put(clave, null);
         return this;
     }
+
+    @Override
+    public Integer get(Object key) {
+        Integer result = super.get(key);
+        if(result == null)
+            System.err.println("Error al obtener el parametro \"" + key + "\": No se han inicializado.");
+        return result;
+    }
+    
+    
 }

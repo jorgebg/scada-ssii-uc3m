@@ -59,6 +59,7 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
     }
 
     public void inicializar() {
+        //esclavos.get(1).i
     }
 
     public void emergencia() {

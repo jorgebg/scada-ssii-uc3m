@@ -13,7 +13,7 @@ import infiniware.scada.modelos.Parametros;
  */
 public class CintaCapacidad extends Cinta {
 
-    Parametros parametros = new Parametros("velocidad", "longitud", "capacidad");
+    
     Boolean[] contenido;
 
     class Movimiento extends Cinta.Movimiento {
@@ -56,6 +56,7 @@ public class CintaCapacidad extends Cinta {
 
     public CintaCapacidad(String salida) {
         super( salida);
+        parametros = new Parametros("velocidad", "longitud", "capacidad");
     }
 
     public void configurar(Parametros parametros) {

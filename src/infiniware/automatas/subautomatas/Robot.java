@@ -4,7 +4,6 @@
  */
 package infiniware.automatas.subautomatas;
 
-import infiniware.automatas.Automata;
 import infiniware.scada.modelos.Parametros;
 import infiniware.scada.simulador.Simulacion;
 
@@ -14,12 +13,12 @@ import infiniware.scada.simulador.Simulacion;
  */
 public abstract class Robot extends SubAutomata {
 
-    Parametros parametros = new Parametros("tiempo-recogida", "tiempo-transporte");
     final String robot;
 
     public Robot(String robot) {
         super();
         this.robot = robot;
+        parametros = new Parametros("tiempo-recogida", "tiempo-transporte");
     }
 
     abstract class Transporte extends Simulacion {

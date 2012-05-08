@@ -13,8 +13,6 @@ import infiniware.scada.modelos.Parametros;
  */
 public class Robot2 extends Robot {
 
-    Parametros parametros = super.parametros.mezclar("tiempo-transporte-soldado");
-
     class MueveConjuntoMontado extends Transporte {
 
         public void postaccion(int accion) {
@@ -91,5 +89,6 @@ public class Robot2 extends Robot {
 
     public Robot2() {
         super("R2");
+        parametros = super.parametros.mezclar("tiempo-transporte-soldado");
     }
 }
