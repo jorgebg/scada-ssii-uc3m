@@ -18,6 +18,8 @@ public class Transicion {
     }
 
     public boolean cumple() {
+        if(subautomata.estado != origen)
+            return false;
         boolean cumple = true;
         char operacion = 0;
         boolean negacion = false;
@@ -40,6 +42,8 @@ public class Transicion {
                             negacion = false;
                         }
                         cumple = operar(operacion, cumple, valor);
+                        if(!cumple)
+                            break;
                     }
 
                 } else {
