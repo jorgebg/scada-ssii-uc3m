@@ -1,30 +1,36 @@
 package infiniware.automatas.maestro;
 
 import infiniware.automatas.Automata;
-import infiniware.automatas.esclavos.Esclavo;
 import infiniware.automatas.sensores.Sensores;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class GestorSensores extends Sensores {
 
-    public Map<Integer,Sensores> esclavos;
+    public Map<Integer, Sensores> automatas = Collections.synchronizedMap(new HashMap<Integer, Sensores>());
 
-    @Override
-    public void actualizar(String sensores) {
+    public void actualizar(char sensores) {
         super.actualizar(sensores);
-        for (Sensores esclavo : esclavos.values()) {
+        for (Sensores esclavo : automatas.values()) {
             esclavo.actualizar(this);
         }
     }
-    
-    
+
     public char codificar(int id) {
-        return (char) esclavos.get(id).codificar();
+        return (char) automatas.get(id).codificar();
     }
 
-    public void putAll(Sensores sensores) {
-        elementos.putAll(sensores.elementos);
+    public void instalar() {
+        for (Automata automata : Automata.INSTANCIAS.values()) {
+            insertar(automata.sensores);
+            automatas.put((int) automata.getId(), automata.sensores.clone());
+        }
     }
     
+    public void actualizar(int id, char sensores) {
+        Sensores automata = this.automatas.get(id);
+        automata.actualizar(sensores);
+        this.actualizar(automata);
+    }
 }

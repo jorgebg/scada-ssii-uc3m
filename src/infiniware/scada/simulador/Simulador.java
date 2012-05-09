@@ -45,7 +45,7 @@ public class Simulador implements ISimulador {
         scada.acciones.add(
                 new Runnable() {
                     public void run() {
-                        scada.sensores.set("CPD", false);
+                        scada.gestorSensores.set("CPD", false);
                     }
                 });
     }

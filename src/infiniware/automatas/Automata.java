@@ -19,7 +19,7 @@ import java.util.Map;
 
 public abstract class Automata implements Profibus, IProcesable, IConexion, IRegistrable {
 
-    public Sensores sensores;
+    public final Sensores sensores;
     public GestorSubAutomatas subautomatas;
     public static final GestorInstancias INSTANCIAS = new GestorInstancias() {
 
@@ -31,6 +31,10 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
         }
     };
 
+    public Automata() {
+        sensores = new Sensores();
+    }
+    
     public void inicializar(char sensores) {
         this.sensores.inicializar(sensores);
     }

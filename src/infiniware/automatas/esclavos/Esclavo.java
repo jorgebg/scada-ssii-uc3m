@@ -20,8 +20,8 @@ public abstract class Esclavo extends Automata implements IEsclavo {
         this.maestro = this.<IMaestro>conectar(Maestro.INSTANCIA);
     }
 
-    public void actualizar(Sensores postcondiciones) {
-        super.actualizar(postcondiciones);
+    public void actualizar(Sensores sensores) {
+        super.actualizar(sensores);
         notificar();
     }
     

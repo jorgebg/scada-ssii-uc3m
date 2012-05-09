@@ -9,20 +9,18 @@ import java.util.*;
  */
 public class Sensores {
     
-    public final Map<String, Boolean> elementos;
+    public final Map<String, Boolean> elementos = Collections.synchronizedMap(new TreeMap<String, Boolean>());
     
     public Sensores() {
-        this.elementos = new HashMap<String, Boolean>();
+        
     }
     
     public Sensores(String[] nombres) {
-        elementos = Collections.synchronizedMap(new TreeMap<String, Boolean>());
-        for(String nombre : nombres)
-            elementos.put(nombre, false);
+        insertar(nombres);
     }
     
     public Sensores(Sensores sensores) {
-        this.elementos = Collections.synchronizedMap(new TreeMap<String, Boolean>(sensores.elementos));
+        insertar(sensores.elementos);
     }
     
     @Override
@@ -105,5 +103,17 @@ public class Sensores {
         this.actualizar(sensores);
     }
 
+
+    public void insertar(Sensores sensores) {
+        this.elementos.putAll(sensores.elementos);
+    }
+    public void insertar(Map<String, Boolean> elementos) {
+        this.elementos.putAll(elementos);
+    }
+
+    public void insertar(String[] nombres) {
+        for(String nombre : nombres)
+            this.elementos.put(nombre, false);
+    }
     
 };

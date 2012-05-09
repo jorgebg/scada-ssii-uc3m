@@ -16,10 +16,10 @@ import java.util.Map;
 public class Maestro extends Automata implements infiniware.scada.IMaestro, infiniware.automatas.esclavos.IMaestro {
 
     GestorEsclavos esclavos;
+    char[] estados;
+    public final GestorSensores mapaSensores;
+    public static final Maestro INSTANCIA = new Maestro();
     Scada scada = Scada.INSTANCIA;
-    char[] estados = new char[4];
-    public GestorSensores sensores;
-    public static Maestro INSTANCIA = new Maestro();
 
     protected Maestro() {
         super();
@@ -30,15 +30,16 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
                 instalar("R2", new Robot2());
             }
         };
-        this.sensores = new GestorSensores();
-        this.esclavos = new GestorEsclavos();
+        esclavos = new GestorEsclavos();
+        mapaSensores = new GestorSensores();
+        estados = new char[4];
     }
 
     /*
      * infiniware.automatas.esclavos.IMaestro {{{
      */
-    public void notificar(byte esclavo, char sensores) {
-        this.sensores.actualizar(sensores);
+    public void notificar(byte automata, char sensores) {
+        this.mapaSensores.actualizar(automata, sensores);
     }
     /*
      * }}}
@@ -48,11 +49,11 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
      * infiniware.scada.IMaestro {{{
      */
     public char[] ciclo(int sensores) {
-        this.sensores.actualizar(sensores);
+        this.mapaSensores.actualizar(sensores);
         estados[getId()] = ejecutar(this.sensores);
         char estado;
         for (int id = 1; id < esclavos.size(); id++) {
-            estado = this.sensores.codificar(id);
+            estado = this.mapaSensores.codificar(id);
             estados[id] = esclavos.ejecutar(id, estado);
         }
         return estados;
@@ -135,4 +136,13 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
         }
     }
 
+    public void actualizar(Sensores sensores) {
+        super.actualizar(sensores);
+        notificar(getId(), (char) this.sensores.codificar());
+    }
+
+    public void actualizar(String sensor, boolean estado) {
+        super.actualizar(sensores);
+        notificar(getId(), (char) this.sensores.codificar());
+    }
 }

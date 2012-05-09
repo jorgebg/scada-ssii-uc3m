@@ -6,6 +6,7 @@ package infiniware.scada.ui.cli;
 
 import infiniware.automatas.Automata;
 import infiniware.procesos.IProcesable;
+import infiniware.scada.Scada;
 import infiniware.scada.ui.IUi;
 import infiniware.scada.ui.Ui;
 import java.io.BufferedReader;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -92,5 +94,8 @@ public class Cli extends Ui implements Runnable {
                     automata.subautomatas.decodificarNombreEstados(estados[id]));
         }
         System.out.println(arbol);
+        System.out.println(Scada.INSTANCIA.gestorSensores);
+        System.out.println();
+        //MapUtils.debugPrint(System.out, "Estados", arbol);
     }
 }

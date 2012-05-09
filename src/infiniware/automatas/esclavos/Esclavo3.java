@@ -6,7 +6,7 @@ import infiniware.automatas.subautomatas.EstacionOperario;
 
 public class Esclavo3 extends Esclavo {
 
-    public static Esclavo3 INSTANCIA = new Esclavo3();
+    public static final Esclavo3 INSTANCIA = new Esclavo3();
     public Esclavo3() {
         super();
         this.subautomatas = new GestorSubAutomatas(this) {

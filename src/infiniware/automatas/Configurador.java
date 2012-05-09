@@ -4,6 +4,7 @@ import infiniware.automatas.esclavos.Esclavo;
 import infiniware.automatas.maestro.Maestro;
 import infiniware.automatas.sensores.Sensores;
 import infiniware.automatas.subautomatas.SubAutomata;
+import infiniware.scada.Scada;
 import java.io.*;
 import java.util.*;
 import org.yaml.snakeyaml.Yaml;
@@ -70,19 +71,10 @@ public class Configurador {
                     subautomata.transiciones = transiciones;
                 }
             }
-            automata.sensores = new Sensores((String[]) sensores.toArray(new String[sensores.size()]));
+            automata.sensores.insertar((String[]) sensores.toArray(new String[sensores.size()]));
             automata.subautomatas.indizarEstados();
-            if(nombreAutomata.equals("Maestro"))
-                Maestro.INSTANCIA.sensores.putAll(automata.sensores);
         }
-        Maestro.INSTANCIA.sensores.esclavos = new HashMap<Integer, Sensores>() {
-
-            {
-                for (int i = 1; i <= 3; i++) {
-                    put(i, automatas.get(i).sensores);
-                }
-
-            }
-        };
+        Maestro.INSTANCIA.mapaSensores.instalar();
+        Scada.INSTANCIA.gestorSensores.instalar();
     }
 }
