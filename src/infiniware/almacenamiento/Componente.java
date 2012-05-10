@@ -1,7 +1,7 @@
 package infiniware.almacenamiento;
 
 import infiniware.automatas.Automata;
-import infiniware.scada.modelos.ConjuntoParametros;
+import infiniware.scada.modelos.Parametros;
 
 public abstract class Componente {
 	
@@ -11,11 +11,11 @@ public abstract class Componente {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    public void guardar(String nombre, ConjuntoParametros parametros) {
+    public void guardar(String nombre, Parametros parametros) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    public ConjuntoParametros cargar(String nombre) {
+    public Parametros cargar(String nombre) {
         throw new UnsupportedOperationException("Not yet implemented");
  
     }
