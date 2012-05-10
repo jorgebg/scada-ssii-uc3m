@@ -29,7 +29,7 @@ public abstract class Ui implements IUi {
         scada.arrancar();
     }
 
-    public ConjuntoParametros cargarConfiguracion(String nombre) {
+    public Parametros cargarConfiguracion(String nombre) {
         return scada.cargarConfiguracion(nombre);
     }
 
@@ -45,7 +45,7 @@ public abstract class Ui implements IUi {
         return scada.generarInforme();
     }
 
-    public void guardarConfiguracion(String nombre, ConjuntoParametros parametros) {
+    public void guardarConfiguracion(String nombre, Parametros parametros) {
         scada.guardarConfiguracion(nombre, parametros);
     }
 

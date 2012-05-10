@@ -20,7 +20,7 @@ public interface IUi {
     /**
      * @UC 005
      */
-    ConjuntoParametros cargarConfiguracion(String nombre);
+    Parametros cargarConfiguracion(String nombre);
 
     /**
      * @UC 003
@@ -45,7 +45,7 @@ public interface IUi {
     /**
      * @UC 004
      */
-    void guardarConfiguracion(String nombre, ConjuntoParametros parametros);
+    void guardarConfiguracion(String nombre, Parametros parametros);
 
 
 
