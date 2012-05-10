@@ -99,7 +99,7 @@ public class Scada implements Ethernet, IProcesable, IScada {
      * @UC 004
      */
     @Override
-    public void guardarConfiguracion(String nombre, Parametros parametros) {
+    public void guardarConfiguracion(String nombre, ConjuntoParametros parametros) {
         almacenamiento.configuracion.guardar(nombre, parametros);
     }
 
@@ -107,7 +107,7 @@ public class Scada implements Ethernet, IProcesable, IScada {
      * @UC 005
      */
     @Override
-    public Parametros cargarConfiguracion(String nombre) {
+    public ConjuntoParametros cargarConfiguracion(String nombre) {
         return almacenamiento.configuracion.cargar(nombre);
     }
 
