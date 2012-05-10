@@ -1,43 +1,50 @@
 package infiniware.almacenamiento;
 
 import static org.junit.Assert.*;
-
+import java.io.*;
 import java.util.HashMap;
-
 import infiniware.almacenamiento.Configuracion;
-import infiniware.scada.modelos.ConjuntoParametros;
 import infiniware.scada.modelos.Parametros;
-
-import org.apache.commons.collections.map.HashedMap;
 import org.junit.Test;
+import org.junit.Before;
+import org.junit.After;
 
 public class ConfiguracionTest {
-	
-	private ConjuntoParametros params; 
-	
-	private void initilizeParams(){
-		params = new ConjuntoParametros();
-		for(int i = 0; i == 6;i++){
-			Parametros par = new Parametros();
-			for(int j = 0; j == 6; i++){
-				String nombre = "Parámetro" + i + "-" + j;
-				par.put(nombre, j);
-			}
-			String nombre = "Conjunto de Parámetros-"+i;
-			HashMap<String, Parametros> conjunto= new HashMap<String, Parametros>();
-			conjunto.put(nombre, par);
-			params.put(i, conjunto);
-		}
+		
+	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+	private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+
+	@Before
+	public void setUpStreams() {
+	    System.setOut(new PrintStream(outContent));
+	    System.setErr(new PrintStream(errContent));
 	}
 
+	@After
+	public void cleanUpStreams() {
+	    System.setOut(null);
+	    System.setErr(null);
+	}
+	
 	@Test
 	public void testGuardar() {
-		fail("Not yet implemented");
+		Parametros parametros = new Parametros();
+		parametros.put("Parametro 1", 1);
+		Configuracion configuracion = new Configuracion();
+		configuracion.guardar("Configuracion 1", parametros);
+		//assertEquals("Ha habido errores guardando el componente ", outContent.toString());
+		System.out.println("Configuracion " + "Parametro 1" + " guardada correctamente");
+		assertEquals("Configuracion " + "Parametro 1" + " guardada correctamente", outContent.toString());
 	}
 
 	@Test
 	public void testCargar() {
-		fail("Not yet implemented");
+		Parametros parametros = new Parametros();
+		parametros.put("Parametro 1", 1);
+		Configuracion configuracion = new Configuracion();
+		configuracion.guardar("Configuracion 1", parametros);
+		Parametros parametros_test = configuracion.cargar("Configuracion 1");
+		assertEquals(parametros, parametros_test);
 	}
 
 }
