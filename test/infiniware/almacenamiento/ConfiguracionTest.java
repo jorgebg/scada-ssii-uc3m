@@ -32,8 +32,7 @@ public class ConfiguracionTest {
 		parametros.put("Parametro 1", 1);
 		Configuracion configuracion = new Configuracion();
 		configuracion.guardar("Configuracion 1", parametros);
-		//assertEquals("Ha habido errores guardando el componente ", outContent.toString());
-		System.out.println("Configuracion " + "Parametro 1" + " guardada correctamente");
+		//System.out.println("Configuracion " + "Parametro 1" + " guardada correctamente");
 		assertEquals("Configuracion " + "Parametro 1" + " guardada correctamente", outContent.toString());
 	}
 

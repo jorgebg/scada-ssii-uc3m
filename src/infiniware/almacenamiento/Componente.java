@@ -9,23 +9,20 @@ import infiniware.scada.modelos.Parametros;
 
 public abstract class Componente {
 	
-	protected String ruta;
-	protected HashMap<String, Parametros> parametros;
+	protected String carpeta = "";
+	protected String fichero = "";
+	protected HashMap<String, Parametros> parametros = new HashMap<String, Parametros>();
 
 
-    public void guardar(String nombre, Parametros parametros) {
-    	try{
-    		this.parametros.put(nombre, parametros);
-			FileOutputStream fos = new FileOutputStream(ruta);
+    public void guardar(String nombre, Parametros parametros) throws IOException{
+			this.parametros.put(nombre, parametros);
+			File folder= new File(carpeta);
+			folder.mkdirs();
+			File fi = new File(carpeta, fichero);
+			FileOutputStream fos = new FileOutputStream(fi);
 			ObjectOutputStream out = new ObjectOutputStream(fos);
 			out.writeObject(this.parametros);
-			out.close();
-			System.out.println("Configuracion " + nombre + " guardada correctamente");
-    		
-    	}catch(IOException e){
-    		System.out.println("Ha habido errores guardando el componente ");
-    	}
-        
+			out.close();   
     }
 
     public Parametros cargar(String nombre) {
