@@ -26,7 +26,16 @@ public class Configuracion extends Componente {
     }
 
     public Parametros cargar(String nombre) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    	Parametros parametros = new Parametros();
+    	try{
+        	super.carpeta = this.carpeta;
+        	super.fichero = this.fichero;
+        	parametros = super.cargar(nombre);
+        	System.out.println("Configuracion " + nombre + " cargada correctamente");
+        }catch (IOException e){
+        	System.out.println("Ha habido errores cargando la configuración");
+        }
+		return parametros;
     }
 
 }
