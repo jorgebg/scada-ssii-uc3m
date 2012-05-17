@@ -19,7 +19,7 @@ public class Configuracion extends Componente {
         	super.carpeta = this.carpeta;
         	super.fichero = this.fichero;
         	super.guardar(nombre, parametros);
-        	System.out.println("Configuracion " + nombre + " guardada correctamente");
+        	System.out.println("Configuración " + nombre + " guardada correctamente");
         }catch (IOException e){
         	System.out.println("Ha habido errores guardando la configuración");
         }
@@ -31,7 +31,11 @@ public class Configuracion extends Componente {
         	super.carpeta = this.carpeta;
         	super.fichero = this.fichero;
         	parametros = super.cargar(nombre);
-        	System.out.println("Configuracion " + nombre + " cargada correctamente");
+        	if(parametros != null){
+        		System.out.println("Configuración " + nombre + " cargada correctamente");
+        	}else{
+        		System.out.println("Configuración " + nombre + " no encontrada");
+        	}
         }catch (IOException e){
         	System.out.println("Ha habido errores cargando la configuración");
         }
