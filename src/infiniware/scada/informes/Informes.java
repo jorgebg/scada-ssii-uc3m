@@ -1,19 +1,15 @@
 
 package infiniware.scada.informes;
 
+
+import static org.junit.Assert.fail;
 import infiniware.scada.Scada;
-import infiniware.scada.informes.modelos.Acciones;
-import infiniware.scada.informes.modelos.Produccion;
-import infiniware.scada.informes.modelos.Incorrectos;
+import infiniware.scada.modelos.ConjuntoGuardable;
 
-public class Informes {
-
-    public Produccion produccion;
-    public Acciones acciones;
-    public Incorrectos incorrectos;
+public class Informes extends ConjuntoGuardable{
     
-    public static Informes generar(Scada scada) {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-    
+	public static Informes generar(Scada scada){
+		return null;
+	}
+	
 }

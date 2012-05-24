@@ -5,7 +5,6 @@
 package infiniware.scada.ui.cli;
 
 import infiniware.automatas.Automata;
-import infiniware.procesos.IProcesable;
 import infiniware.scada.Scada;
 import infiniware.scada.ui.IUi;
 import infiniware.scada.ui.Ui;
@@ -17,7 +16,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**

@@ -2,16 +2,15 @@ package infiniware.scada;
 
 import infiniware.automatas.maestro.GestorSensores;
 import infiniware.automatas.maestro.Maestro;
-import infiniware.automatas.sensores.Sensores;
 import infiniware.procesos.IProcesable;
 import infiniware.remoto.Ethernet;
 import infiniware.remoto.Registrador;
 import infiniware.scada.informes.Informes;
 import infiniware.scada.modelos.ConjuntoParametros;
-import infiniware.scada.modelos.Parametros;
 import infiniware.scada.simulador.Simulador;
 import infiniware.scada.ui.Ui;
 import infiniware.scada.ui.cli.Cli;
+import infiniware.Resultado;
 
 public class Scada implements Ethernet, IProcesable, IScada {
 
@@ -99,16 +98,16 @@ public class Scada implements Ethernet, IProcesable, IScada {
      * @UC 004
      */
     @Override
-    public void guardarConfiguracion(String nombre, Parametros parametros) {
-        almacenamiento.configuracion.guardar(nombre, parametros);
+    public Resultado guardarConfiguracion(String nombre, ConjuntoParametros parametros) {
+        return almacenamiento.configuracion.guardar(nombre, parametros);
     }
 
     /**
      * @UC 005
      */
     @Override
-    public Parametros cargarConfiguracion(String nombre) {
-        return almacenamiento.configuracion.cargar(nombre);
+    public Resultado cargarConfiguracion(String nombre, ConjuntoParametros parametros) {
+        return almacenamiento.configuracion.cargar(nombre, parametros);
     }
 
     /**

@@ -11,11 +11,14 @@ import infiniware.remoto.IConexion;
 import infiniware.remoto.IRegistrable;
 import infiniware.remoto.Profibus;
 import infiniware.remoto.Registrador;
+import infiniware.scada.modelos.Guardable;
 import infiniware.scada.modelos.Parametros;
 import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public abstract class Automata implements Profibus, IProcesable, IConexion, IRegistrable {
 
@@ -137,8 +140,8 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
     }
     
     
-    public void configurar(Map<String,Parametros> parametrosSubautomatas) {
-        for (Map.Entry<String, Parametros> parametros : parametrosSubautomatas.entrySet()) {
+    public void configurar(Map<String, Guardable> hashMap) {
+        for (Entry<String, Guardable> parametros : hashMap.entrySet()) {
             this.subautomatas.get(parametros.getKey()).configurar(parametros.getValue());
         }
     }

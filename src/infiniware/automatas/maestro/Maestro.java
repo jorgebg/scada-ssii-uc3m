@@ -8,10 +8,12 @@ import infiniware.automatas.subautomatas.Cinta;
 import infiniware.automatas.subautomatas.Robot2;
 import infiniware.scada.Scada;
 import infiniware.scada.modelos.ConjuntoParametros;
+import infiniware.scada.modelos.Guardable;
 import infiniware.scada.modelos.Parametros;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class Maestro extends Automata implements infiniware.scada.IMaestro, infiniware.automatas.esclavos.IMaestro {
 
@@ -104,7 +106,7 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
     }
 
     public void configurarAutomatas(ConjuntoParametros parametros) {
-        for (Map.Entry<Integer, HashMap<String, Parametros>> automata : parametros.entrySet()) {
+        for (Entry<Integer, HashMap<String, Guardable>> automata : parametros.entrySet()) {
             if (automata.getKey() == 0) {
                 configurar(automata.getValue());
             } else {

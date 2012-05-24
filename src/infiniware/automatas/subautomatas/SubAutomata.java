@@ -2,10 +2,10 @@ package infiniware.automatas.subautomatas;
 
 import infiniware.automatas.Automata;
 import infiniware.automatas.Transicion;
+import infiniware.scada.modelos.Guardable;
 import infiniware.scada.modelos.Parametros;
 import infiniware.scada.simulador.Simulacion;
 import infiniware.scada.simulador.Simulaciones;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
@@ -46,8 +46,8 @@ public abstract class SubAutomata {
         return estado;
     }
 
-    public void configurar(Parametros parametros) {
-        this.parametros = parametros.extraer(parametros.keySet());
+    public void configurar(Guardable guardable) {
+        this.parametros = (Parametros) guardable.extraer(guardable.keySet());
     }
 
     public void simular() {

@@ -4,11 +4,11 @@
  */
 package infiniware.scada.modelos;
 
-import java.util.HashMap;
+
 
 /**
  *
  * @author jorge
  */
-public class ConjuntoParametros extends HashMap<Integer, HashMap<String, Parametros>> {
+public class ConjuntoParametros extends ConjuntoGuardable {
 }

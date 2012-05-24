@@ -5,8 +5,6 @@
 package infiniware.scada.ui.gui;
 
 import infiniware.scada.ui.Ui;
-import infiniware.scada.ui.cli.Cli;
-import java.awt.EventQueue;
 
 /**
  *

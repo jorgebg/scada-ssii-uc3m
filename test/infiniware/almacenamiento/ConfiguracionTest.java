@@ -2,52 +2,49 @@ package infiniware.almacenamiento;
 
 import static org.junit.Assert.*;
 
-import java.io.*;
+import java.util.HashMap;
+
+import infiniware.Resultado;
 import infiniware.almacenamiento.Configuracion;
+import infiniware.scada.modelos.ConjuntoParametros;
+import infiniware.scada.modelos.Guardable;
 import infiniware.scada.modelos.Parametros;
 import org.junit.Test;
-import org.junit.Before;
-import org.junit.After;
 
 public class ConfiguracionTest {
-		
-	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-	private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-
-	@Before
-	public void setUpStreams() {
-	    System.setOut(new PrintStream(outContent));
-	    System.setErr(new PrintStream(errContent));
-	}
-
-	@After
-	public void cleanUpStreams() {
-	    System.setOut(null);
-	    System.setErr(null);
-	}
 	
 	@Test
 	public void testGuardar() {
-		Parametros parametros = new Parametros();
-		parametros.put("Parametro 1", 1);
+		ConjuntoParametros parametros = new ConjuntoParametros();
+		Parametros param = new Parametros();
+		param.put("Parametro 1", 1);
+		HashMap<String, Guardable> mapa = new HashMap<String, Guardable>();
+		mapa.put("Automata 1", param);
+		parametros.put(1, mapa);
 		Configuracion configuracion = new Configuracion();
 		String nombre = "Configuracion 1";
-		configuracion.guardar(nombre, parametros);
-		assertEquals("Configuración " + nombre + " guardada correctamente\n", outContent.toString());
+		Resultado res = configuracion.guardar(nombre, parametros);
+		assertEquals(Resultado.CORRECTO, res);
 	}
 
 	@Test
 	public void testCargar() {
-		Parametros parametros = new Parametros();
-		parametros.put("Parametro 1", 1);
+		ConjuntoParametros parametros = new ConjuntoParametros();
+		Parametros param = new Parametros();
+		param.put("Parametro 1", 1);
+		HashMap<String, Parametros> mapa = new HashMap<String, Parametros>();
+		mapa.put("Automata 1", param);
 		Configuracion configuracion = new Configuracion();
 		String nombre = "Configuracion 1";
-		configuracion.guardar(nombre, parametros);
-		Parametros parametros_test = configuracion.cargar("Configuracion 1");
+		Resultado res = configuracion.guardar(nombre, parametros);
+		assertEquals(Resultado.CORRECTO, res);
+		ConjuntoParametros parametros_test = new ConjuntoParametros();
 		String nombre_erroneo =  "ERROR";
-		configuracion.cargar(nombre_erroneo);
+		res = configuracion.cargar(nombre_erroneo, parametros_test);
+		assertNotSame(parametros, parametros_test);
+		res = configuracion.cargar(nombre, parametros_test);
 		assertEquals(parametros, parametros_test);
-		assertEquals("Configuración " + nombre + " guardada correctamente\n"+"Configuración " + nombre + " cargada correctamente\n"+"Configuración " + nombre_erroneo + " no encontrada\n", outContent.toString());
+		assertEquals(Resultado.CORRECTO, res);
 	}
 
 }

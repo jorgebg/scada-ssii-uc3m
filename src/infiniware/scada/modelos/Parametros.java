@@ -1,22 +1,17 @@
 package infiniware.scada.modelos;
 
-import java.util.HashMap;
-import java.util.Set;
 
-public class Parametros extends HashMap<String, Integer> {
+public class Parametros extends Guardable {
 
-    public Parametros(String... parametros) {
+	public Parametros(String... parametros) {
         mezclar(parametros);
     }
-    public Parametros extraer(String[] parametros) {
+    
+    public Guardable extraer(String[] parametros) {
         Parametros nuevos = new Parametros();
         for(String clave : parametros)
             nuevos.put(clave, get(clave));
         return nuevos;
-    }
-
-    public Parametros extraer(Set<String> parametros) {
-        return extraer((String[])parametros.toArray(new String[parametros.size()]));
     }
 
     public Parametros mezclar(String... parametros) {
