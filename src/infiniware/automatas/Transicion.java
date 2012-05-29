@@ -18,39 +18,42 @@ public class Transicion {
     }
 
     public boolean cumple() {
-        if(subautomata.estado != origen)
-            return false;
         boolean cumple = true;
         char operacion = 0;
         boolean negacion = false;
         String buffer = "";
         //System.out.println(codicion);
-        for (char token : this.codicion.toCharArray()) {
-            //System.out.println("{" + buffer + "}" + operacion);
-            if (token == '!') {
-                negacion = true;
-            } else {
-                if (esOperacion(token)) {
-                    boolean valor = subautomata.automata.sensores.get(buffer);
-                    buffer = "";
-                    if (operacion == 0) {
-                        operacion = token;
-                        cumple = valor;
-                    } else {
-                        if (negacion) {
-                            valor = !valor;
-                            negacion = false;
-                        }
-                        cumple = operar(operacion, cumple, valor);
-                        if(!cumple)
-                            break;
-                    }
-
+        if (subautomata.estado != origen) {
+            cumple = false;
+        } else {
+            for (char token : this.codicion.toCharArray()) {
+                //System.out.println("{" + buffer + "}" + operacion);
+                if (token == '!') {
+                    negacion = true;
                 } else {
-                    buffer = buffer + token;
+                    if (esOperacion(token)) {
+                        boolean valor = subautomata.automata.sensores.get(buffer);
+                        buffer = "";
+                        if (operacion == 0) {
+                            operacion = token;
+                            cumple = valor;
+                        } else {
+                            if (negacion) {
+                                valor = !valor;
+                                negacion = false;
+                            }
+                            cumple = operar(operacion, cumple, valor);
+                            if (!cumple) {
+                                break;
+                            }
+                        }
+
+                    } else {
+                        buffer = buffer + token;
+                    }
                 }
+                //System.out.println("[" + cumple + "]");
             }
-            //System.out.println("[" + cumple + "]");
         }
         return cumple;
     }

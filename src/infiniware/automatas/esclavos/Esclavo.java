@@ -31,13 +31,14 @@ public abstract class Esclavo extends Automata implements IEsclavo {
     
     
     public void actualizar(String sensor, boolean estado) {
-        super.actualizar(sensores);
+        super.actualizar(sensor, estado);
         notificar();
     }
 
     private void notificar() {
        
         try {
+            System.out.println("Notificando: " + sensores);
             maestro.notificar(getId(), (char)sensores.codificar());
         } catch (RemoteException ex) {
             System.err.println("Error al notificar al maestro: ");

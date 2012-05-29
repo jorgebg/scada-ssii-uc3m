@@ -75,6 +75,6 @@ public class Configurador {
             automata.subautomatas.indizarEstados();
         }
         Maestro.INSTANCIA.mapaSensores.instalar();
-        Scada.INSTANCIA.gestorSensores.instalar();
+        Scada.INSTANCIA.mapaSensores.instalar();
     }
 }

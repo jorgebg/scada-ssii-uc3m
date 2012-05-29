@@ -40,6 +40,8 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
      */
     public void notificar(byte automata, char sensores) {
         this.mapaSensores.actualizar(automata, sensores);
+        System.out.println("Notificacion A" + automata + ":" + this.mapaSensores.automatas.get((int)automata));
+        this.scada.notificar(automata, sensores);
     }
     /*
      * }}}
@@ -142,7 +144,7 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
     }
 
     public void actualizar(String sensor, boolean estado) {
-        super.actualizar(sensores);
+        super.actualizar(sensor, estado);
         notificar(getId(), (char) this.sensores.codificar());
     }
 }

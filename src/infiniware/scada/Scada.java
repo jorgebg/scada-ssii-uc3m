@@ -13,7 +13,7 @@ import infiniware.scada.simulador.Simulador;
 import infiniware.scada.ui.Ui;
 import infiniware.scada.ui.cli.Cli;
 
-public class Scada implements Ethernet, IProcesable, IScada {
+public class Scada implements Ethernet, IProcesable, IScada, infiniware.automatas.maestro.IScada {
 
     private static final int CICLO = 200;
     Simulador simulador;
@@ -22,7 +22,7 @@ public class Scada implements Ethernet, IProcesable, IScada {
     long timestamp;
     boolean emergencia = false;
     public final Acciones acciones = new Acciones();
-    public final GestorSensores gestorSensores = new GestorSensores();
+    public final GestorSensores mapaSensores = new GestorSensores();
     public static final Scada INSTANCIA = new Scada();
     public static Ui ui = Cli.INSTANCIA;
     
@@ -61,7 +61,7 @@ public class Scada implements Ethernet, IProcesable, IScada {
                 accion.run();
             }
             simulador.ciclo();
-            estados = maestro.ciclo(gestorSensores.codificar());
+            estados = maestro.ciclo(mapaSensores.codificar());
             ui.actualizar(estados);
             sincronizar();
         }
@@ -158,5 +158,9 @@ public class Scada implements Ethernet, IProcesable, IScada {
         ui.ocultar();
     }
     /* }}} */
+
+    public void notificar(byte automata, char sensores) {
+        this.mapaSensores.actualizar(automata, sensores);
+    }
 
 }

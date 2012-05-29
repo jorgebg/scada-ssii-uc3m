@@ -13,6 +13,9 @@ import infiniware.scada.modelos.Parametros;
  */
 public class Robot2 extends Robot {
 
+    class Reposo extends Robot.Reposo {
+    }
+    
     class MueveConjuntoMontado extends Transporte {
 
         public void postaccion(int accion) {

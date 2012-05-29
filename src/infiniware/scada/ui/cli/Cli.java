@@ -58,8 +58,9 @@ public class Cli extends Ui implements Runnable {
             } catch (Exception e) {
                 e.printStackTrace(System.err);
             }
-            accion = Integer.parseInt(linea);
+            
             try {
+                accion = Integer.parseInt(linea);
                 System.out.println("Ejecutando [" + methods[accion].getName() + "]");
                 methods[accion].invoke(this);
             } catch (InvocationTargetException ex) {
@@ -94,7 +95,7 @@ public class Cli extends Ui implements Runnable {
                     automata.subautomatas.decodificarNombreEstados(estados[id]));
         }
         System.out.println(arbol);
-        System.out.println(Scada.INSTANCIA.gestorSensores);
+        System.out.println(Scada.INSTANCIA.mapaSensores);
         System.out.println();
         //MapUtils.debugPrint(System.out, "Estados", arbol);
     }

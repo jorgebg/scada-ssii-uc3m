@@ -64,7 +64,7 @@ public class Sensores {
         char[] chars = new char[Math.max(Profibus.SIZE, size())];
         Arrays.fill(chars, '0');
         for (int i = 0; i < size(); i++) {
-            chars[i] = get(i) ? '1' : '0';
+            chars[chars.length-1-i] = get(i) ? '1' : '0';
         }
         String str = new String(chars);
         return str;
@@ -79,7 +79,7 @@ public class Sensores {
     public void actualizar(String sensores) {
         char[] chars = sensores.toCharArray();
         for (int i = 0; i < chars.length; i++) {
-            set(i, chars[i] == '1');
+            set(i, chars[chars.length-1-i] == '1');
         }
     }
     

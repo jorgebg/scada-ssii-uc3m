@@ -7,6 +7,7 @@ package infiniware.automatas.subautomatas;
 import infiniware.automatas.Automata;
 import infiniware.automatas.subautomatas.Robot.Transporte;
 import infiniware.scada.modelos.Parametros;
+import infiniware.scada.simulador.Simulacion;
 
 /**
  *
@@ -14,7 +15,8 @@ import infiniware.scada.modelos.Parametros;
  */
 public class Robot1 extends Robot {
 
-    
+    class Reposo extends Robot.Reposo {
+    }
 
     class TransporteEngranaje1 extends Transporte {
 
