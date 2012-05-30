@@ -53,10 +53,12 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
     public char[] ciclo(int sensores) {
         this.mapaSensores.actualizar(sensores);
         estados[getId()] = ejecutar(this.sensores);
-        char estado;
-        for (int id = 1; id < esclavos.size(); id++) {
-            estado = this.mapaSensores.codificar(id);
-            estados[id] = esclavos.ejecutar(id, estado);
+        char sensoresEsclavo, mascaraEsclavo;
+        for (int id = 1; id <= esclavos.size(); id++) {
+            sensoresEsclavo = this.mapaSensores.codificar(id);
+            mascaraEsclavo = this.mapaSensores.codificarMascara(id);
+            System.out.println("Ejecutando E"+id+": "+Integer.toBinaryString(sensoresEsclavo)+" & "+ Integer.toBinaryString(mascaraEsclavo));
+            estados[id] = esclavos.ejecutar(id, sensoresEsclavo, mascaraEsclavo);
         }
         return estados;
     }

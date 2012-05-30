@@ -16,13 +16,13 @@ class GestorEsclavos extends HashMap<Integer, IEsclavo> {
     }
 
     public char ejecutar(int index, Sensores sensores) {
-        return ejecutar(index, (char)sensores.codificar());
+        return ejecutar(index, (char)sensores.codificar(), (char)sensores.actualizados.codificar());
     }
 
-    public char ejecutar(int index, char sensores) {
+    public char ejecutar(int index, char sensores, char mascara) {
         checkIndex(index);
         try {
-            return get(index).ejecutar(sensores);
+            return get(index).ejecutar(sensores, mascara);
         } catch (RemoteException ex) {
             System.err.println("Error al llamar remotamente a 'ejecutar' en el esclavo " + index + ".");
             ex.printStackTrace(System.err);

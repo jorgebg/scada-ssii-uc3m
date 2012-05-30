@@ -43,6 +43,12 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
         this.sensores.actualizar(sensores);
         return ejecutar();
     }
+    
+    public char ejecutar(char sensores, char mascara) {
+        System.out.println("Ejecutando: " + Integer.toBinaryString(sensores) + " & " + Integer.toBinaryString(mascara));
+        this.sensores.actualizar(sensores, mascara);
+        return ejecutar();
+    }
 
     public char ejecutar(Sensores sensores) {
         this.sensores.actualizar(sensores);

@@ -20,6 +20,11 @@ public class GestorSensores extends Sensores {
     public char codificar(int id) {
         return (char) automatas.get(id).codificar();
     }
+    
+    
+    char codificarMascara(int id) {
+        return (char) automatas.get(id).actualizados.codificar();
+    }
 
     public void instalar() {
         for (Automata automata : Automata.INSTANCIAS.values()) {
@@ -31,6 +36,8 @@ public class GestorSensores extends Sensores {
     public void actualizar(int id, char sensores) {
         Sensores automata = this.automatas.get(id);
         automata.actualizar(sensores);
+        automata.actualizados.inicializar();
         this.actualizar(automata);
     }
+
 }

@@ -2,6 +2,8 @@ package infiniware.automatas.sensores;
 
 import infiniware.remoto.Profibus;
 import java.util.*;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Adapter de TreeMap
@@ -10,16 +12,24 @@ import java.util.*;
 public class Sensores {
     
     public final Map<String, Boolean> elementos = Collections.synchronizedMap(new TreeMap<String, Boolean>());
+    public Sensores actualizados;
     
     public Sensores() {
-        
+        this(true);
+    }
+    
+    public Sensores(boolean actualizados) {
+        if(actualizados)
+            this.actualizados = new Sensores(false);
     }
     
     public Sensores(String[] nombres) {
+        this();
         insertar(nombres);
     }
     
     public Sensores(Sensores sensores) {
+        this();
         insertar(sensores.elementos);
     }
     
@@ -38,10 +48,14 @@ public class Sensores {
     
     public void set(int i, boolean estado) {
         elementos.put((String)keySet().toArray()[i], estado);
+        if(actualizados!=null)
+            actualizados.set(i, estado);
     }
 
     public void set(String sensor, boolean estado) {
         elementos.put(sensor, estado);
+        if(actualizados!=null)
+            actualizados.set(sensor, estado);
     }
     
     public Set<String> keySet() {
@@ -73,14 +87,26 @@ public class Sensores {
     
     public void actualizar(int sensores) {
         actualizar(Integer.toBinaryString(sensores));
+        if(actualizados!=null)
+            actualizados.actualizar(sensores);
+    }
+    
+    public void actualizar(int sensores, int mascara) {
+        actualizar(Integer.toBinaryString(sensores), Integer.toBinaryString(mascara));
     }
     
     
-    public void actualizar(String sensores) {
+    public void actualizar(String sensores, String mascara) {
         char[] chars = sensores.toCharArray();
         for (int i = 0; i < chars.length; i++) {
-            set(i, chars[chars.length-1-i] == '1');
+            int index = chars.length-1-i;
+            if(mascara.charAt(index) == '1')
+                set(i, chars[index] == '1');
         }
+    }
+    
+    public void actualizar(String sensores) {
+        actualizar(sensores, StringUtils.repeat("1", sensores.length()));
     }
     
     public void actualizar(Sensores sensores) {
@@ -106,14 +132,20 @@ public class Sensores {
 
     public void insertar(Sensores sensores) {
         this.elementos.putAll(sensores.elementos);
+        if(actualizados != null)
+            actualizados.elementos.putAll(elementos);
     }
     public void insertar(Map<String, Boolean> elementos) {
         this.elementos.putAll(elementos);
+        if(actualizados != null)
+            actualizados.elementos.putAll(elementos);
     }
 
     public void insertar(String[] nombres) {
         for(String nombre : nombres)
             this.elementos.put(nombre, false);
+        if(actualizados != null)
+            actualizados.elementos.putAll(elementos);
     }
     
 };
