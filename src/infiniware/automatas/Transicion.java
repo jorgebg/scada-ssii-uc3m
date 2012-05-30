@@ -23,6 +23,7 @@ public class Transicion {
         boolean negacion = false;
         String buffer = "";
         //System.out.println(codicion);
+        //System.out.println(subautomata.estado + " " + origen);
         if (subautomata.estado != origen) {
             cumple = false;
         } else {
@@ -33,15 +34,15 @@ public class Transicion {
                 } else {
                     if (esOperacion(token)) {
                         boolean valor = subautomata.automata.sensores.get(buffer);
+                        if (negacion) {
+                            valor = !valor;
+                            negacion = false;
+                        }
                         buffer = "";
                         if (operacion == 0) {
                             operacion = token;
                             cumple = valor;
                         } else {
-                            if (negacion) {
-                                valor = !valor;
-                                negacion = false;
-                            }
                             cumple = operar(operacion, cumple, valor);
                             if (!cumple) {
                                 break;
@@ -52,7 +53,7 @@ public class Transicion {
                         buffer = buffer + token;
                     }
                 }
-                //System.out.println("[" + cumple + "]");
+                //System.out.println(token + " [" + cumple + "]");
             }
         }
         return cumple;
