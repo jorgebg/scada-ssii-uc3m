@@ -33,6 +33,10 @@ public class Cinta extends SubAutomata {
     public Cinta(String robot) {
         super();
         this.salida = robot;
-        parametros = new Parametros("velocidad", "longitud");
+        //parametros = new Parametros("velocidad", "longitud");
+        configurar(new Parametros() {{
+          put("velocidad", 1);
+          put("longitud", 5);  
+        }});
     }
 }

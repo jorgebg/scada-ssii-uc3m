@@ -6,20 +6,20 @@ import java.util.Set;
 public class Parametros extends HashMap<String, Integer> {
 
     public Parametros(String... parametros) {
-        mezclar(parametros);
+        mezclarTodo(parametros);
     }
-    public Parametros extraer(String[] parametros) {
+    public Parametros mezclar(String[] parametros) {
         Parametros nuevos = new Parametros();
         for(String clave : parametros)
             nuevos.put(clave, get(clave));
         return nuevos;
     }
 
-    public Parametros extraer(Set<String> parametros) {
-        return extraer((String[])parametros.toArray(new String[parametros.size()]));
+    public Parametros mezclar(Set<String> parametros) {
+        return mezclar((String[])parametros.toArray(new String[parametros.size()]));
     }
 
-    public Parametros mezclar(String... parametros) {
+    public Parametros mezclarTodo(String... parametros) {
         for(String clave : parametros)
             put(clave, null);
         return this;

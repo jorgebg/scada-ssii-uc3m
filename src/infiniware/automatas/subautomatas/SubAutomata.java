@@ -52,7 +52,10 @@ public abstract class SubAutomata {
     }
 
     public void configurar(Parametros parametros) {
-        this.parametros = parametros.extraer(parametros.keySet());
+        //System.out.println("Configurando: " + parametros);
+        if(this.parametros == null)
+            this.parametros = new Parametros();
+        this.parametros = parametros.mezclar(parametros.keySet());
     }
 
     public void simular() {

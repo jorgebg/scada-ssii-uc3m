@@ -48,6 +48,9 @@ public class Estacion extends SubAutomata {
         super();
         this.entrada = entrada;
         this.salida = salida;
-        parametros = new Parametros("tiempo");
+        //parametros = new Parametros("tiempo");
+        configurar(new Parametros() {{
+          put("tiempo", 2);
+        }});
     }
 }
