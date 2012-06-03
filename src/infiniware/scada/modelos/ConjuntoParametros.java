@@ -4,6 +4,9 @@
  */
 package infiniware.scada.modelos;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
 
 
 /**
@@ -11,4 +14,8 @@ package infiniware.scada.modelos;
  * @author jorge
  */
 public class ConjuntoParametros extends ConjuntoGuardable {
+	
+	public ConjuntoParametros(){
+		super();
+	}
 }
