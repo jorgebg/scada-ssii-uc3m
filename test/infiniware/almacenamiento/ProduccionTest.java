@@ -5,16 +5,6 @@ import infiniware.Resultado;
 import infiniware.scada.informes.Informes;
 import infiniware.scada.informes.modelos.Fabricacion;
 import infiniware.scada.informes.modelos.Funcionamiento;
-import infiniware.scada.modelos.ConjuntoParametros;
-import infiniware.scada.modelos.Guardable;
-import infiniware.scada.modelos.Parametros;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.util.HashMap;
-
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 public class ProduccionTest {
@@ -26,7 +16,6 @@ public class ProduccionTest {
 	public void testGuardar() {
 		Informes inf = new Informes(fab, fun);
 		Produccion produccion = new Produccion();
-		String nombre = "Produccion 1";
 		Resultado res = produccion.guardar(inf);
 		assertEquals(Resultado.CORRECTO, res);
 	}
@@ -35,7 +24,6 @@ public class ProduccionTest {
 	public void testCargar() {
 		Informes inf = new Informes(fab, fun);
 		Produccion produccion = new Produccion();
-		String nombre = "Produccion 1";
 		Resultado res = produccion.guardar(inf);
 		assertEquals(Resultado.CORRECTO, res);
 		Informes inf_test = new Informes();

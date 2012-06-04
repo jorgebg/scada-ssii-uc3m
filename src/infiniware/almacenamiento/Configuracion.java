@@ -13,6 +13,7 @@ import java.util.StringTokenizer;
 import org.yaml.snakeyaml.Yaml;
 
 import infiniware.Resultado;
+import infiniware.Sistema;
 import infiniware.scada.modelos.ConjuntoParametros;
 import infiniware.scada.modelos.Guardable;
 import infiniware.scada.modelos.Parametros;
@@ -43,19 +44,40 @@ public class Configuracion extends Componente {
     		FileInputStream fis = new FileInputStream(fi);
     		InputStreamReader in = new InputStreamReader(fis);
     		BufferedReader br = new BufferedReader(in);
-    		String key = br.readLine().trim().substring(0, 1);
+    		String key = br.readLine();
+    		HashMap<String, Guardable> map = null;
+			int intKey = 0;
     		while(key != null && key != "" ){
-    			String value = br.readLine().trim();
+    			String value = "";
+    			boolean keychanged = true;
+    			try{
+    				value = key.trim();
+    				key = key.trim().substring(0, 1);
+    				intKey = Integer.valueOf(key);
+    				value = br.readLine().trim();
+    			}catch(Exception e){
+    				keychanged = false;
+    			}
+    			Guardable param = new Parametros();
     			StringTokenizer st = new StringTokenizer(value, ":");
     			String mapKey = st.nextToken();
-    			String parametrosKey = st.nextToken().trim();
-    			parametrosKey = parametrosKey.substring(1, parametrosKey.length());
-    			String parametrosValue = st.nextToken().trim().substring(0, 1);
-    			HashMap<String, Guardable> map = new HashMap<String, Guardable>();
-    			Guardable param = new Parametros();
-    			param.put(parametrosKey, Integer.valueOf(parametrosValue));
+    			String parametro = st.nextToken(",").trim();
+    			parametro = parametro.substring(3);
+    			while (!parametro.endsWith("}")){
+    				StringTokenizer st1 = new StringTokenizer(parametro, ":");
+    		    	String nombr = st1.nextToken().trim();
+    		    	String valor = st1.nextToken().substring(1);
+    				param.put(nombr, Integer.valueOf(valor));
+    				parametro = st.nextToken(",").trim();
+    			}
+    			parametro = parametro.substring(0, parametro.length()-1);
+    			StringTokenizer st1 = new StringTokenizer(parametro, ":");
+		    	String nombr = st1.nextToken().trim();
+		    	String valor = st1.nextToken().substring(1);
+				param.put(nombr, Integer.valueOf(valor));
+				if(keychanged) map = new HashMap<String, Guardable>();
     			map.put(mapKey, param);
-    			parametros.put(Integer.valueOf(key), map);   			
+    			if(!keychanged) parametros.put(intKey, map);
     			key = br.readLine();
     		}
         }catch (IOException e){
@@ -63,5 +85,5 @@ public class Configuracion extends Componente {
         }
     	return Resultado.CORRECTO;
     }
-
+    
 }
