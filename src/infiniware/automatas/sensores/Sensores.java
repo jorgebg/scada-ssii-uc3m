@@ -47,15 +47,16 @@ public class Sensores {
     }
     
     public void set(int i, boolean estado) {
-        elementos.put((String)keySet().toArray()[i], estado);
-        if(actualizados!=null)
-            actualizados.set(i, estado);
+        String key = (String)keySet().toArray()[i];
+        if(actualizados!=null && estado==elementos.get(key))
+            actualizados.set(key, estado);
+        elementos.put(key, estado);
     }
 
     public void set(String sensor, boolean estado) {
-        elementos.put(sensor, estado);
-        if(actualizados!=null)
+        if(actualizados!=null && estado==elementos.get(sensor))
             actualizados.set(sensor, estado);
+        elementos.put(sensor, estado);
     }
     
     public Set<String> keySet() {
@@ -87,8 +88,6 @@ public class Sensores {
     
     public void actualizar(int sensores) {
         actualizar(Integer.toBinaryString(sensores));
-        if(actualizados!=null)
-            actualizados.actualizar(sensores);
     }
     
     public void actualizar(int sensores, int mascara) {
@@ -100,7 +99,7 @@ public class Sensores {
         char[] chars = sensores.toCharArray();
         for (int i = 0; i < chars.length; i++) {
             int index = chars.length-1-i;
-            if(mascara.charAt(index) == '1')
+            if(mascara.length()-1 >= index && mascara.charAt(index) == '1')
                 set(i, chars[index] == '1');
         }
     }
@@ -120,8 +119,35 @@ public class Sensores {
     }
 
     @Override
+    /*public String toString() {
+        String sensores = "";
+        String valores = "";
+        String mascara = "";
+        for (Map.Entry<String, Boolean> entry : elementos.entrySet()) {
+            sensores += StringUtils.rightPad(entry.getKey(), 3);
+            valores += StringUtils.rightPad(entry.getValue() ? "1" : "0", 3);
+            if (actualizados != null)
+                mascara += StringUtils.rightPad(actualizados.get(entry.getKey()) ? "1" : "0", 3);
+        }
+        String resultado = sensores + "\n" + valores;
+        if(!mascara.isEmpty()){
+            resultado += "\n" + mascara;
+        }
+        return resultado;
+    }*/
     public String toString() {
-        return "[" + toBinaryString() + "] " + elementos;
+        String sensores = "";
+        String valores = "";
+        for (Map.Entry<String, Boolean> entry : elementos.entrySet()) {
+            String valor = entry.getValue() ? "1" : "0";
+            if (actualizados != null && actualizados.get(entry.getKey()))
+                valor += "*";
+            sensores += StringUtils.rightPad(entry.getKey(), 3);
+            valores += StringUtils.rightPad(valor, 3);
+                
+        }
+        String resultado = sensores + "\n" + valores;
+        return resultado;
     }
 
     public void inicializar(char sensores) {

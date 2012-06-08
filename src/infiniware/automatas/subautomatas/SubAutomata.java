@@ -40,7 +40,7 @@ public abstract class SubAutomata {
         //System.out.println(nombre + ": Estoy en [" + estados.get(estado) + "]");
         for (Transicion transicion : transiciones) {
             if (transicion.cumple()) {
-                System.out.println(nombre + ": Transitando de [" + estados.get(estado) + "]" + " a [" + estados.get(transicion.destino) + "] cumpliendose " + transicion.codicion + " (" + automata.sensores + ")");
+                System.out.println(nombre + ": Transitando de [" + estados.get(estado) + "]" + " a [" + estados.get(transicion.destino) + "] cumpliendose " + transicion.codicion);
                 estado = transicion.destino;
                 break;
             } else {

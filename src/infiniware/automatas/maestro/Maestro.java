@@ -6,12 +6,16 @@ import infiniware.automatas.esclavos.*;
 import infiniware.automatas.sensores.Sensores;
 import infiniware.automatas.subautomatas.Cinta;
 import infiniware.automatas.subautomatas.Robot2;
+import infiniware.remoto.Profibus;
 import infiniware.scada.Scada;
 import infiniware.scada.modelos.ConjuntoParametros;
 import infiniware.scada.modelos.Parametros;
 import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Maestro extends Automata implements infiniware.scada.IMaestro, infiniware.automatas.esclavos.IMaestro {
 
@@ -40,7 +44,7 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
      */
     public void notificar(byte automata, char sensores) {
         this.mapaSensores.actualizar(automata, sensores);
-        System.out.println("Notificacion A" + automata + ":" + this.mapaSensores.automatas.get((int)automata));
+        System.out.println((automata == 0 ? "M" : "E" + automata) + " => M:\n" + this.mapaSensores.automatas.get((int) automata) + "\n");
         this.scada.notificar(automata, sensores);
     }
     /*
@@ -52,13 +56,8 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
      */
     public char[] ciclo(int sensores) {
         this.mapaSensores.actualizar(sensores);
-        estados[getId()] = ejecutar(this.sensores);
-        char sensoresEsclavo, mascaraEsclavo;
-        for (int id = 1; id <= esclavos.size(); id++) {
-            sensoresEsclavo = this.mapaSensores.codificar(id);
-            mascaraEsclavo = this.mapaSensores.codificarMascara(id);
-            System.out.println("Ejecutando E"+id+": "+Integer.toBinaryString(sensoresEsclavo)+" & "+ Integer.toBinaryString(mascaraEsclavo));
-            estados[id] = esclavos.ejecutar(id, sensoresEsclavo, mascaraEsclavo);
+        for (int id = 0; id < INSTANCIAS.size(); id++) {
+            ejecutarAutomata(id);
         }
         return estados;
     }
@@ -89,10 +88,21 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
                     Esclavo2.INSTANCIA,
                     Esclavo3.INSTANCIA
                 }) {
-            IEsclavo iesclavo = this.<IEsclavo>conectar(esclavo);
-            esclavos.put(esclavo.getId(), iesclavo);
+            this.conectarEsclavo(esclavo);
         }
         System.out.println("Conexion con los esclavos establecida.");
+    }
+
+    protected IEsclavo conectarEsclavo(int id) {
+        return conectarEsclavo(Esclavo.INSTANCIAS.get(id));
+    }
+    protected IEsclavo conectarEsclavo(Automata automata) {
+        return conectarEsclavo((Esclavo) automata);
+    }
+    protected IEsclavo conectarEsclavo(Esclavo automata) {
+        IEsclavo iesclavo = this.<IEsclavo>conectar(automata);
+        esclavos.put(automata.getId(), iesclavo);
+        return iesclavo;
     }
 
     public void enlazar() {
@@ -149,4 +159,39 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
         super.actualizar(sensor, estado);
         notificar(getId(), (char) this.sensores.codificar());
     }
+
+    private void ejecutarAutomata(int id) {
+        String nombre = "M";
+        char estadoAnterior = estados[id];
+        if (id != 0) {
+            nombre = "E" + id;
+        }
+        System.out.println("M => " + nombre + ":\n" + this.sensores + "\n");
+        if (id == 0) {
+
+            estados[id] = ejecutar(this.sensores);
+        } else {
+            char sensoresEsclavo = this.mapaSensores.codificar(id);
+            char mascaraEsclavo = this.mapaSensores.codificarMascara(id);
+        boolean exito = true;
+        do {
+            try {
+                estados[id] = esclavos.ejecutar(id, sensoresEsclavo, mascaraEsclavo);
+                exito = true;
+            } catch (RemoteException ex) {
+                exito = false;
+                System.err.println("Error al llamar remotamente a 'ejecutar' en el esclavo " + id + ".");
+                conectarEsclavo(id);
+            }
+        } while (!exito);
+        }
+        System.out.println("M => " + nombre + ":\n" + this.mapaSensores.automatas.get(id) + "\n");
+
+        if (estadoAnterior != estados[id]) {
+            System.out.println(nombre + " ha cambiado de estado " + (int) estadoAnterior + " a " + (int) estados[id] + ": " + Automata.INSTANCIAS.get(id).subautomatas.obtenerDiferenciaEstados(estadoAnterior, estados[id]));
+        }
+        //System.out.println("M <= E" + id + ":" + this.mapaSensores.automatas.get(id));
+
+    }
+
 }

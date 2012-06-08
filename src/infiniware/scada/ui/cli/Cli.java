@@ -5,7 +5,6 @@
 package infiniware.scada.ui.cli;
 
 import infiniware.automatas.Automata;
-import infiniware.procesos.IProcesable;
 import infiniware.scada.Scada;
 import infiniware.scada.ui.IUi;
 import infiniware.scada.ui.Ui;
@@ -15,10 +14,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.yaml.snakeyaml.Yaml;
 
 /**
  *
@@ -87,14 +86,15 @@ public class Cli extends Ui implements Runnable {
     }
 
     public void actualizar(char[] estados) {
-        Map<String, Map<String, String>> arbol = new HashMap<String, Map<String, String>>();
+        Map<String, Map<String, String>> arbol = new LinkedHashMap<String, Map<String, String>>();
         for (int id = 0; id < estados.length; id++) {
             Automata automata = Automata.INSTANCIAS.get(id);
             arbol.put(
                     automata.getRemoteName(),
                     automata.subautomatas.decodificarNombreEstados(estados[id]));
         }
-        System.out.println(arbol);
+        Yaml arbolyaml = new Yaml();
+        System.out.println(arbolyaml.dump(arbol));
         System.out.println(Scada.INSTANCIA.mapaSensores);
         System.out.println();
         //MapUtils.debugPrint(System.out, "Estados", arbol);

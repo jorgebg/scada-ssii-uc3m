@@ -38,9 +38,12 @@ public abstract class Robot extends SubAutomata {
 
     abstract class Transporte extends Simulacion {
 
-        int acciones = 2;
         static final int RECOGER = 0;
         static final int TRANSPORTAR = 1;
+
+        public Transporte() {
+            acciones = 2;
+        }
 
         @Override
         public long tiempo(int accion) {

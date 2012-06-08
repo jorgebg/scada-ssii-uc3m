@@ -18,9 +18,12 @@ public class CintaCapacidad extends Cinta {
 
     class Movimiento extends Cinta.Movimiento {
 
-        int acciones = 2;
         static final int MOVER = 0;
         static final int CARGAR = 1;
+
+        public Movimiento() {
+            acciones = 2;
+        }
 
         @Override
         public long tiempo(int accion) {

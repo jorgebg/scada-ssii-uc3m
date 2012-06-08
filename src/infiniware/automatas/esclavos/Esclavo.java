@@ -10,7 +10,7 @@ import java.rmi.RemoteException;
 public abstract class Esclavo extends Automata implements IEsclavo {
 
     protected IMaestro maestro;
-    
+
     public void desconectar() {
         maestro = null;
         super.desconectar();
@@ -24,28 +24,30 @@ public abstract class Esclavo extends Automata implements IEsclavo {
         super.actualizar(sensores);
         notificar();
     }
-    
+
     public void enlazar() {
         super.<IEsclavo>enlazar();
     }
-    
-    
+
     public void actualizar(String sensor, boolean estado) {
         super.actualizar(sensor, estado);
         notificar();
     }
 
     private void notificar() {
-       
-        try {
-            System.out.println("Notificando: " + sensores);
-            maestro.notificar(getId(), (char)sensores.codificar());
-        } catch (RemoteException ex) {
-            System.err.println("Error al notificar al maestro: ");
-            ex.printStackTrace(System.err);
-        }
+        boolean exito = true;
+        do {
+            try {
+                System.out.println("Notificando:\n" + sensores);
+                maestro.notificar(getId(), (char) sensores.codificar());
+                exito = true;
+            } catch (RemoteException ex) {
+                exito = false;
+                System.err.println("Error al notificar al maestro: ");
+                conectar();
+            }
+        } while (!exito);
     }
-
 
     public void fallar() {
         throw new UnsupportedOperationException("Not supported yet.");

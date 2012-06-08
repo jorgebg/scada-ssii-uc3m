@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 
 /**
  *
@@ -72,6 +74,22 @@ public class GestorSubAutomatas extends HashMap<String, SubAutomata> {
             String nombreSubAutomata = (String) this.keySet().toArray()[id];
             String nombreEstado = get(id).estados.get(e);
             nombreEstados.put(nombreSubAutomata, nombreEstado);
+            id++;
+        }
+        return nombreEstados;
+    }
+
+    public Map<String, String> obtenerDiferenciaEstados(char estado1, char estado2) {
+        Map<String, String> nombreEstados = new HashMap<String, String>();
+        List<Integer> listaEstado1 = estados.get(estado1);
+        List<Integer> listaEstado2 = estados.get(estado2);
+        int id = 0;
+        for (Integer e : listaEstado1) {
+            if (e.equals((listaEstado2.get(id)))) {
+                String nombreSubAutomata = (String) this.keySet().toArray()[id];
+                String nombreEstado = get(id).estados.get(e);
+                nombreEstados.put(nombreSubAutomata, nombreEstado);
+            }
             id++;
         }
         return nombreEstados;

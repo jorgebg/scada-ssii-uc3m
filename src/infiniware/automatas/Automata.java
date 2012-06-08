@@ -45,8 +45,8 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
     }
     
     public char ejecutar(char sensores, char mascara) {
-        System.out.println("Ejecutando: " + Integer.toBinaryString(sensores) + " & " + Integer.toBinaryString(mascara));
         this.sensores.actualizar(sensores, mascara);
+        System.out.println("Ejecutando:\n" + this.sensores);
         return ejecutar();
     }
 
@@ -106,6 +106,9 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
         return this.getClass().getSimpleName();
     }
 
+    protected <T extends Profibus> T conectar(int automata) {
+        return this.<T>conectar(INSTANCIAS.get(automata));
+    }
     protected <T extends Profibus> T conectar(Automata automata) {
         Registry registry;
         T profibus = null;

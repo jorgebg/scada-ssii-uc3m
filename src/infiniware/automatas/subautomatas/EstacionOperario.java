@@ -14,9 +14,12 @@ public class EstacionOperario extends Estacion {
 
     class Montaje extends Estacion.Montaje {
 
-        int acciones = 2;
         static final int PROCESAR = 0;
         static final int OPERARIO = 1;
+
+        public Montaje() {
+            acciones = 2;
+        }
 
         public long tiempo(int accion) {
             switch (accion) {
