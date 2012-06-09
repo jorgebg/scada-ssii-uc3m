@@ -96,6 +96,10 @@ public class Cli extends Ui implements Runnable {
         Yaml arbolyaml = new Yaml();
         System.out.println(arbolyaml.dump(arbol));
         System.out.println(Scada.INSTANCIA.mapaSensores);
+        if(Scada.INSTANCIA.mapaSensores.get("M")) {
+            System.out.println("Limpiando CPD automaticamente");
+            limpiarCPD();
+        }
         System.out.println();
         //MapUtils.debugPrint(System.out, "Estados", arbol);
     }

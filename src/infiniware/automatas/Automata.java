@@ -112,12 +112,16 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
     protected <T extends Profibus> T conectar(Automata automata) {
         Registry registry;
         T profibus = null;
+        boolean errorMostrado = false;
         while (profibus == null) {
             try {
                 registry = LocateRegistry.getRegistry(automata.getHost(), automata.getPort());
                 profibus = (T) registry.lookup(automata.getRemoteName() + "");
             } catch (Exception e) {
-                System.err.println("No se puede conectar con el automata \"" + automata.getRemoteName() + "\" desde \"" + getRemoteName() + "\". Tratando de reconectar.");
+                if (!errorMostrado) {
+                    System.err.println("No se puede conectar con el automata \"" + automata.getRemoteName() + "\" desde \"" + getRemoteName() + "\". Tratando de reconectar.");
+                    errorMostrado = true;
+                }
                 //e.printStackTrace(System.err);
                 try {
                     Thread.currentThread().sleep(500);

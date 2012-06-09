@@ -10,21 +10,21 @@ import infiniware.automatas.Automata;
  *
  * @author jorge
  */
-public class EstacionOperario extends Estacion {
+public class EstacionValidacion extends Estacion {
 
-    class Montaje extends Estacion.Montaje {
+    class Ocupada extends Estacion.Ocupada {
 
         static final int PROCESAR = 0;
         static final int OPERARIO = 1;
 
-        public Montaje() {
+        public Ocupada() {
             acciones = 2;
         }
 
         public long tiempo(int accion) {
             switch (accion) {
                 case PROCESAR:
-                    return parametros.get("velocidad");
+                    return parametros.get("tiempo");
                 case OPERARIO:
                     return (long) (Math.random() * 1000);
             }
@@ -42,12 +42,15 @@ public class EstacionOperario extends Estacion {
                 case PROCESAR:
                     automata.actualizar(salida, true);
                 case OPERARIO:
-                    automata.actualizar("OK", Math.random() > 0.90);
+                    boolean ok = Math.random() > 0.10;
+                    System.out.println("Operario: pieza " + (ok ? "VALIDA" : "INVALIDA"));
+                    automata.actualizar("OK", ok);
+                    super.postaccion(accion);
             }
         }
     };
 
-    public EstacionOperario(String entrada, String salida) {
+    public EstacionValidacion(String entrada, String salida) {
         super(entrada, salida);
     }
 }

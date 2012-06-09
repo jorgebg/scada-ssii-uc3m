@@ -16,6 +16,7 @@ public class Cinta extends SubAutomata {
 
      
     final String salida;
+    final String entrada;
 
     class Movimiento extends Simulacion {
 
@@ -27,16 +28,22 @@ public class Cinta extends SubAutomata {
         @Override
         public void postaccion(int accion) {
             automata.actualizar(salida, true);
+            if(entrada!=null)
+                automata.actualizar(entrada, false);
         }
     };
 
-    public Cinta(String robot) {
+    public Cinta(String salida, String entrada) {
         super();
-        this.salida = robot;
+        this.salida = salida;
+        this.entrada = entrada;
         //parametros = new Parametros("velocidad", "longitud");
         configurar(new Parametros() {{
           put("velocidad", 1);
           put("longitud", 5);  
         }});
+    }
+    public Cinta(String salida) {
+        this(salida, null);
     }
 }

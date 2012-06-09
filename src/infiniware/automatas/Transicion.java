@@ -20,14 +20,16 @@ public class Transicion {
     public boolean cumple() {
         boolean cumple = true;
         char operacion = 0;
+        char fin = '\n';
         boolean negacion = false;
         String buffer = "";
+        String condicion = this.codicion + fin;
         //System.out.println(codicion);
         //System.out.println(subautomata.estado + " " + origen);
         if (subautomata.estado != origen) {
             cumple = false;
         } else {
-            for (char token : this.codicion.toCharArray()) {
+            for (char token : condicion.toCharArray()) {
                 //System.out.println("{" + buffer + "}" + operacion);
                 if (token == '!') {
                     negacion = true;
@@ -40,7 +42,6 @@ public class Transicion {
                         }
                         buffer = "";
                         if (operacion == 0) {
-                            operacion = token;
                             cumple = valor;
                         } else {
                             cumple = operar(operacion, cumple, valor);
@@ -48,7 +49,7 @@ public class Transicion {
                                 break;
                             }
                         }
-
+                        operacion = token;
                     } else {
                         buffer = buffer + token;
                     }
@@ -60,7 +61,7 @@ public class Transicion {
     }
 
     private boolean esOperacion(char token) {
-        return token == '*' || token == '+';
+        return token == '*' || token == '+' || token == '\n';
     }
 
     private boolean operar(char token, boolean a, boolean b) {

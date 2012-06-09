@@ -30,7 +30,7 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
         this.subautomatas = new GestorSubAutomatas(this) {
 
             {
-                instalar("CT", new Cinta("R2"));
+                instalar("CT", new Cinta("G", "F"));
                 instalar("R2", new Robot2());
             }
         };
@@ -96,9 +96,11 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
     protected IEsclavo conectarEsclavo(int id) {
         return conectarEsclavo(Esclavo.INSTANCIAS.get(id));
     }
+
     protected IEsclavo conectarEsclavo(Automata automata) {
         return conectarEsclavo((Esclavo) automata);
     }
+
     protected IEsclavo conectarEsclavo(Esclavo automata) {
         IEsclavo iesclavo = this.<IEsclavo>conectar(automata);
         esclavos.put(automata.getId(), iesclavo);
@@ -166,17 +168,16 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
         if (id != 0) {
             nombre = "E" + id;
         }
-        System.out.println("M => " + nombre + ":\n" + this.sensores + "\n");
-        if (id == 0) {
-
-            estados[id] = ejecutar(this.sensores);
-        } else {
-            char sensoresEsclavo = this.mapaSensores.codificar(id);
-            char mascaraEsclavo = this.mapaSensores.codificarMascara(id);
-        boolean exito = true;
+        char sensores = this.mapaSensores.codificar(id);
+        char mascara = this.mapaSensores.codificarMascara(id);
+        boolean exito;
         do {
             try {
-                estados[id] = esclavos.ejecutar(id, sensoresEsclavo, mascaraEsclavo);
+                if (id == 0) {
+                    estados[id] = ejecutar(sensores, mascara);
+                } else {
+                    estados[id] = esclavos.ejecutar(id, sensores, mascara);
+                }
                 exito = true;
             } catch (RemoteException ex) {
                 exito = false;
@@ -184,7 +185,7 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
                 conectarEsclavo(id);
             }
         } while (!exito);
-        }
+
         System.out.println("M => " + nombre + ":\n" + this.mapaSensores.automatas.get(id) + "\n");
 
         if (estadoAnterior != estados[id]) {
@@ -194,4 +195,7 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
 
     }
 
+    public void limpiarCPD() {
+        actualizar("M", false);
+    }
 }

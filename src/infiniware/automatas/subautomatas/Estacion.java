@@ -20,16 +20,16 @@ public class Estacion extends SubAutomata {
     final String salida;
 
     
-    class Montaje extends Simulacion {
+    class Ocupada extends Simulacion {
 
         @Override
         public long tiempo(int accion) {
-            return parametros.get("velocidad");
+            return parametros.get("tiempo");
         }
 
         @Override
         public void preaccion(int accion) {
-            Sensores sensores = new Sensores(entrada);
+            Sensores sensores = new Sensores(entrada, false);
             automata.actualizar(sensores);
         }
 

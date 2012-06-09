@@ -31,7 +31,7 @@ public class CintaCapacidad extends Cinta {
                 case MOVER:
                     return super.tiempo(accion);
                 case CARGAR:
-                    return 2000;
+                    return 2000; //TODO nuevo parametro?
             }
             return -1;
         }
@@ -43,6 +43,8 @@ public class CintaCapacidad extends Cinta {
                     desplazar();
                     if(contenido[contenido.length-1])
                         automata.actualizar(salida, true);
+                        if(entrada!=null)
+                            automata.actualizar(entrada, false);
                     break;
                 case CARGAR:
                     contenido[0] = Math.random() > 0.75;

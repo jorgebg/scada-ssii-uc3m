@@ -27,4 +27,6 @@ public interface IMaestro extends Ethernet {
     public void provocarFalloEsclavo(byte esclavo);
 
     public void recuperarFalloEsclavo(byte esclavo);
+    
+    public void limpiarCPD();
 }

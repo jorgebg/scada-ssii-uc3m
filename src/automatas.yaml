@@ -11,8 +11,8 @@ Esclavo1:
       - Reposo => A+!R1
   EM:
     Reposo:
-      - Montaje => C*D
-    Montaje:
+      - Ocupada => C*D
+    Ocupada:
       - Reposo => E
   R1:
     Reposo:
@@ -38,8 +38,8 @@ Esclavo1:
 Esclavo2:
   ES:
     Reposo:
-      - Soldadura => H*!I
-    Soldadura:
+      - Ocupada => H*!I
+    Ocupada:
       - Reposo => I
       
 Esclavo3:
@@ -50,21 +50,21 @@ Esclavo3:
       - Reposo => N+!R2
   EV:
     Reposo:
-      - Validacion => J*!K
-    Validacion:
+      - Ocupada => J*!K
+    Ocupada:
       - Reposo => K
 
 
 Maestro:
   CT:
     Reposo:
-      - Movimiento => G*!R2
+      - Movimiento => F*!G
     Movimiento:
-      - Reposo => G*!R2
+      - Reposo => G
   R2:
     Reposo:
       - MueveConjuntoMontado => G*!H*R2
-      - MueveConjuntoSoldado => J*!K*R2
+      - MueveConjuntoSoldado => I*!J*R2
       - MueveConjuntoValido => K*!L*R2*OK
       - MueveConjuntoNoValido => K*!M*R2*!OK
     MueveConjuntoMontado:
