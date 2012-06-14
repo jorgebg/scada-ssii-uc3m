@@ -44,10 +44,10 @@ public class Gui extends Ui implements Runnable{
             Automata automata = Automata.INSTANCIAS.get(id);
             Map<String, String> estadosSubautomatas = automata.subautomatas.decodificarNombreEstados(estados[id]);
             for (Map.Entry<String, String> entry : estadosSubautomatas.entrySet()) {
-                String nombre = entry.getKey();
+                String subautomata = entry.getKey();
                 String estadoScada = entry.getValue();
-                int estadoGui = obtenerEstadoGui(nombre, estadoScada);
-                Animation animacion = obtenerAnimacion(nombre);
+                int estadoGui = obtenerEstadoGui(subautomata, estadoScada);
+                Animation animacion = obtenerAnimacionSubautomata(subautomata);
                 if(animacion.getState()!=estadoGui)
                     animacion.start(estadoGui);
             }
@@ -68,7 +68,7 @@ public class Gui extends Ui implements Runnable{
         }
     }
     
-    private Animation obtenerAnimacion(String automata) {
+    private Animation obtenerAnimacionSubautomata(String automata) {
         String methodName = "get"+StringUtils.capitalize(automata.toLowerCase());
         Animation animation = null;
         try {
