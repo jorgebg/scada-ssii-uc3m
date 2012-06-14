@@ -1,46 +1,45 @@
-package infiniware.scada.ui.gui;
+package infiniware.scada.ui.gui.view;
 
-import infiniware.scada.ui.Ui;
-
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import org.eclipse.wb.swing.FocusTraversalOnArray;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JTabbedPane;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JTextPane;
-import javax.swing.UIManager;
-import javax.swing.border.EtchedBorder;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.TitledBorder;
+import infiniware.scada.Scada;
 import java.awt.Color;
-import javax.swing.JToggleButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import java.awt.Component;
-import javax.swing.Box;
-import java.awt.Dimension;
-import javax.swing.JSlider;
-import java.awt.Font;
-import javax.swing.JScrollBar;
-import java.awt.event.ContainerAdapter;
-import java.awt.event.ContainerEvent;
-import java.awt.Rectangle;
 import java.awt.ComponentOrientation;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.Frame;
-import java.awt.SystemColor;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-public class Ventana extends JFrame {
+import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+
+import org.eclipse.wb.swing.FocusTraversalOnArray;
+
+import infiniware.scada.ui.gui.view.animation.AnimationController;
+
+public class SCADAUserInterface extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtLongitudCen;
@@ -71,7 +70,9 @@ public class Ventana extends JFrame {
 	private JTextField txtParadasNormales;
 	private JTextField txtParadasEmergencia;
 	private JTextField txtArranques;
-
+	
+	public AnimationController ac;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -79,7 +80,7 @@ public class Ventana extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Ventana frame = new Ventana();
+					SCADAUserInterface frame = new SCADAUserInterface();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -87,18 +88,24 @@ public class Ventana extends JFrame {
 			}
 		});
 	}
-
+	
 	/**
 	 * Create the frame.
 	 */
-	public Ventana() {
-		setExtendedState(Ventana.MAXIMIZED_BOTH);
+	public SCADAUserInterface() {
+		setExtendedState(Frame.MAXIMIZED_BOTH);
 		setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		setBounds(new Rectangle(0, 0, 1024, 1000));
 		setSize(new Dimension(1280, 1000));
 		setTitle("SCADA");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1280, 968);
+		
+		//AnimationController
+		ac = new AnimationController();
+		ac.initAll();
+		
+		//----------//
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -133,13 +140,15 @@ public class Ventana extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
-		JTextPane txtLog = new JTextPane();
-		txtLog.setEditable(false);
-		txtLog.setDragEnabled(true);
-		txtLog.setBounds(6, 14, 1062, 173);
-		panel.add(txtLog);
-		
 		JButton btnStart = new JButton("Start");
+		btnStart.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ac.startAll();
+                                Scada.ui.arrancar();
+			}
+		});
+		
 		btnStart.setForeground(new Color(0, 128, 0));
 		btnStart.setBounds(1078, 19, 144, 23);
 		panel.add(btnStart);
@@ -149,11 +158,29 @@ public class Ventana extends JFrame {
 		btnStop.setBounds(1078, 53, 144, 23);
 		panel.add(btnStop);
 		
+		//EMERGENCY STOP BUTTON
 		JButton btnEmergencyStop = new JButton("Emergency Stop");
+		btnEmergencyStop.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				ac.emergencyStopAll();
+			}
+		});
+		
 		btnEmergencyStop.setBackground(new Color(255, 0, 0));
 		btnEmergencyStop.setForeground(new Color(0, 0, 0));
 		btnEmergencyStop.setBounds(1078, 138, 144, 49);
 		panel.add(btnEmergencyStop);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setBounds(6, 14, 1062, 173);
+		panel.add(scrollPane);
+		
+		JTextPane txtLog = new JTextPane();
+		scrollPane.setViewportView(txtLog);
+		txtLog.setEditable(false);
+		txtLog.setDragEnabled(true);
 		panel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtLog, btnStart, btnStop, btnEmergencyStop}));
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
@@ -164,10 +191,84 @@ public class Ventana extends JFrame {
 		tabbedPane.addTab("Simulador", null, panelSimulador, null);
 		panelSimulador.setLayout(null);
 		
+		//Creates the Simulator frame
 		JPanel panelInstalacion = new JPanel();
 		panelInstalacion.setBackground(Color.LIGHT_GRAY);
 		panelInstalacion.setBounds(6, 6, 1068, 642);
 		panelSimulador.add(panelInstalacion);
+		panelInstalacion.setLayout(null);
+		
+		//CEN
+		JPanel panel_CEN = new JPanel();
+		panel_CEN.setBounds(842, 310, 73, 291);
+		panelInstalacion.add(panel_CEN);
+		panel_CEN.setLayout(null);
+		ac.getCen().createGUI(panel_CEN, panel_CEN.getWidth(), panel_CEN.getHeight());
+		
+		//CEJ
+		JPanel panel_CEJ = new JPanel();
+		panel_CEJ.setBounds(966, 310, 73, 291);
+		panelInstalacion.add(panel_CEJ);
+		ac.getCej().createGUI(panel_CEJ, panel_CEJ.getWidth(), panel_CEJ.getHeight());
+		
+		//R1
+		JPanel panel_R1 = new JPanel();
+		panel_R1.setBounds(691, 75, 371, 232);
+		panelInstalacion.add(panel_R1);
+		ac.getRobot1().createGUI(panel_R1, panel_R1.getWidth(), panel_R1.getHeight());
+		
+		//EM
+		JPanel panel_EM = new JPanel();
+		panel_EM.setBounds(814, 6, 210, 70);
+		panelInstalacion.add(panel_EM);
+		ImageIcon imgEST = new ImageIcon("imgs/estaticas/em.jpg");
+		panel_EM.setLayout(null);
+		JLabel label_EM = new JLabel(imgEST);
+		label_EM.setBounds(0, 0, 210, 70);
+		panel_EM.add(label_EM);
+		
+		//ES
+		JPanel panel_ES = new JPanel();
+		panel_ES.setBounds(75, 6, 210, 70);
+		panelInstalacion.add(panel_ES);
+		panel_ES.setLayout(null);
+		JLabel label_ES = new JLabel(imgEST);
+		label_ES.setBounds(0, 0, 210, 70);
+		panel_ES.add(label_ES);
+		
+		//EV
+		JPanel panel_EV = new JPanel();
+		panel_EV.setBounds(6, 63, 70, 210);
+		panelInstalacion.add(panel_EV);
+		ImageIcon imgEV = new ImageIcon("imgs/estaticas/ev.jpg");
+		panel_EV.setLayout(null);
+		JLabel label_EV = new JLabel(imgEV);
+		label_EV.setBounds(0, 0, 70, 210);
+		panel_EV.add(label_EV);
+		
+		//R2
+		JPanel panel_R2 = new JPanel();
+		panel_R2.setBounds(75, 75, 371, 232);
+		panelInstalacion.add(panel_R2);
+		ac.getRobot2().createGUI(panel_R2, panel_R2.getWidth(), panel_R2.getHeight());
+		
+		//COK
+		JPanel panel_COK = new JPanel();
+		panel_COK.setBounds(120, 310, 73, 291);
+		panelInstalacion.add(panel_COK);
+		ac.getCok().createGUI(panel_COK, panel_COK.getWidth(), panel_COK.getHeight());
+		
+		//CNOK
+		JPanel panel_CNOK = new JPanel();
+		panel_CNOK.setBounds(237, 310, 313, 291);
+		panelInstalacion.add(panel_CNOK);
+		ac.getCnok().createGUI(panel_CNOK, panel_CNOK.getWidth(), panel_CNOK.getHeight());
+		
+		//CT
+		JPanel panel_CT = new JPanel();
+		panel_CT.setBounds(446, 104, 244, 63);
+		panelInstalacion.add(panel_CT);
+		ac.getCt().createGUI(panel_CT, panel_CT.getWidth(), panel_CT.getHeight());
 		
 		JPanel panelControlAutomatas = new JPanel();
 		panelControlAutomatas.setBackground(Color.LIGHT_GRAY);
@@ -178,6 +279,7 @@ public class Ventana extends JFrame {
 		JButton btnVaciarConjuntosDefectuosos = new JButton("Vaciar CNOK");
 		btnVaciarConjuntosDefectuosos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				ac.getCnok().empty();
 			}
 		});
 		btnVaciarConjuntosDefectuosos.setBounds(10, 537, 122, 38);
