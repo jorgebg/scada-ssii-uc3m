@@ -12,6 +12,7 @@ import infiniware.scada.modelos.Parametros;
 import infiniware.scada.simulador.Simulador;
 import infiniware.scada.ui.Ui;
 import infiniware.scada.ui.cli.Cli;
+import infiniware.scada.ui.gui.Gui;
 
 public class Scada implements Ethernet, IProcesable, IScada, infiniware.automatas.maestro.IScada {
 
@@ -24,7 +25,8 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
     public final Acciones acciones = new Acciones();
     public final GestorSensores mapaSensores = new GestorSensores();
     public static final Scada INSTANCIA = new Scada();
-    public static Ui ui = Cli.INSTANCIA;
+    //public static Ui ui = Cli.INSTANCIA;
+    public static Ui ui = Gui.INSTANCIA;
     
     /**
      * Estados de los automata: id {0..3} => estado {0..9}

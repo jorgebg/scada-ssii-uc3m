@@ -4,24 +4,33 @@
  */
 package infiniware.scada.ui.gui;
 
+import infiniware.automatas.Automata;
+import infiniware.scada.Scada;
 import infiniware.scada.ui.Ui;
 import infiniware.scada.ui.cli.Cli;
+import infiniware.scada.ui.gui.view.SCADAUserInterface;
+import infiniware.scada.ui.gui.view.animation.Animation;
 import java.awt.EventQueue;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import org.yaml.snakeyaml.Yaml;
 
 /**
  *
  * @author jorge
  */
-public class Gui extends Ui {
+public class Gui extends Ui implements Runnable{
 
     public static final Gui INSTANCIA = new Gui();
+    private SCADAUserInterface frame;
+    private Thread thread;
 
     private Gui() {
     }
 
     public void run() {
         try {
-            Ventana frame = new Ventana();
+            frame = new SCADAUserInterface();
             frame.setVisible(true);
         } catch (Exception e) {
             e.printStackTrace(System.err);
@@ -29,15 +38,40 @@ public class Gui extends Ui {
     }
 
     public void actualizar(char[] estados) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        for (int id = 0; id < estados.length; id++) {
+            Automata automata = Automata.INSTANCIAS.get(id);
+            Map<String, String> estadosSubautomatas = automata.subautomatas.decodificarNombreEstados(estados[id]);
+            for (Map.Entry<String, String> entry : estadosSubautomatas.entrySet()) {
+                String nombre = entry.getKey();
+                String estadoScada = entry.getValue();
+                int estadoGui = obtenerEstadoGui(nombre, estadoScada);
+                Animation animacion = obtenerAnimacion(nombre);
+                if(animacion.getState()!=estadoGui)
+                    animacion.start(estadoGui);
+            }
+        }
+        //MapUtils.debugPrint(System.out, "Estados", arbol);
     }
 
     public Thread mostrar() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
+        thread = new Thread(this);
+        thread.start();
+        return thread;
     }
 
     public void ocultar() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        synchronized (INSTANCIA) {
+            thread.notify();
+        }
+    }
+    
+    private Animation obtenerAnimacion(String nombre) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    private int obtenerEstadoGui(String nombre, String estadoScada) {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
 }
