@@ -11,8 +11,10 @@ import infiniware.scada.ui.cli.Cli;
 import infiniware.scada.ui.gui.view.SCADAUserInterface;
 import infiniware.scada.ui.gui.view.animation.Animation;
 import java.awt.EventQueue;
+import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -66,8 +68,16 @@ public class Gui extends Ui implements Runnable{
         }
     }
     
-    private Animation obtenerAnimacion(String nombre) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private Animation obtenerAnimacion(String automata) {
+        String methodName = "get"+StringUtils.capitalize(automata.toLowerCase());
+        Animation animation = null;
+        try {
+        Method method = frame.ac.getClass().getMethod(methodName);
+        animation = (Animation) method.invoke(frame.ac);
+        } catch (Exception e) {
+        System.err.println("Error al llamar al metodo '"+methodName+"'");
+        }
+        return animation;
     }
 
     private int obtenerEstadoGui(String nombre, String estadoScada) {
