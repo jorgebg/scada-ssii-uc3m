@@ -67,11 +67,12 @@ public class Robot2Animation implements ActionListener, Animation {
 			this.pause = Robot2Animation.PAUSE_TIME;
 			
 			this.state = Robot2Animation.REP;
-			this.imgsR2_REP = new ImageIcon(Robot2Animation.DIR_R2+"cm/ct2es1.jpg");
-			this.statusLabel = new JLabel(this.imgsR2_REP) ;
-			
 			this.stop = false;
 			this.emergencyStop = false;
+
+			this.imgsR2_REP = new ImageIcon(Robot2Animation.DIR_R2+"cm/ct2es1.jpg");
+			this.statusLabel = new JLabel(this.imgsR2_REP) ;
+			this.robot2 = new Robot2();
 		}
 
 		public void init(){
@@ -92,14 +93,12 @@ public class Robot2Animation implements ActionListener, Animation {
 		public void createGUI(JPanel parentPanel, int with, int height){
 			parentPanel.setLayout(null); //set layaout to absolute coordenates
 
-			robot2 = new Robot2();
 			robot2.setVisible(true);
 			robot2.setOpaque(true);
 			robot2.setBounds(0, 0, with, height);
 			parentPanel.add(robot2);	
 			
-			robot2.addMouseListener(new ALR2(this));
-			
+			//robot2.addMouseListener(new ALR2(this));
 			robot2.add(statusLabel, BorderLayout.CENTER);
 		}
 		

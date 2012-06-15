@@ -64,11 +64,12 @@ public class Robot1Animation implements ActionListener, Animation {
 		this.pause = Robot1Animation.PAUSE_TIME;
 		
 		this.state = Robot1Animation.REP;
-		this.imgsR1_REP = new ImageIcon(Robot1Animation.DIR_R1+"en/cen2em1.jpg");
-		this.statusLabel = new JLabel(this.imgsR1_REP) ;
-		
 		this.stop = false;
 		this.emergencyStop = false;		
+
+		this.imgsR1_REP = new ImageIcon(Robot1Animation.DIR_R1+"en/cen2em1.jpg");
+		this.statusLabel = new JLabel(this.imgsR1_REP) ;
+		this.robot1 = new Robot1();
 	}
 
 	public void init(){
@@ -87,13 +88,12 @@ public class Robot1Animation implements ActionListener, Animation {
 	public void createGUI(JPanel parentPanel, int with, int height){
 		parentPanel.setLayout(null); //set layaout to absolute coordenates
 
-		robot1 = new Robot1();
 		robot1.setVisible(true);
 		robot1.setOpaque(true);
 		robot1.setBounds(0, 0, with, height);
 		parentPanel.add(robot1);	
 		
-		robot1.addMouseListener(new ALR(this));
+		//robot1.addMouseListener(new ALR(this));
 		robot1.add(statusLabel);
 	}
 	

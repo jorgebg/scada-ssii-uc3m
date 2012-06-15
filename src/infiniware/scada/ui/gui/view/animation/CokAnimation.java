@@ -20,6 +20,7 @@ public class CokAnimation implements ActionListener, Animation {
 	private static final int FRAMES_COK = 4;		 	//number of frames to load in the slides (COK)
 	private static final String DIR_COK = "imgs/cintas/"; 	//direction of the slide images / (cok1-4.jpg)
 	private static final int COK_MAX = 10200;			//Max size of the images
+	private static final int PAUSE_TIME = 0;			//Lag time for image loading
 	
 	public static final int STOP = 0;
 	public static final int MOVE = 1;
@@ -42,19 +43,21 @@ public class CokAnimation implements ActionListener, Animation {
 	
 	public CokAnimation(double timeCOK){
 		this.speed = ImgLoader.calculateSpeed(timeCOK, CokAnimation.FRAMES_COK);
+		this.pause = CokAnimation.PAUSE_TIME;
 		
 		this.imgsREP = new ImageIcon(CokAnimation.DIR_COK+"cok/cok1.jpg");
 		this.state=CokAnimation.STOP;
-		this.statusLabel = new JLabel(this.imgsREP);
 		
 		this.stop = false;
 		this.emergencyStop = false;
+
+		this.statusLabel = new JLabel(imgsREP);
+		this.cok = new Cinta();
 	}
 	
 	public void init(){
 		this.timer = new Timer(this.speed, this);
         this.timer.setInitialDelay(this.pause);
-        //this.timer.start(); 
         
         //Start loading the images in the background.
         this.slideWorker.execute();
@@ -63,15 +66,13 @@ public class CokAnimation implements ActionListener, Animation {
 	public void createGUI(JPanel parentPanel, int with, int height){
 		parentPanel.setLayout(null); //set layaout to absolute coordenates
 
-		cok = new Cinta();
 		cok.setVisible(true);
 		cok.setOpaque(true);
 		cok.setBounds(0, 0, with, height);
 		parentPanel.add(cok);	
 		
-		cok.addMouseListener(new ALCOK(this));
-		
-		cok.add(statusLabel, BorderLayout.CENTER);
+		//cok.addMouseListener(new ALCOK(this));
+        this.cok.add(statusLabel);
 	}
 	
 	

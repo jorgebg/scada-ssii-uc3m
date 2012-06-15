@@ -22,6 +22,7 @@ public class CtAnimation implements ActionListener, Animation {
 	private static final int CT_MAX = 10200;			//Max size of the images
 	public static final int STOP = 0;
 	public static final int MOVE = 1;
+	private static final int PAUSE_TIME = 0;			//Lag time for image loading
 	
 	private ImageIcon imgsCT[]; //the images of the R1 movement (from CEN to EM)
 	private ImageIcon imgsREP;
@@ -41,13 +42,15 @@ public class CtAnimation implements ActionListener, Animation {
 	
 	public CtAnimation(double timeCT){
 		this.speed = ImgLoader.calculateSpeed(timeCT, CtAnimation.FRAMES_CT);
+		this.pause = CtAnimation.PAUSE_TIME;		
 		
-		this.imgsREP = new ImageIcon(CtAnimation.DIR_CT+"ct/ct1.jpg");
 		this.state=CtAnimation.STOP;
-		this.statusLabel = new JLabel(this.imgsREP);
-		
 		this.stop = false;
 		this.emergencyStop = false;
+		
+		this.imgsREP = new ImageIcon(CtAnimation.DIR_CT+"ct/ct1.jpg");
+		this.statusLabel = new JLabel(this.imgsREP);
+		this.ct = new Cinta();
 	}
 	
 	public void init(){
@@ -62,15 +65,13 @@ public class CtAnimation implements ActionListener, Animation {
 	public void createGUI(JPanel parentPanel, int with, int height){
 		parentPanel.setLayout(null); //set layaout to absolute coordenates
 
-		ct = new Cinta();
 		ct.setVisible(true);
 		ct.setOpaque(true);
 		ct.setBounds(0, 0, with, height);
 		parentPanel.add(ct);	
 		
-		ct.addMouseListener(new ALCT(this));
-		
-		ct.add(statusLabel, BorderLayout.CENTER);
+		//ct.addMouseListener(new ALCT(this));
+		this.ct.add(statusLabel);
 	}
 	
 	

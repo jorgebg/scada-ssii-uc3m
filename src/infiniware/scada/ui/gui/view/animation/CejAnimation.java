@@ -20,6 +20,7 @@ public class CejAnimation implements Animation, ActionListener {
 	private static final int FRAMES_CEJ = 4;		 	//number of frames to load in the slides (CEN, CEJ)
 	private static final String DIR_CEJ = "imgs/cintas/"; 	//direction of the slide images / (cen-4.jpg)
 	private static final int CEJ_MAX = 10200;			//Max size of the images
+	private static final int PAUSE_TIME = 0;			//Lag time for image loading
 	
 	public static final int STOP = 0;
 	public static final int MOVE = 1;
@@ -42,19 +43,20 @@ public class CejAnimation implements Animation, ActionListener {
 	
 	public CejAnimation(double timeCEJ){
 		this.speed = ImgLoader.calculateSpeed(timeCEJ, CejAnimation.FRAMES_CEJ);
+		this.pause = CejAnimation.PAUSE_TIME;
 		
-		this.imgsREP = new ImageIcon(CejAnimation.DIR_CEJ+"cen/cen1.jpg");
-		this.state=CejAnimation.STOP;
-		this.statusLabel = new JLabel(this.imgsREP);
-		
+		this.state = CejAnimation.STOP;
 		this.stop = false;
 		this.emergencyStop = false;
+		
+		this.imgsREP = new ImageIcon(CejAnimation.DIR_CEJ+"cen/cen1.jpg");
+		this.statusLabel = new JLabel(this.imgsREP);
+		this.cej= new Cinta();
 	}
 	
 	public void init(){
 		this.timer = new Timer(this.speed, this);
         this.timer.setInitialDelay(this.pause);
-        //this.timer.start(); 
         
         //Start loading the images in the background.
         this.slideWorker.execute();
@@ -63,15 +65,13 @@ public class CejAnimation implements Animation, ActionListener {
 	public void createGUI(JPanel parentPanel, int with, int height){
 		parentPanel.setLayout(null); //set layaout to absolute coordenates
 
-		cej = new Cinta();
 		cej.setVisible(true);
 		cej.setOpaque(true);
 		cej.setBounds(0, 0, with, height);
 		parentPanel.add(cej);	
 		
-		cej.addMouseListener(new ALCEJ(this));
-		
-		cej.add(statusLabel, BorderLayout.CENTER);
+		//cej.addMouseListener(new ALCEJ(this));
+		this.cej.add(statusLabel);
 	}
 	
 	
