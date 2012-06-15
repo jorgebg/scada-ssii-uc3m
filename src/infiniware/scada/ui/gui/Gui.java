@@ -25,9 +25,9 @@ import org.yaml.snakeyaml.Yaml;
 public class Gui extends Ui implements Runnable {
 
     public static final Gui INSTANCIA = new Gui();
+    public static final Map<String, Map<String, Integer>> mapaEstadosGui = generarMapaEstadosGui();
     private SCADAUserInterface frame;
     private Thread thread;
-    Map<String, Map<String, Integer>> mapaEstadosGui = generarMapaEstadosGui();
 
     private Gui() {
     }
@@ -139,18 +139,18 @@ public class Gui extends Ui implements Runnable {
         };
         Map<String, Map<String, Integer>> mapa = new HashMap<String, Map<String, Integer>>();
         for (Map.Entry<String, String[]> entry : mapaBase.entrySet()) {
+            int indice = 0;
             String subautomata = entry.getKey();
             String[] estadosSubautomata = entry.getValue();
 
             Map<String, Integer> mapaEstados = new HashMap<String, Integer>();
 
             for (String estadosIndice : estadosSubautomata) {
-                for (int i = 0; i < estadosIndice.split(", ").length; i++) {
-                    mapaEstados.put(estadosSubautomata[i], i);
-
+                String[] estados = estadosIndice.split(", ");
+                for (int i = 0; i < estados.length; i++) {
+                    mapaEstados.put(estados[i], indice++);
                 }
-
-
+                mapa.put(subautomata, mapaEstados);
             }
         }
         return mapa;
