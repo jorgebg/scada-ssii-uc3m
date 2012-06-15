@@ -18,16 +18,20 @@ import infiniware.scada.ui.gui.view.ImgLoader;
 
 public class CenAnimation implements ActionListener, Animation{
 
-	private static final int FRAMES_CEN = 4;		 	//number of frames to load in the slides (CEN, CEJ)
+	private static final int FRAMES_CEN = 4;		 		//number of frames to load in the slides (CEN, CEJ)
 	private static final String DIR_CEN = "imgs/cintas/"; 	//direction of the slide images / (cen-4.jpg)
-	private static final int CEN_MAX = 10200;			//Max size of the images
+	private static final int CEN_MAX = 10200;				//Max size of the images
+	
+	public static final int STOP = 0;
+	public static final int MOVE = 1;
 	
 	private ImageIcon imgsCEN[]; //the images of the R1 movement (from CEN to EM)
+	private ImageIcon imgsREP;
 	
 	private Cinta cen;
+	private int state;
 	
 	private JLabel statusLabel;		//Used for suspended animation until the beginning of the animation
-	
 	private int loopslot = -1;  //the current frame number
 	
 	Timer timer;        //the timer animating the images
@@ -39,6 +43,11 @@ public class CenAnimation implements ActionListener, Animation{
 	
 	public CenAnimation(double timeCEN){
 		this.speed = ImgLoader.calculateSpeed(timeCEN, CenAnimation.FRAMES_CEN);
+		
+		this.imgsREP = new ImageIcon(CenAnimation.DIR_CEN+"cen/cen1.jpg");
+		this.statusLabel = new JLabel(this.imgsREP);
+		
+		this.state=CenAnimation.STOP;
 		this.stop = false;
 		this.emergencyStop = false;
 	}
@@ -46,7 +55,7 @@ public class CenAnimation implements ActionListener, Animation{
 	public void init(){
 		this.timer = new Timer(this.speed, this);
         this.timer.setInitialDelay(this.pause);
-        this.timer.start(); 
+        //this.timer.start(); 
         
         //Start loading the images in the background.
         this.slideWorker.execute();
@@ -63,8 +72,6 @@ public class CenAnimation implements ActionListener, Animation{
 		
 		cen.addMouseListener(new ALCEN(this));
 		
-		ImageIcon stopedRobot = new ImageIcon(CenAnimation.DIR_CEN+"cen/cen1.jpg");
-		statusLabel = new JLabel(stopedRobot,JLabel.CENTER);
 		cen.add(statusLabel, BorderLayout.CENTER);
 	}
 	
@@ -111,11 +118,13 @@ public class CenAnimation implements ActionListener, Animation{
 		
 		protected void paintComponent(Graphics g){
 			super.paintComponent(g);
-	
+			
 			if(slideWorker.isDone() && (loopslot > -1) && (loopslot < CenAnimation.FRAMES_CEN)){
 				if(imgsCEN != null && imgsCEN[loopslot] != null){
 					imgsCEN[loopslot].paintIcon(this, g, 0, 0);
 				}
+			}else{
+				imgsREP.paintIcon(this, g, 0, 0);
 			}
 			
 		}
@@ -149,11 +158,7 @@ public class CenAnimation implements ActionListener, Animation{
 		}
 	}
 	
-	public void start() {
-		if(this.timer==null){
-			this.init();
-		}
-		
+	private void start() {		
 		if (slideWorker.isDone() && CenAnimation.FRAMES_CEN > 1){
 			//this.loopslot = 0;
 			timer.restart();
@@ -162,12 +167,13 @@ public class CenAnimation implements ActionListener, Animation{
 		}
 	}
 
+	@Override
 	public void emergencyStop() {
 		timer.stop();
 		this.emergencyStop = true;
 	}
 	
-	public void stop() {
+	private void stop() {
 		timer.stop();
 		this.stop = true;
 	}
@@ -180,10 +186,10 @@ public class CenAnimation implements ActionListener, Animation{
 		}
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
-			if(!csim.emergencyStop){
-				csim.emergencyStop();
+			if(csim.state==csim.STOP){
+				csim.start(1);
 			}else{
-				csim.start();
+				csim.start(0);
 			}
 		}
 		
@@ -205,5 +211,25 @@ public class CenAnimation implements ActionListener, Animation{
 			// TODO Auto-generated method stub
 		}
 		
+	}
+
+	@Override
+	public void start(int state) {
+		if(this.timer==null){
+			this.init();
+		}
+		
+		if(this.state != state)
+			this.state=state;
+		
+		if(state == CenAnimation.STOP)
+			this.stop();
+		else
+			this.start();
+	}
+
+	@Override
+	public int getState() {
+		return this.state;
 	}
 }

@@ -20,17 +20,20 @@ import infiniware.scada.ui.gui.view.ImgLoader;
 public class Robot2Animation implements ActionListener, Animation {
 
 	//States to be accessed from other classes
-		public static final int CT2ES = 0;	
-		public static final int ES2EV = 1;	
-		public static final int EV2COK = 2;
-		public static final int EV2CNOK = 3;
+		public static final int REP =0;
+		public static final int CT2ES = 1;	
+		public static final int ES2EV = 2;	
+		public static final int EV2COK = 3;
+		public static final int EV2CNOK = 4;
 
 		private static final int FRAMES_ROBOT = 24; 		//number of frames to load in the robots (R2)
 		private static final int FRAMES_REP =4;				//number of frames from REP to CT (needed to calculate the time)
 		private static final String DIR_R2 = "imgs/r2/" ; 	//direction of the R1 images / (ct2es1-24.jpg, es2ev1-24.jpg, ev2cok1-24.jpg, ev2cnok1-24.jpg)
 		private static final int R2_MAX = 10220;			//Max size of the images
-		private static final int N_STATES = 4;				//Max number of states	
+		private static final int N_STATES = 5;				//Max number of states	
+		private static final int PAUSE_TIME = 0;			//Lag time for image loading
 			
+		private ImageIcon imgsR2_REP; 		//the image for the R2 REP state 
 		private ImageIcon imgsR2_CT2ES[]; //the images of the R1 movement (from CT to ES)
 		private ImageIcon imgsR2_ES2EV[]; //the images of the R1 movement (from ES to EV)
 		private ImageIcon imgsR2_EV2COK[];  //the images of the R1 movement (from EV to COK)
@@ -56,15 +59,19 @@ public class Robot2Animation implements ActionListener, Animation {
 		private boolean stop;
 		private boolean emergencyStop;
 		
-		public Robot2Animation(double timeREP2CT, double timeCT2ES, double timeES2EV, int initialState){
+		public Robot2Animation(double timeREP2CT, double timeCT2ES, double timeES2EV){
 			this.speedREP2CT = ImgLoader.calculateSpeed(timeREP2CT, Robot2Animation.FRAMES_REP);
 			this.speedCT2ES = ImgLoader.calculateSpeed(timeCT2ES, (Robot2Animation.FRAMES_ROBOT - Robot2Animation.FRAMES_REP));
 			this.speedES2EV = ImgLoader.calculateSpeed(timeES2EV, Robot2Animation.FRAMES_ROBOT);
 			this.speedEV2COK = this.speedES2EV;	//no time defined for this action.
-			this.state = initialState;
+			this.pause = Robot2Animation.PAUSE_TIME;
+			
+			this.state = Robot2Animation.REP;
+			this.imgsR2_REP = new ImageIcon(Robot2Animation.DIR_R2+"cm/ct2es1.jpg");
+			this.statusLabel = new JLabel(this.imgsR2_REP) ;
+			
 			this.stop = false;
 			this.emergencyStop = false;
-			this.pause = 00;
 		}
 
 		public void init(){
@@ -93,8 +100,6 @@ public class Robot2Animation implements ActionListener, Animation {
 			
 			robot2.addMouseListener(new ALR2(this));
 			
-			ImageIcon stopedRobot = new ImageIcon(Robot2Animation.DIR_R2+"ct2es1.jpg");
-			statusLabel = new JLabel(stopedRobot,JLabel.CENTER);
 			robot2.add(statusLabel, BorderLayout.CENTER);
 		}
 		
@@ -175,6 +180,10 @@ public class Robot2Animation implements ActionListener, Animation {
 				super.paintComponent(g);
 			
 				switch(state){
+				case(Robot2Animation.REP):
+					if(imgsR2_REP != null)
+						imgsR2_REP.paintIcon(this, g, 0, 0);
+					break;
 				case(Robot2Animation.CT2ES):
 					if(robotWorker.isDone() && (loopslot > -1) && (loopslot < Robot2Animation.FRAMES_ROBOT)){
 						if(imgsR2_CT2ES != null && imgsR2_CT2ES[loopslot] != null){
@@ -247,8 +256,9 @@ public class Robot2Animation implements ActionListener, Animation {
 			}
 		}
 		
+		@Override
 		public void start(int state) {
-			if(state < 0 || state > 3){
+			if(state < 0 || state >= Robot2Animation.N_STATES){
 				System.err.println("Invalid state give to Robot2Animation.start(int state)");
 			}else{
 				if(this.timer==null)
@@ -272,11 +282,8 @@ public class Robot2Animation implements ActionListener, Animation {
 				}
 			}
 		}
-		
-		public void start() {
-			this.start(this.state);
-		}
 
+		@Override
 		public void emergencyStop() {
 			timer.stop();
 			this.emergencyStop = true;
@@ -293,9 +300,12 @@ public class Robot2Animation implements ActionListener, Animation {
 		 * @param state
 		 * @return the new speed or -1 if the given state was not correct
 		 */
-		public int changeInitialSpeed(int state){
+		private int changeInitialSpeed(int state){
 			int newSpeed = -1;
 			switch(state){
+			case(Robot2Animation.REP):
+				newSpeed = this.speedREP2CT;
+			break;
 			case(Robot2Animation.CT2ES):
 				newSpeed = this.speedREP2CT;
 			break;
@@ -312,7 +322,6 @@ public class Robot2Animation implements ActionListener, Animation {
 				System.err.println("Invalid state give to Robot2Animation.changeSpeed(int speed)");
 				break;
 			}
-			
 			return newSpeed;
 		}
 		
@@ -322,7 +331,7 @@ public class Robot2Animation implements ActionListener, Animation {
 		 * needed because of the time difference between
 		 * the two behaviors.
 		 */
-		public void updateSpeed(){
+		private void updateSpeed(){
 			this.speed = this.speedCT2ES;
 			timer.setDelay(this.speed);
 			timer.setInitialDelay(this.pause);
@@ -335,12 +344,16 @@ public class Robot2Animation implements ActionListener, Animation {
 		 * needed because of the time difference between
 		 * the two behaviors.
 		 */
-		public void resetSpeed(){
+		private void resetSpeed(){
 			this.speed = this.speedREP2CT;
 			timer.setDelay(this.speed);
 			timer.start();
 		}
 		
+		@Override
+		public int getState() {
+			return this.state;
+		}
 		
 		public class ALR2 implements MouseListener{
 			Robot2Animation rsim;
@@ -351,7 +364,7 @@ public class Robot2Animation implements ActionListener, Animation {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				count++;
-				if(count > 3){
+				if(count >= Robot2Animation.N_STATES){
 					count = 0;
 				}
 				//System.out.println("Estado: "+rsim.getState());

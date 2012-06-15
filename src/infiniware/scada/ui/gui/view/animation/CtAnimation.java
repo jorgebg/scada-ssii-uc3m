@@ -20,14 +20,16 @@ public class CtAnimation implements ActionListener, Animation {
 	private static final int FRAMES_CT = 4;		 	//number of frames to load in the slides (CT)
 	private static final String DIR_CT = "imgs/cintas/"; 	//direction of the slide images / (ct1-4.jpg)
 	private static final int CT_MAX = 10200;			//Max size of the images
+	public static final int STOP = 0;
+	public static final int MOVE = 1;
 	
-		
 	private ImageIcon imgsCT[]; //the images of the R1 movement (from CEN to EM)
+	private ImageIcon imgsREP;
 	
 	private Cinta ct;
+	private int state;
 	
 	private JLabel statusLabel;		//Used for suspended animation until the beginning of the animation
-	
 	private int loopslot = -1;  //the current frame number
 	
 	Timer timer;        //the timer animating the images
@@ -39,6 +41,11 @@ public class CtAnimation implements ActionListener, Animation {
 	
 	public CtAnimation(double timeCT){
 		this.speed = ImgLoader.calculateSpeed(timeCT, CtAnimation.FRAMES_CT);
+		
+		this.imgsREP = new ImageIcon(CtAnimation.DIR_CT+"ct/ct1.jpg");
+		this.state=CtAnimation.STOP;
+		this.statusLabel = new JLabel(this.imgsREP);
+		
 		this.stop = false;
 		this.emergencyStop = false;
 	}
@@ -46,7 +53,7 @@ public class CtAnimation implements ActionListener, Animation {
 	public void init(){
 		this.timer = new Timer(this.speed, this);
         this.timer.setInitialDelay(this.pause);
-        this.timer.start(); 
+        //this.timer.start(); 
         
         //Start loading the images in the background.
         this.slideWorker.execute();
@@ -63,8 +70,6 @@ public class CtAnimation implements ActionListener, Animation {
 		
 		ct.addMouseListener(new ALCT(this));
 		
-		ImageIcon stopedRobot = new ImageIcon(CtAnimation.DIR_CT+"ct/ct1.jpg");
-		statusLabel = new JLabel(stopedRobot,JLabel.CENTER);
 		ct.add(statusLabel, BorderLayout.CENTER);
 	}
 	
@@ -116,8 +121,9 @@ public class CtAnimation implements ActionListener, Animation {
 				if(imgsCT != null && imgsCT[loopslot] != null){
 					imgsCT[loopslot].paintIcon(this, g, 0, 0);
 				}
-			}
-			
+			}else{
+				imgsREP.paintIcon(this, g, 0, 0);
+			}			
 		}
 	}
 
@@ -149,11 +155,7 @@ public class CtAnimation implements ActionListener, Animation {
 		}
 	}
 	
-	public void start() {
-		if(this.timer==null){
-			this.init();
-		}
-		
+	private void start() {
 		if (slideWorker.isDone() && CtAnimation.FRAMES_CT > 1){
 			timer.restart();
 			this.stop = false;
@@ -161,12 +163,13 @@ public class CtAnimation implements ActionListener, Animation {
 		}
 	}
 
+	@Override
 	public void emergencyStop() {
 		timer.stop();
 		this.emergencyStop = true;
 	}
 	
-	public void stop() {
+	private void stop() {
 		timer.stop();
 		this.stop = true;
 	}
@@ -180,10 +183,10 @@ public class CtAnimation implements ActionListener, Animation {
 		}
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
-			if(!csim.emergencyStop){
-				csim.emergencyStop();
+			if(csim.state==csim.STOP){
+				csim.start(1);
 			}else{
-				csim.start();
+				csim.start(0);
 			}
 		}
 
@@ -205,6 +208,26 @@ public class CtAnimation implements ActionListener, Animation {
 			// TODO Auto-generated method stub
 		}
 
+	}
+
+	@Override
+	public void start(int state) {
+		if(this.timer==null){
+			this.init();
+		}
+		
+		if(this.state != state)
+			this.state=state;
+		
+		if(state == CtAnimation.STOP)
+			this.stop();
+		else
+			this.start();
+	}
+
+	@Override
+	public int getState() {
+		return this.state;
 	}
 
 }

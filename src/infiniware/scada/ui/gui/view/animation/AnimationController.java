@@ -5,12 +5,10 @@ public class AnimationController {
 	private final double DEFAULT_ROBOT1_RECOGIDA = 5.0;
 	private final double DEFAULT_ROBOT1_TRANS_CEN = 5.0;
 	private final double DEFAULT_ROBOT1_TRANS_EM = 5.0;
-	private final int DEFAULT_ROBOT1_STATE = Robot1Animation.CEN2EM;
 	
 	private final double DEFAULT_ROBOT2_RECOGIDA = 5.0;
 	private final double DEFAULT_ROBOT2_TRANS_CT = 5.0;
 	private final double DEFAULT_ROBOT2_TRANS_EV = 5.0;
-	private final int DEFAULT_ROBOT2_STATE = Robot2Animation.CT2ES;
 	
 	private final double DEFAULT_CEN = 0.5;
 	private final double DEFAULT_CEJ = 0.5;
@@ -28,8 +26,8 @@ public class AnimationController {
 	private CnokAnimation cnok;
 	
 	public AnimationController(){
-		robot1 = new Robot1Animation(this.DEFAULT_ROBOT1_RECOGIDA,this.DEFAULT_ROBOT1_TRANS_CEN, this.DEFAULT_ROBOT1_TRANS_EM, this.DEFAULT_ROBOT1_STATE);
-		robot2 = new Robot2Animation(this.DEFAULT_ROBOT2_RECOGIDA,this.DEFAULT_ROBOT2_TRANS_CT, this.DEFAULT_ROBOT2_TRANS_EV, this.DEFAULT_ROBOT2_STATE);
+		robot1 = new Robot1Animation(this.DEFAULT_ROBOT1_RECOGIDA,this.DEFAULT_ROBOT1_TRANS_CEN, this.DEFAULT_ROBOT1_TRANS_EM);
+		robot2 = new Robot2Animation(this.DEFAULT_ROBOT2_RECOGIDA,this.DEFAULT_ROBOT2_TRANS_CT, this.DEFAULT_ROBOT2_TRANS_EV);
 		
 		cen = new CenAnimation(this.DEFAULT_CEN);
 		cej = new CejAnimation(this.DEFAULT_CEJ);
@@ -61,15 +59,15 @@ public class AnimationController {
 	}
 	
 	public void startAll(){
-		this.robot1.start();
-		this.robot2.start();
+		this.robot1.start(robot1.getState());
+		this.robot2.start(robot1.getState());
 		
-		this.cen.start();
-		this.cej.start();
-		this.ct.start();
+		this.cen.start(CenAnimation.STOP);
+		this.cej.start(CejAnimation.STOP);
+		this.ct.start(CtAnimation.STOP);
 		
-		this.cok.start();
-		this.cnok.start();
+		this.cok.start(CokAnimation.STOP);
+		this.cnok.start(CnokAnimation.MOVE);
 		
 	}
 

@@ -22,17 +22,19 @@ public class CnokAnimation implements ActionListener, Animation {
 	private static final int CNOK_MAX = 19345;				//Max size of the images
 	private final int GravitySpeed = 200;			
 	
+	public static final int EMTPY=0;
+	public static final int FULL=1;
+	public static final int MOVE=2;
+	
 	private ImageIcon imgsCNOK[]; 					//the images of the movement from CNOK to NOKContainer
-	//private ImageIcon staticConteiner[];			//staticConteiner[0] - empty, staticConteiner[1] - full
 	private ImageIcon emptyConteiner;
-	private ImageIcon normalConteiner;
+	//private ImageIcon normalConteiner;
 	private ImageIcon fullConteiner;
 	
-	
 	private Cinta cnok;
+	private int state;
 	
 	private JLabel statusLabel;		//Used for suspended animation until the beginning of the animation
-	
 	private int loopslot = -1;  //the current frame number
 	
 	Timer timer;        //the timer animating the images
@@ -41,26 +43,24 @@ public class CnokAnimation implements ActionListener, Animation {
 		
 	private boolean stop;
 	private boolean emergencyStop;
-	private boolean dynamic;
-	private boolean isFull;
-	private boolean isEmpty;
 	
 	public CnokAnimation(){
 		this.speed = this.GravitySpeed;
 		this.stop = false;
 		this.emergencyStop = false;
-		this.dynamic = true;
-		this.isFull = false;
-		this.isEmpty = true;
+		
+		this.state=CnokAnimation.EMTPY;
+		
 		this.emptyConteiner =new ImageIcon("imgs/estaticas/cnokNull.jpg");
-		this.normalConteiner =new ImageIcon("imgs/estaticas/cnok0.jpg");
+		//this.normalConteiner =new ImageIcon("imgs/estaticas/cnok0.jpg");
 		this.fullConteiner =new ImageIcon("imgs/estaticas/cnok1.jpg");
+		this.statusLabel = new JLabel(this.emptyConteiner);
 	}
 	
 	public void init(){
 		this.timer = new Timer(this.speed, this);
         this.timer.setInitialDelay(this.pause);
-        this.timer.start(); 
+        //this.timer.start(); 
         
         //Start loading the images in the background.
         this.slideWorker.execute();
@@ -77,8 +77,7 @@ public class CnokAnimation implements ActionListener, Animation {
 		
 		cnok.addMouseListener(new ALCNOK(this));
 		
-		statusLabel = new JLabel(this.emptyConteiner,JLabel.CENTER);
-		cnok.add(statusLabel, BorderLayout.CENTER);
+		cnok.add(statusLabel);
 	}
 	
 	
@@ -125,26 +124,26 @@ public class CnokAnimation implements ActionListener, Animation {
 		protected void paintComponent(Graphics g){
 			super.paintComponent(g);
 	
-			if(!dynamic){
-				if(!isFull && !isEmpty){
-					if(normalConteiner != null)
-						normalConteiner.paintIcon(this,g,0,0);
-				}else if(isFull){
-					if(fullConteiner != null)
-						fullConteiner.paintIcon(this,g,0,0);
-				}else if(isEmpty){
-					if(emptyConteiner != null)
-						emptyConteiner.paintIcon(this,g,0,0);
-				}
-				
-			}else{
+			switch(state){
+			case(CnokAnimation.EMTPY):
+				if(emptyConteiner != null)
+					emptyConteiner.paintIcon(this,g,0,0);
+			break;
+			case(CnokAnimation.FULL):
+				if(fullConteiner != null)
+					fullConteiner.paintIcon(this,g,0,0);
+			break;
+			case(CnokAnimation.MOVE):
 				if(slideWorker.isDone() && (loopslot > -1) && (loopslot < CnokAnimation.FRAMES_CNOK)){
 					if(imgsCNOK != null && imgsCNOK[loopslot] != null){
 						imgsCNOK[loopslot].paintIcon(this, g, 0, 0);
 					}
 				}
-			}
-			
+				break;
+			default:
+				System.err.println("Invalid state given CnokAnimation-Cinta.paintComponent()");
+				break;
+			}			
 		}
 	}
 
@@ -177,44 +176,22 @@ public class CnokAnimation implements ActionListener, Animation {
 		}
 	}
 	
-	public void empty(){
-		this.dynamic = false;
-		this.isFull = false;
-		this.isEmpty = true;
-		
-		cnok.repaint();
-	}
-	
-	public void full(){
-		this.dynamic=false;
-		this.isFull=true;
-		this.isEmpty=false;
-		
-		cnok.repaint();
-	}
-	
-	public void start() {
-		if(this.timer==null){
-			this.init();
-		}
-		
+	private void start() {
 		if (slideWorker.isDone() && CnokAnimation.FRAMES_CNOK > 1){
 			this.loopslot = 0;
 			timer.restart();
 			this.stop = false;
 			this.emergencyStop = false;
-			this.dynamic = true;
-			this.isEmpty=false;
-			this.isFull=false;
 		}
 	}
 
+	@Override
 	public void emergencyStop() {
 		timer.stop();
 		this.emergencyStop = true;
 	}
 	
-	public void stop() {
+	private void stop() {
 		timer.stop();
 		this.stop = true;
 	}
@@ -230,13 +207,13 @@ public class CnokAnimation implements ActionListener, Animation {
 			count++;
 			switch(count){
 			case(0):
-				csim.empty();
+				csim.start(csim.EMTPY);
 			break;
 			case(1):
-				csim.start();
+				csim.start(csim.MOVE);
 			break;
 			case(2):
-				csim.full();
+				csim.start(CnokAnimation.FULL);
 			break;
 			default:
 				count=-1;
@@ -261,7 +238,29 @@ public class CnokAnimation implements ActionListener, Animation {
 		public void mouseReleased(MouseEvent arg0) {
 			// TODO Auto-generated method stub
 		}
-		
+	}
+
+	@Override
+	public void start(int state) {
+		if(this.timer==null){
+			this.init();
+		}
+
+		if(this.state != state)
+			this.state=state;
+
+		if(state == CnokAnimation.MOVE)
+			this.start();
+		else
+			cnok.repaint();
+
+	}
+
+	@Override
+	public int getState() {
+		return this.state;
 	}
 
 }
+
+	
