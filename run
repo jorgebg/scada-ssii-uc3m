@@ -1,0 +1,8 @@
+#!/bin/bash
+ant init build
+gnome-terminal -e "ant esclavo1" &
+gnome-terminal -e "ant esclavo2" &
+gnome-terminal -e "ant esclavo3" &
+#gnome-terminal -e "ant base" &
+read -p "Press [Enter] key to kill all running slaves..."
+kill `jobs -pr`

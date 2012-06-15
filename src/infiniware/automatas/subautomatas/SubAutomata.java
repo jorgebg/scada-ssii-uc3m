@@ -68,4 +68,10 @@ public abstract class SubAutomata {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return this.nombre;
+    }
+    
 }

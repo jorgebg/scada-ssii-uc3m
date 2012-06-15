@@ -9,6 +9,7 @@ import java.rmi.RemoteException;
 
 public abstract class Esclavo extends Automata implements IEsclavo {
 
+    
     protected IMaestro maestro;
 
     public void desconectar() {

@@ -4,7 +4,6 @@
  */
 package infiniware.automatas.subautomatas;
 
-import infiniware.automatas.Automata;
 import infiniware.scada.modelos.Parametros;
 
 /**
@@ -78,5 +77,15 @@ public class CintaCapacidad extends Cinta {
                 contenido[i] = true;
             }
         }
+    }
+    
+    @Override
+    public String toString() {
+        String s = super.toString() + ": |";
+        for (int i = 0; i < contenido.length; i++) {
+                s += contenido[i] ? salida : " ";
+        }
+        s += "|";
+        return s;
     }
 }
