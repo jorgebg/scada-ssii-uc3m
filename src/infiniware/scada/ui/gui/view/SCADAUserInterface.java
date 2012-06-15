@@ -148,7 +148,7 @@ public class SCADAUserInterface extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				ac.startAll();
-                               // Scada.ui.arrancar();
+                                Scada.ui.arrancar();
 			}
 		});
 		
