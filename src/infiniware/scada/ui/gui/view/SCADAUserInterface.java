@@ -144,13 +144,7 @@ public class SCADAUserInterface extends JFrame {
 		panel.setLayout(null);
 		
 		JButton btnStart = new JButton("Start");
-		btnStart.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				ac.startAll();
-				Scada.ui.arrancar();
-			}
-		});
+		
 		
 		btnStart.setForeground(new Color(0, 128, 0));
 		btnStart.setBounds(1078, 19, 144, 23);
@@ -163,12 +157,6 @@ public class SCADAUserInterface extends JFrame {
 		
 		//EMERGENCY STOP BUTTON
 		JButton btnEmergencyStop = new JButton("Emergency Stop");
-		btnEmergencyStop.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				ac.emergencyStopAll();
-			}
-		});
 		
 		btnEmergencyStop.setBackground(new Color(255, 0, 0));
 		btnEmergencyStop.setForeground(new Color(0, 0, 0));
@@ -274,11 +262,7 @@ public class SCADAUserInterface extends JFrame {
 		panelControlAutomatas.setLayout(null);
 		
 		JButton btnVaciarConjuntosDefectuosos = new JButton("Vaciar CNOK");
-		btnVaciarConjuntosDefectuosos.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				ac.getCnok().start(CnokAnimation.EMTPY);
-			}
-		});
+		
 		btnVaciarConjuntosDefectuosos.setBounds(10, 537, 122, 38);
 		panelControlAutomatas.add(btnVaciarConjuntosDefectuosos);
 		
@@ -858,5 +842,42 @@ public class SCADAUserInterface extends JFrame {
 		Component verticalStrut_1 = Box.createVerticalStrut(20);
 		verticalStrut_1.setBounds(525, 901, 35, 8);
 		contentPane.add(verticalStrut_1);
+		
+		//Mouse Listeners 
+		
+		//Start
+		btnStart.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//ac.startAll();
+				Scada.ui.arrancar();
+			}
+		});
+		
+		//Stop
+		btnStop.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//ac.startAll();
+				Scada.ui.parada();
+			}
+		});
+		
+		//Emergency Stop
+		btnEmergencyStop.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				//ac.emergencyStopAll();
+				Scada.ui.emergencia();
+			}
+		});
+		
+		//Empty 
+		btnVaciarConjuntosDefectuosos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ac.getCnok().start(CnokAnimation.EMTPY);
+				Scada.ui.limpiarCPD();
+			}
+		});
 	}
 }
