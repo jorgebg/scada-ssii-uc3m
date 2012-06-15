@@ -31,6 +31,11 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
         }
     };
 
+    public enum Simulaciones { /*Fallar, Recuperar,*/ LimpiarCPD };    
+    public void simular(Simulaciones simulacion) {
+        //Nada por defecto
+    }
+
     public Automata() {
         sensores = new Sensores();
     }

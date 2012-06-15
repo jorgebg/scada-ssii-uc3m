@@ -1,6 +1,6 @@
 package infiniware.automatas.esclavos;
 
-import infiniware.automatas.esclavos.Esclavo.Simulaciones;
+import infiniware.automatas.Automata.Simulaciones;
 import infiniware.remoto.Profibus;
 import infiniware.scada.modelos.Parametros;
 import java.rmi.RemoteException;
@@ -13,5 +13,5 @@ public interface IEsclavo extends Profibus {
     public void fallar() throws RemoteException;
     public void recuperar() throws RemoteException;
 
-    public void simular(Simulaciones simulaciones);
+    public void simular(Simulaciones simulaciones) throws RemoteException;
 }

@@ -196,6 +196,11 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
     }
 
     public void limpiarCPD() {
-        esclavos.get(3).simular(Esclavo.Simulaciones.LimpiarCPD);
+        try {
+            esclavos.get(3).simular(Esclavo.Simulaciones.LimpiarCPD);
+        } catch (RemoteException ex) {
+            System.err.println("Error al limpiar el CPD");
+            ex.printStackTrace(System.err);
+        }
     }
 }
