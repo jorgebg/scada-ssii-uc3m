@@ -12,6 +12,7 @@ import infiniware.scada.modelos.Parametros;
  * @author jorge
  */
 public class Robot2 extends Robot {
+    public final CPD cpd = new CPD();
 
     class Reposo extends Robot.Reposo {
     }
@@ -83,7 +84,7 @@ public class Robot2 extends Robot {
                     automata.actualizar("K", false);
                     break;
                 case TRANSPORTAR:
-                    automata.actualizar("M", true);
+                    cpd.incrementar();
                     break;
             }
             super.postaccion(accion);
@@ -94,5 +95,21 @@ public class Robot2 extends Robot {
         super("R2");
         //parametros = super.parametros.mezclarTodo("tiempo-transporte-soldado");
         super.parametros.put("tiempo-transporte-soldado", 2);
+    }
+    
+    public class CPD {
+        static final String sensor = "M";
+        int capacidad = 10;
+        int invalidos = 0;
+        public void incrementar() {
+            if(invalidos < capacidad)
+                invalidos++;
+            else
+                automata.actualizar(sensor, true);
+        }
+        public void limpiar() {
+            invalidos = 0;
+            automata.actualizar(sensor, false);
+        }
     }
 }

@@ -104,4 +104,11 @@ public class GestorSubAutomatas extends HashMap<String, SubAutomata> {
         }
         return put(key, value);
     }
+
+    public <T extends SubAutomata> T buscar(Object key) {
+        SubAutomata subautomata = super.get(key);
+        return (T)subautomata;
+    }
+    
+    
 }

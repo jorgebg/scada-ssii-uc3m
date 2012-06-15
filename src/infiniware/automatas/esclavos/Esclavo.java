@@ -9,6 +9,8 @@ import java.rmi.RemoteException;
 
 public abstract class Esclavo extends Automata implements IEsclavo {
 
+    public enum Simulaciones { LimpiarCPD };
+    
     protected IMaestro maestro;
 
     public void desconectar() {
@@ -55,5 +57,9 @@ public abstract class Esclavo extends Automata implements IEsclavo {
 
     public void recuperar() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public void simular(Simulaciones simulacion) {
+        //Nada por defecto
     }
 }

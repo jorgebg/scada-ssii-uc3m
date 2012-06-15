@@ -196,6 +196,6 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
     }
 
     public void limpiarCPD() {
-        actualizar("M", false);
+        esclavos.get(3).simular(Esclavo.Simulaciones.LimpiarCPD);
     }
 }
