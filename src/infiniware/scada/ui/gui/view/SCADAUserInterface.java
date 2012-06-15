@@ -185,6 +185,7 @@ public class SCADAUserInterface extends JFrame {
 		
 		//CEN
 		JPanel panel_CEN = new JPanel();
+		panel_CEN.setBackground(Color.LIGHT_GRAY);
 		panel_CEN.setBounds(842, 310, 73, 291);
 		panelInstalacion.add(panel_CEN);
 		panel_CEN.setLayout(null);
@@ -192,65 +193,64 @@ public class SCADAUserInterface extends JFrame {
 		
 		//CEJ
 		JPanel panel_CEJ = new JPanel();
+		panel_CEJ.setBackground(Color.LIGHT_GRAY);
 		panel_CEJ.setBounds(966, 310, 73, 291);
 		panelInstalacion.add(panel_CEJ);
 		ac.getCej().createGUI(panel_CEJ, panel_CEJ.getWidth(), panel_CEJ.getHeight());
 		
 		//R1
 		JPanel panel_R1 = new JPanel();
+		panel_R1.setBackground(Color.LIGHT_GRAY);
 		panel_R1.setBounds(691, 75, 371, 232);
 		panelInstalacion.add(panel_R1);
 		ac.getRobot1().createGUI(panel_R1, panel_R1.getWidth(), panel_R1.getHeight());
 		
 		//EM
 		JPanel panel_EM = new JPanel();
+		panel_EM.setBackground(Color.LIGHT_GRAY);
 		panel_EM.setBounds(814, 6, 210, 70);
 		panelInstalacion.add(panel_EM);
-		ImageIcon imgEST = new ImageIcon("imgs/estaticas/em.jpg");
-		panel_EM.setLayout(null);
-		JLabel label_EM = new JLabel(imgEST);
-		label_EM.setBounds(0, 0, 210, 70);
-		panel_EM.add(label_EM);
+		ac.getEm().createGUI(panel_EM, panel_EM.getWidth(), panel_EM.getHeight());
 		
 		//ES
 		JPanel panel_ES = new JPanel();
+		panel_ES.setBackground(Color.LIGHT_GRAY);
 		panel_ES.setBounds(75, 6, 210, 70);
 		panelInstalacion.add(panel_ES);
-		panel_ES.setLayout(null);
-		JLabel label_ES = new JLabel(imgEST);
-		label_ES.setBounds(0, 0, 210, 70);
-		panel_ES.add(label_ES);
+		ac.getEs().createGUI(panel_ES, panel_ES.getWidth(), panel_ES.getHeight());
+		
 		
 		//EV
 		JPanel panel_EV = new JPanel();
+		panel_EV.setBackground(Color.LIGHT_GRAY);
 		panel_EV.setBounds(6, 63, 70, 210);
 		panelInstalacion.add(panel_EV);
-		ImageIcon imgEV = new ImageIcon("imgs/estaticas/ev.jpg");
-		panel_EV.setLayout(null);
-		JLabel label_EV = new JLabel(imgEV);
-		label_EV.setBounds(0, 0, 70, 210);
-		panel_EV.add(label_EV);
+		ac.getEv().createGUI(panel_EV, panel_EV.getWidth(), panel_EV.getHeight());
 		
 		//R2
 		JPanel panel_R2 = new JPanel();
+		panel_R2.setBackground(Color.LIGHT_GRAY);
 		panel_R2.setBounds(75, 75, 371, 232);
 		panelInstalacion.add(panel_R2);
 		ac.getRobot2().createGUI(panel_R2, panel_R2.getWidth(), panel_R2.getHeight());
 		
 		//COK
 		JPanel panel_COK = new JPanel();
+		panel_COK.setBackground(Color.LIGHT_GRAY);
 		panel_COK.setBounds(120, 310, 73, 291);
 		panelInstalacion.add(panel_COK);
 		ac.getCok().createGUI(panel_COK, panel_COK.getWidth(), panel_COK.getHeight());
 		
 		//CNOK
 		JPanel panel_CNOK = new JPanel();
-		panel_CNOK.setBounds(237, 310, 313, 291);
+		panel_CNOK.setBackground(Color.LIGHT_GRAY);
+		panel_CNOK.setBounds(237, 310, 309, 288);
 		panelInstalacion.add(panel_CNOK);
 		ac.getCnok().createGUI(panel_CNOK, panel_CNOK.getWidth(), panel_CNOK.getHeight());
 		
 		//CT
 		JPanel panel_CT = new JPanel();
+		panel_CT.setBackground(Color.LIGHT_GRAY);
 		panel_CT.setBounds(446, 104, 244, 63);
 		panelInstalacion.add(panel_CT);
 		ac.getCt().createGUI(panel_CT, panel_CT.getWidth(), panel_CT.getHeight());

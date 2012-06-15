@@ -21,9 +21,12 @@ public class AnimationController {
 	private CenAnimation cen;
 	private CejAnimation cej;
 	private CtAnimation ct;
-	
 	private CokAnimation cok;
 	private CnokAnimation cnok;
+	
+	private EmAnimation em;
+	private EmAnimation es;
+	private EvAnimation ev;
 	
 	public AnimationController(){
 		robot1 = new Robot1Animation(this.DEFAULT_ROBOT1_RECOGIDA,this.DEFAULT_ROBOT1_TRANS_CEN, this.DEFAULT_ROBOT1_TRANS_EM);
@@ -34,6 +37,10 @@ public class AnimationController {
 		ct = new CtAnimation(this.DEFAULT_CT);
 		cok = new CokAnimation(this.DEFAULT_COK);
 		cnok = new CnokAnimation();
+		
+		em = new EmAnimation();
+		es = new EmAnimation();
+		ev = new EvAnimation();
 	}
 	
 	public void initAll(){
@@ -54,11 +61,11 @@ public class AnimationController {
 		this.cen.emergencyStop();
 		this.cej.emergencyStop();
 		this.ct.emergencyStop();
-		
 		this.cok.emergencyStop();
+		
 	}
 	
-	public void startAll(){
+	/*public void startAll(){
 		this.robot1.start(robot1.getState());
 		this.robot2.start(robot1.getState());
 		
@@ -69,7 +76,7 @@ public class AnimationController {
 		this.cok.start(CokAnimation.STOP);
 		this.cnok.start(CnokAnimation.MOVE);
 		
-	}
+	}*/
 
 	public Robot1Animation getRobot1() {
 		return robot1;
@@ -98,5 +105,18 @@ public class AnimationController {
 	public CnokAnimation getCnok() {
 		return cnok;
 	}
+
+	public EmAnimation getEm() {
+		return em;
+	}
+
+	public EmAnimation getEs() {
+		return es;
+	}
+
+	public EvAnimation getEv() {
+		return ev;
+	}
+	
 		
 }

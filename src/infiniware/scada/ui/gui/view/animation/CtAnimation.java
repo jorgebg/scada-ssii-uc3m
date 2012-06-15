@@ -19,7 +19,7 @@ public class CtAnimation implements ActionListener, Animation {
 
 	private static final int FRAMES_CT = 4;		 	//number of frames to load in the slides (CT)
 	private static final String DIR_CT = "imgs/cintas/"; 	//direction of the slide images / (ct1-4.jpg)
-	private static final int CT_MAX = 10200;			//Max size of the images
+	private static final int CT_MAX = 24996;			//Max size of the images
 	public static final int STOP = 0;
 	public static final int MOVE = 1;
 	private static final int PAUSE_TIME = 0;			//Lag time for image loading
@@ -70,7 +70,7 @@ public class CtAnimation implements ActionListener, Animation {
 		ct.setBounds(0, 0, with, height);
 		parentPanel.add(ct);	
 		
-		//ct.addMouseListener(new ALCT(this));
+		ct.addMouseListener(new ALCT(this));
 		this.ct.add(statusLabel);
 	}
 	

@@ -20,7 +20,7 @@ public class CenAnimation implements ActionListener, Animation{
 
 	private static final int FRAMES_CEN = 4;		 		//number of frames to load in the slides (CEN, CEJ)
 	private static final String DIR_CEN = "imgs/cintas/"; 	//direction of the slide images / (cen-4.jpg)
-	private static final int CEN_MAX = 10200;				//Max size of the images
+	private static final int CEN_MAX = 26510;				//Max size of the images
 	private static final int PAUSE_TIME = 0;			//Lag time for image loading
 	
 	public static final int STOP = 0;
@@ -72,7 +72,7 @@ public class CenAnimation implements ActionListener, Animation{
 		cen.setBounds(0, 0, with, height);
 		parentPanel.add(cen);	
 		
-		//cen.addMouseListener(new ALCEN(this));
+		cen.addMouseListener(new ALCEN(this));
         this.cen.add(statusLabel);
 	}
 	

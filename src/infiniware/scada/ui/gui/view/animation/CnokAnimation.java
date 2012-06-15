@@ -19,7 +19,7 @@ public class CnokAnimation implements ActionListener, Animation {
 
 	private static final int FRAMES_CNOK = 8;		 		//number of frames to load in the slides CNOK
 	private static final String DIR_CNOK = "imgs/cintas/"; 	//direction of the slide images / (cnok1-9.jpg)
-	private static final int CNOK_MAX = 19345;				//Max size of the images
+	private static final int CNOK_MAX = 20632;				//Max size of the images
 	private final int GravitySpeed = 200;			
 	
 	public static final int EMTPY=0;
@@ -76,7 +76,6 @@ public class CnokAnimation implements ActionListener, Animation {
 		parentPanel.add(cnok);	
 		
 		cnok.addMouseListener(new ALCNOK(this));
-		
 		cnok.add(statusLabel);
 	}
 	

@@ -19,7 +19,7 @@ public class CejAnimation implements Animation, ActionListener {
 
 	private static final int FRAMES_CEJ = 4;		 	//number of frames to load in the slides (CEN, CEJ)
 	private static final String DIR_CEJ = "imgs/cintas/"; 	//direction of the slide images / (cen-4.jpg)
-	private static final int CEJ_MAX = 10200;			//Max size of the images
+	private static final int CEJ_MAX = 26510;			//Max size of the images
 	private static final int PAUSE_TIME = 0;			//Lag time for image loading
 	
 	public static final int STOP = 0;
@@ -70,7 +70,7 @@ public class CejAnimation implements Animation, ActionListener {
 		cej.setBounds(0, 0, with, height);
 		parentPanel.add(cej);	
 		
-		//cej.addMouseListener(new ALCEJ(this));
+		cej.addMouseListener(new ALCEJ(this));
 		this.cej.add(statusLabel);
 	}
 	

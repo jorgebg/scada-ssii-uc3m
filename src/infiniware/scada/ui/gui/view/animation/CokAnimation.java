@@ -19,7 +19,7 @@ public class CokAnimation implements ActionListener, Animation {
 
 	private static final int FRAMES_COK = 4;		 	//number of frames to load in the slides (COK)
 	private static final String DIR_COK = "imgs/cintas/"; 	//direction of the slide images / (cok1-4.jpg)
-	private static final int COK_MAX = 10200;			//Max size of the images
+	private static final int COK_MAX = 26553;			//Max size of the images
 	private static final int PAUSE_TIME = 0;			//Lag time for image loading
 	
 	public static final int STOP = 0;
@@ -71,7 +71,7 @@ public class CokAnimation implements ActionListener, Animation {
 		cok.setBounds(0, 0, with, height);
 		parentPanel.add(cok);	
 		
-		//cok.addMouseListener(new ALCOK(this));
+		cok.addMouseListener(new ALCOK(this));
         this.cok.add(statusLabel);
 	}
 	
