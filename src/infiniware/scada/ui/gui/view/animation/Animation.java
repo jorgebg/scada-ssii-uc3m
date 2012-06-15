@@ -24,7 +24,7 @@ public interface Animation {
 
 	public void start(int state); 
         
-        public int getState();
+    public int getState();
 	
 	public void emergencyStop();
 

@@ -38,6 +38,9 @@ import javax.swing.border.TitledBorder;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import infiniware.scada.ui.gui.view.animation.AnimationController;
+import infiniware.scada.ui.gui.view.animation.CnokAnimation;
+
+import javax.swing.JTextArea;
 
 public class SCADAUserInterface extends JFrame {
 
@@ -145,7 +148,7 @@ public class SCADAUserInterface extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				ac.startAll();
-                                Scada.ui.arrancar();
+                               // Scada.ui.arrancar();
 			}
 		});
 		
@@ -172,16 +175,10 @@ public class SCADAUserInterface extends JFrame {
 		btnEmergencyStop.setBounds(1078, 138, 144, 49);
 		panel.add(btnEmergencyStop);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane.setBounds(6, 14, 1062, 173);
-		panel.add(scrollPane);
-		
-		JTextPane txtLog = new JTextPane();
-		scrollPane.setViewportView(txtLog);
-		txtLog.setEditable(false);
-		txtLog.setDragEnabled(true);
-		panel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtLog, btnStart, btnStop, btnEmergencyStop}));
+		JTextArea logConsole = new JTextArea();
+		logConsole.setBounds(6, 19, 1062, 173);
+		panel.add(logConsole);
+		panel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{btnStart, btnStop, btnEmergencyStop}));
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(10, 0, 1244, 689);
@@ -279,7 +276,7 @@ public class SCADAUserInterface extends JFrame {
 		JButton btnVaciarConjuntosDefectuosos = new JButton("Vaciar CNOK");
 		btnVaciarConjuntosDefectuosos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ac.getCnok().empty();
+				ac.getCnok().start(CnokAnimation.EMTPY);
 			}
 		});
 		btnVaciarConjuntosDefectuosos.setBounds(10, 537, 122, 38);

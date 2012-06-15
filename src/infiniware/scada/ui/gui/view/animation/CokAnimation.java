@@ -21,13 +21,16 @@ public class CokAnimation implements ActionListener, Animation {
 	private static final String DIR_COK = "imgs/cintas/"; 	//direction of the slide images / (cok1-4.jpg)
 	private static final int COK_MAX = 10200;			//Max size of the images
 	
+	public static final int STOP = 0;
+	public static final int MOVE = 1;
 		
 	private ImageIcon imgsCOK[]; //the images of the R1 movement (from CEN to EM)
+	private ImageIcon imgsREP;
 	
 	private Cinta cok;
+	private int state;
 	
 	private JLabel statusLabel;		//Used for suspended animation until the beginning of the animation
-	
 	private int loopslot = -1;  //the current frame number
 	
 	Timer timer;        //the timer animating the images
@@ -39,6 +42,11 @@ public class CokAnimation implements ActionListener, Animation {
 	
 	public CokAnimation(double timeCOK){
 		this.speed = ImgLoader.calculateSpeed(timeCOK, CokAnimation.FRAMES_COK);
+		
+		this.imgsREP = new ImageIcon(CokAnimation.DIR_COK+"cok/cok1.jpg");
+		this.state=CokAnimation.STOP;
+		this.statusLabel = new JLabel(this.imgsREP);
+		
 		this.stop = false;
 		this.emergencyStop = false;
 	}
@@ -46,7 +54,7 @@ public class CokAnimation implements ActionListener, Animation {
 	public void init(){
 		this.timer = new Timer(this.speed, this);
         this.timer.setInitialDelay(this.pause);
-        this.timer.start(); 
+        //this.timer.start(); 
         
         //Start loading the images in the background.
         this.slideWorker.execute();
@@ -63,8 +71,6 @@ public class CokAnimation implements ActionListener, Animation {
 		
 		cok.addMouseListener(new ALCOK(this));
 		
-		ImageIcon stopedRobot = new ImageIcon(CokAnimation.DIR_COK+"cok/cok1.jpg");
-		statusLabel = new JLabel(stopedRobot,JLabel.CENTER);
 		cok.add(statusLabel, BorderLayout.CENTER);
 	}
 	
@@ -116,7 +122,10 @@ public class CokAnimation implements ActionListener, Animation {
 				if(imgsCOK != null && imgsCOK[loopslot] != null){
 					imgsCOK[loopslot].paintIcon(this, g, 0, 0);
 				}
+			}else{
+				imgsREP.paintIcon(this, g, 0, 0);
 			}
+			
 			
 		}
 	}
@@ -149,11 +158,7 @@ public class CokAnimation implements ActionListener, Animation {
 		}
 	}
 	
-	public void start() {
-		if(this.timer==null){
-			this.init();
-		}
-		
+	private void start() {
 		if (slideWorker.isDone() && CokAnimation.FRAMES_COK > 1){
 			timer.restart();
 			this.stop = false;
@@ -161,12 +166,13 @@ public class CokAnimation implements ActionListener, Animation {
 		}
 	}
 
+	@Override
 	public void emergencyStop() {
 		timer.stop();
 		this.emergencyStop = true;
 	}
 	
-	public void stop() {
+	private void stop() {
 		timer.stop();
 		this.stop = true;
 	}
@@ -180,10 +186,10 @@ public class CokAnimation implements ActionListener, Animation {
 		}
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
-			if(!csim.emergencyStop){
-				csim.emergencyStop();
+			if(csim.state==csim.STOP){
+				csim.start(1);
 			}else{
-				csim.start();
+				csim.start(0);
 			}
 		}
 
@@ -205,6 +211,26 @@ public class CokAnimation implements ActionListener, Animation {
 			// TODO Auto-generated method stub
 		}
 
+	}
+
+	@Override
+	public void start(int state) {
+		if(this.timer==null){
+			this.init();
+		}
+		
+		if(this.state != state)
+			this.state=state;
+		
+		if(state == CokAnimation.STOP)
+			this.stop();
+		else
+			this.start();
+	}
+
+	@Override
+	public int getState() {
+		return this.state;
 	}
 
 }
