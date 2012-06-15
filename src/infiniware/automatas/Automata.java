@@ -5,6 +5,7 @@ import infiniware.automatas.esclavos.Esclavo2;
 import infiniware.automatas.esclavos.Esclavo3;
 import infiniware.automatas.maestro.Maestro;
 import infiniware.automatas.sensores.Sensores;
+import infiniware.automatas.subautomatas.CintaCapacidad;
 import infiniware.automatas.subautomatas.SubAutomata;
 import infiniware.procesos.IProcesable;
 import infiniware.remoto.IConexion;
@@ -63,6 +64,10 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
     public char ejecutar() {
         for (SubAutomata subautomata : subautomatas.values()) {
             subautomata.ejecutar();
+            // DEBUG {{{
+            if(subautomata instanceof CintaCapacidad)
+                System.out.println(subautomata);
+            // }}}
         }
         return subautomatas.codificarEstados();
     }
