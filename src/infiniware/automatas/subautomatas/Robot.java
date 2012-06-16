@@ -19,8 +19,8 @@ public abstract class Robot extends SubAutomata {
         super();
         this.robot = robot;
         configurar(new Parametros() {{
-          put("tiempo-recogida", 2);
-          put("tiempo-transporte", 2);
+          put("tiempo-recogida", 5000);
+          put("tiempo-transporte", 5000);
         }});
         //parametros = new Parametros("tiempo-recogida", "tiempo-transporte");
         //System.out.println(this.simulaciones);

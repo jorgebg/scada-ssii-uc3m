@@ -85,6 +85,6 @@ public class Robot1 extends Robot {
     public Robot1() {
         super("R1");
         //parametros = super.parametros.mezclarTodo("tiempo-transporte-montado");
-        super.parametros.put("tiempo-transporte-montado", 2);
+        super.parametros.put("tiempo-transporte-montado", 5000);
     }
 }
