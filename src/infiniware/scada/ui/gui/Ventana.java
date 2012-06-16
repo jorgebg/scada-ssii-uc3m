@@ -1,16 +1,12 @@
 package infiniware.scada.ui.gui;
 
-import infiniware.scada.ui.Ui;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTabbedPane;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -19,10 +15,8 @@ import javax.swing.UIManager;
 import javax.swing.border.EtchedBorder;
 import javax.swing.JLabel;
 import javax.swing.JButton;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.Color;
-import javax.swing.JToggleButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
@@ -32,16 +26,15 @@ import javax.swing.Box;
 import java.awt.Dimension;
 import javax.swing.JSlider;
 import java.awt.Font;
-import javax.swing.JScrollBar;
-import java.awt.event.ContainerAdapter;
-import java.awt.event.ContainerEvent;
 import java.awt.Rectangle;
 import java.awt.ComponentOrientation;
-import java.awt.Frame;
-import java.awt.SystemColor;
 
 public class Ventana extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtLongitudCen;
 	private JTextField txtVelocidadCen;

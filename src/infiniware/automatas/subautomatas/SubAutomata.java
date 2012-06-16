@@ -5,7 +5,6 @@ import infiniware.automatas.Transicion;
 import infiniware.scada.modelos.Parametros;
 import infiniware.scada.simulador.Simulacion;
 import infiniware.scada.simulador.Simulaciones;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.List;
 

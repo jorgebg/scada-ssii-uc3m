@@ -1,8 +1,8 @@
 package infiniware.scada.ui;
 
+import infiniware.Resultado;
 import infiniware.scada.informes.Informes;
 import infiniware.scada.modelos.ConjuntoParametros;
-import infiniware.scada.modelos.Parametros;
 
 public interface IUi {
     
@@ -20,7 +20,7 @@ public interface IUi {
     /**
      * @UC 005
      */
-    Parametros cargarConfiguracion(String nombre);
+    Resultado cargarConfiguracion(String nombre, ConjuntoParametros parametros);
 
     /**
      * @UC 003
@@ -45,7 +45,7 @@ public interface IUi {
     /**
      * @UC 004
      */
-    void guardarConfiguracion(String nombre, Parametros parametros);
+    Resultado guardarConfiguracion(String nombre, ConjuntoParametros parametros);
 
 
 

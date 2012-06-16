@@ -5,6 +5,7 @@ import infiniware.automatas.esclavos.Esclavo2;
 import infiniware.automatas.esclavos.Esclavo3;
 import infiniware.automatas.maestro.Maestro;
 import infiniware.automatas.sensores.Sensores;
+import infiniware.automatas.subautomatas.CintaCapacidad;
 import infiniware.automatas.subautomatas.SubAutomata;
 import infiniware.procesos.IProcesable;
 import infiniware.remoto.IConexion;
@@ -31,6 +32,11 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
         }
     };
 
+    public enum Simulaciones { /*Fallar, Recuperar,*/ LimpiarCPD };    
+    public void simular(Simulaciones simulacion) {
+        //Nada por defecto
+    }
+
     public Automata() {
         sensores = new Sensores();
     }
@@ -45,8 +51,8 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
     }
     
     public char ejecutar(char sensores, char mascara) {
-        System.out.println("Ejecutando: " + Integer.toBinaryString(sensores) + " & " + Integer.toBinaryString(mascara));
         this.sensores.actualizar(sensores, mascara);
+        System.out.println("Ejecutando:\n" + this.sensores);
         return ejecutar();
     }
 
@@ -58,6 +64,10 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
     public char ejecutar() {
         for (SubAutomata subautomata : subautomatas.values()) {
             subautomata.ejecutar();
+            // DEBUG {{{
+            if(subautomata instanceof CintaCapacidad)
+                System.out.println(subautomata);
+            // }}}
         }
         return subautomatas.codificarEstados();
     }
@@ -106,15 +116,22 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
         return this.getClass().getSimpleName();
     }
 
+    protected <T extends Profibus> T conectar(int automata) {
+        return this.<T>conectar(INSTANCIAS.get(automata));
+    }
     protected <T extends Profibus> T conectar(Automata automata) {
         Registry registry;
         T profibus = null;
+        boolean errorMostrado = false;
         while (profibus == null) {
             try {
                 registry = LocateRegistry.getRegistry(automata.getHost(), automata.getPort());
                 profibus = (T) registry.lookup(automata.getRemoteName() + "");
             } catch (Exception e) {
-                System.err.println("No se puede conectar con el automata \"" + automata.getRemoteName() + "\" desde \"" + getRemoteName() + "\". Tratando de reconectar.");
+                if (!errorMostrado) {
+                    System.err.println("No se puede conectar con el automata \"" + automata.getRemoteName() + "\" desde \"" + getRemoteName() + "\". Tratando de reconectar.");
+                    errorMostrado = true;
+                }
                 //e.printStackTrace(System.err);
                 try {
                     Thread.currentThread().sleep(500);
