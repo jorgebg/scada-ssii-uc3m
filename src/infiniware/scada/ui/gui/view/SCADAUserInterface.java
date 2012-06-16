@@ -73,9 +73,10 @@ public class SCADAUserInterface extends JFrame {
 	private JTextField txtParadasNormales;
 	private JTextField txtParadasEmergencia;
 	private JTextField txtArranques;
-	
+	public JTextArea logConsole;
+        
 	public AnimationController ac;
-	
+        
 	/**
 	 * Launch the application.
 	 */
@@ -163,7 +164,7 @@ public class SCADAUserInterface extends JFrame {
 		btnEmergencyStop.setBounds(1078, 138, 144, 49);
 		panel.add(btnEmergencyStop);
 		
-		JTextArea logConsole = new JTextArea();
+		logConsole = new JTextArea();
 		logConsole.setBounds(6, 19, 1062, 173);
 		panel.add(logConsole);
 		panel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{btnStart, btnStop, btnEmergencyStop}));
