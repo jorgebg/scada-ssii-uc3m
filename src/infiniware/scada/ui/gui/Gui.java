@@ -5,18 +5,14 @@
 package infiniware.scada.ui.gui;
 
 import infiniware.automatas.Automata;
-import infiniware.scada.Scada;
 import infiniware.scada.ui.Ui;
-import infiniware.scada.ui.cli.Cli;
 import infiniware.scada.ui.gui.view.SCADAUserInterface;
 import infiniware.scada.ui.gui.view.animation.Animation;
-import java.awt.EventQueue;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import javax.swing.JTextArea;
 import org.apache.commons.lang3.StringUtils;
-import org.yaml.snakeyaml.Yaml;
 
 /**
  *
@@ -52,10 +48,10 @@ public class Gui extends Ui implements Runnable {
                 Animation animacion = obtenerAnimacionSubautomata(subautomata);
                 if (animacion.getState() != estadoGui) {
                     animacion.start(estadoGui);
+                    System.out.println("Llamando Animation " + subautomata + " Estado: " + estadoScada + " " + estadoGui);
                 }
             }
         }
-        //MapUtils.debugPrint(System.out, "Estados", arbol);
     }
 
     public Thread mostrar() {
@@ -148,8 +144,9 @@ public class Gui extends Ui implements Runnable {
             for (String estadosIndice : estadosSubautomata) {
                 String[] estados = estadosIndice.split(", ");
                 for (int i = 0; i < estados.length; i++) {
-                    mapaEstados.put(estados[i], indice++);
+                    mapaEstados.put(estados[i], indice);
                 }
+                indice++;
                 mapa.put(subautomata, mapaEstados);
             }
         }
@@ -200,4 +197,12 @@ R2
 3: MueveConjuntoValido
 4: MueveConjuntoNoValido
 */
+
+    @Override
+    public void log(String msg) {
+        JTextArea log = frame.logConsole;
+        log.append(msg+"\n");
+        //log.setText(log.getText() + msg+"\n");
+        log.setCaretPosition(log.getDocument().getLength());
+    }
 }

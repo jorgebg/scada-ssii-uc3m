@@ -1,5 +1,8 @@
 package infiniware.scada.informes;
 
-public abstract class Informe {
+import infiniware.Resultado;
+import infiniware.scada.modelos.Guardable;
+
+public abstract class Informe extends Guardable{
     
 }

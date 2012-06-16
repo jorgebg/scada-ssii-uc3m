@@ -8,9 +8,9 @@ import infiniware.scada.IScada;
 import infiniware.scada.Scada;
 import infiniware.scada.informes.Informes;
 import infiniware.scada.modelos.ConjuntoParametros;
-import infiniware.scada.modelos.Parametros;
 import infiniware.scada.simulador.ISimulador;
 import infiniware.scada.simulador.Simulador;
+import infiniware.Resultado;
 
 /**
  *
@@ -26,11 +26,19 @@ public abstract class Ui implements IUi {
     }
 
     public void arrancar() {
-        scada.arrancar();
+        new Thread(){
+
+            @Override
+            public void run() {
+                
+                scada.arrancar();
+            }
+            
+        }.start();
     }
 
-    public Parametros cargarConfiguracion(String nombre) {
-        return scada.cargarConfiguracion(nombre);
+    public Resultado cargarConfiguracion(String nombre, ConjuntoParametros parametros) {
+        return scada.cargarConfiguracion(nombre, parametros);
     }
 
     public void configurar(ConjuntoParametros parametros) {
@@ -45,8 +53,8 @@ public abstract class Ui implements IUi {
         return scada.generarInforme();
     }
 
-    public void guardarConfiguracion(String nombre, Parametros parametros) {
-        scada.guardarConfiguracion(nombre, parametros);
+    public Resultado guardarConfiguracion(String nombre, ConjuntoParametros parametros) {
+        return scada.guardarConfiguracion(nombre, parametros);
     }
 
     public void parada() {
@@ -87,4 +95,6 @@ public abstract class Ui implements IUi {
     public abstract Thread mostrar();
 
     public abstract void ocultar();
+
+    public abstract void log(String msg);
 }

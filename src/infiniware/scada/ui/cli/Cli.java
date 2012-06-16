@@ -103,4 +103,9 @@ public class Cli extends Ui implements Runnable {
         System.out.println();
         //MapUtils.debugPrint(System.out, "Estados", arbol);
     }
+
+    @Override
+    public void log(String msg) {
+        System.out.println(msg);
+    }
 }

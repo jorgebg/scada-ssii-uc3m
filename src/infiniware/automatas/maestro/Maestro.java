@@ -6,16 +6,12 @@ import infiniware.automatas.esclavos.*;
 import infiniware.automatas.sensores.Sensores;
 import infiniware.automatas.subautomatas.Cinta;
 import infiniware.automatas.subautomatas.Robot2;
-import infiniware.remoto.Profibus;
 import infiniware.scada.Scada;
 import infiniware.scada.modelos.ConjuntoParametros;
 import infiniware.scada.modelos.Parametros;
 import java.rmi.RemoteException;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Maestro extends Automata implements infiniware.scada.IMaestro, infiniware.automatas.esclavos.IMaestro {
 
@@ -120,12 +116,13 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
     }
 
     public void configurarAutomatas(ConjuntoParametros parametros) {
-        for (Map.Entry<Integer, HashMap<String, Parametros>> automata : parametros.entrySet()) {
-            if (automata.getKey() == 0) {
-                configurar(automata.getValue());
+        for (Integer key : parametros.keySet()) {
+            HashMap<String, Parametros> automata = parametros.getParametros(key);
+            if (key == 0) {
+                configurar(automata);
             } else {
                 try {
-                    esclavos.get(automata).configurar(automata.getValue());
+                    esclavos.get(automata).configurar(automata);
                 } catch (RemoteException ex) {
                     System.err.println("Error al configurar el esclavo " + automata + ":");
                     ex.printStackTrace(System.err);
@@ -189,7 +186,8 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
         System.out.println("M => " + nombre + ":\n" + this.mapaSensores.automatas.get(id) + "\n");
 
         if (estadoAnterior != estados[id]) {
-            System.out.println(nombre + " ha cambiado de estado " + (int) estadoAnterior + " a " + (int) estados[id] + ": " + Automata.INSTANCIAS.get(id).subautomatas.obtenerDiferenciaEstados(estadoAnterior, estados[id]));
+            //System.out.println(Automata.INSTANCIAS.get(id).subautomatas.obtenerDiferenciaEstados(estadoAnterior, estados[id]));
+            informarScada(id, estadoAnterior);
         }
         //System.out.println("M <= E" + id + ":" + this.mapaSensores.automatas.get(id));
 
@@ -201,6 +199,19 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
         } catch (RemoteException ex) {
             System.err.println("Error al limpiar el CPD");
             ex.printStackTrace(System.err);
+        }
+    }
+
+    private void informarScada(int id, char estadoAnterior) {
+        Automata automata = Automata.INSTANCIAS.get(id);
+        //System.out.println(""+id+"%"+(int)estadoAnterior+" "+(int)estados[id] + " " + automata.subautomatas.obtenerDiferenciaEstados(estadoAnterior, estados[id]));
+        Map<String, String> estadosAnteriores = automata.subautomatas.decodificarNombreEstados(estadoAnterior);
+        Map<String, String> estadosNuevos = automata.subautomatas.obtenerDiferenciaEstados(estadoAnterior, estados[id]);
+        for (Map.Entry<String, String> estadoNuevo : estadosNuevos.entrySet()) {
+            String nombreSubAutomata = estadoNuevo.getKey();
+            String nombreEstadoNuevo = estadoNuevo.getValue();
+            String nombreEstadoAnterior = estadosAnteriores.get(nombreSubAutomata);
+            Scada.log(nombreSubAutomata + " ha pasado de [" + nombreEstadoAnterior + "] a [" + nombreEstadoNuevo + "]");
         }
     }
 }
