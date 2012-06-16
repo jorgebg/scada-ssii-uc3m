@@ -13,6 +13,8 @@ import infiniware.scada.simulador.Simulador;
 import infiniware.scada.ui.Ui;
 import infiniware.scada.ui.cli.Cli;
 import infiniware.scada.ui.gui.Gui;
+import java.io.BufferedWriter;
+import java.io.PrintStream;
 
 public class Scada implements Ethernet, IProcesable, IScada, infiniware.automatas.maestro.IScada {
 
@@ -165,4 +167,8 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
         this.mapaSensores.actualizar(automata, sensores);
     }
 
+    
+    public static void log(String msg) {
+        ui.log(msg);
+    }
 }

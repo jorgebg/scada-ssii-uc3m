@@ -52,10 +52,10 @@ public class Gui extends Ui implements Runnable {
                 Animation animacion = obtenerAnimacionSubautomata(subautomata);
                 if (animacion.getState() != estadoGui) {
                     animacion.start(estadoGui);
+                    System.out.println("Llamando Animation " + subautomata + " Estado: " + estadoScada + " " + estadoGui);
                 }
             }
         }
-        //MapUtils.debugPrint(System.out, "Estados", arbol);
     }
 
     public Thread mostrar() {
@@ -148,8 +148,9 @@ public class Gui extends Ui implements Runnable {
             for (String estadosIndice : estadosSubautomata) {
                 String[] estados = estadosIndice.split(", ");
                 for (int i = 0; i < estados.length; i++) {
-                    mapaEstados.put(estados[i], indice++);
+                    mapaEstados.put(estados[i], indice);
                 }
+                indice++;
                 mapa.put(subautomata, mapaEstados);
             }
         }
@@ -200,4 +201,9 @@ R2
 3: MueveConjuntoValido
 4: MueveConjuntoNoValido
 */
+
+    @Override
+    public void log(String msg) {
+        frame.logConsole.append(msg+"\n");
+    }
 }

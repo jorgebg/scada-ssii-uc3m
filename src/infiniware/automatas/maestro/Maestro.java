@@ -189,7 +189,7 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
         System.out.println("M => " + nombre + ":\n" + this.mapaSensores.automatas.get(id) + "\n");
 
         if (estadoAnterior != estados[id]) {
-            System.out.println(nombre + " ha cambiado de estado " + (int) estadoAnterior + " a " + (int) estados[id] + ": " + Automata.INSTANCIAS.get(id).subautomatas.obtenerDiferenciaEstados(estadoAnterior, estados[id]));
+            Scada.log(nombre + " ha cambiado de estado " + (int) estadoAnterior + " a " + (int) estados[id] + ": " + Automata.INSTANCIAS.get(id).subautomatas.obtenerDiferenciaEstados(estadoAnterior, estados[id]));
         }
         //System.out.println("M <= E" + id + ":" + this.mapaSensores.automatas.get(id));
 
