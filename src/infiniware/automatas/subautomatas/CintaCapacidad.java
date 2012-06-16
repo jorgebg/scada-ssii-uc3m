@@ -62,8 +62,8 @@ public class CintaCapacidad extends Cinta {
     public CintaCapacidad(String salida) {
         super( salida);
         configurar(new Parametros() {{
-          put("velocidad", 1);
-          put("longitud", 5);
+          put("velocidad", 10000);
+          put("longitud", 5000);  
           put("capacidad", 5);  
         }});
         //parametros = new Parametros("velocidad", "longitud", "capacidad");

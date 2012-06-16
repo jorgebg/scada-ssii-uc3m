@@ -209,7 +209,7 @@ public class SCADAUserInterface extends JFrame {
 		panel_R1.setBackground(Color.LIGHT_GRAY);
 		panel_R1.setBounds(691, 75, 371, 232);
 		panelInstalacion.add(panel_R1);
-		ac.getRobot1().createGUI(panel_R1, panel_R1.getWidth(), panel_R1.getHeight());
+		ac.getR1().createGUI(panel_R1, panel_R1.getWidth(), panel_R1.getHeight());
 		
 		//EM
 		JPanel panel_EM = new JPanel();
@@ -238,7 +238,7 @@ public class SCADAUserInterface extends JFrame {
 		panel_R2.setBackground(Color.LIGHT_GRAY);
 		panel_R2.setBounds(75, 75, 371, 232);
 		panelInstalacion.add(panel_R2);
-		ac.getRobot2().createGUI(panel_R2, panel_R2.getWidth(), panel_R2.getHeight());
+		ac.getR2().createGUI(panel_R2, panel_R2.getWidth(), panel_R2.getHeight());
 		
 		//COK
 		JPanel panel_COK = new JPanel();

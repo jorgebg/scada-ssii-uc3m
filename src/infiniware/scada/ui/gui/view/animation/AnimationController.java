@@ -131,7 +131,6 @@ public class AnimationController {
 		
 		this.cok.start(CokAnimation.STOP);
 		this.cnok.start(CnokAnimation.MOVE);
-		
 	}
 	
 	public void setParametros(double[] parameters){
@@ -141,12 +140,12 @@ public class AnimationController {
 	public double[] getParametros(){
 		return this.parametros;
 	}
-	
-	public Robot1Animation getRobot1() {
+
+	public Robot1Animation getR1() {
 		return robot1;
 	}
 
-	public Robot2Animation getRobot2() {
+	public Robot2Animation getR2() {
 		return robot2;
 	}
 

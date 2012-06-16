@@ -39,8 +39,8 @@ public class Cinta extends SubAutomata {
         this.entrada = entrada;
         //parametros = new Parametros("velocidad", "longitud");
         configurar(new Parametros() {{
-          put("velocidad", 1);
-          put("longitud", 5);  
+          put("velocidad", 5000);
+          put("longitud", 10);  
         }});
     }
     public Cinta(String salida) {
