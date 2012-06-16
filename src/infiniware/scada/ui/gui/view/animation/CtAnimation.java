@@ -1,6 +1,8 @@
 package infiniware.scada.ui.gui.view.animation;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,14 +17,16 @@ import javax.swing.Timer;
 
 import infiniware.scada.ui.gui.view.ImgLoader;
 
-public class CtAnimation implements ActionListener, Animation {
+public class CtAnimation implements ActionListener, Animation, SlideAnimation {
 
 	private static final int FRAMES_CT = 4;		 	//number of frames to load in the slides (CT)
 	private static final String DIR_CT = "imgs/cintas/"; 	//direction of the slide images / (ct1-4.jpg)
 	private static final int CT_MAX = 24996;			//Max size of the images
+	private static final int PAUSE_TIME = 0;			//Lag time for image loading
+	private final int PIECE_SIZE = 38;
+
 	public static final int STOP = 0;
 	public static final int MOVE = 1;
-	private static final int PAUSE_TIME = 0;			//Lag time for image loading
 	
 	private ImageIcon imgsCT[]; //the images of the R1 movement (from CEN to EM)
 	private ImageIcon imgsREP;
@@ -31,6 +35,14 @@ public class CtAnimation implements ActionListener, Animation {
 	private int state;
 	
 	private JLabel statusLabel;		//Used for suspended animation until the beginning of the animation
+	
+	private ImageIcon imgPiece;
+	private JLabel piece0;
+	private JLabel piece1;
+	private JLabel pieceN;
+	private JLabel piecePFin;
+	private JLabel pieceFin;
+	
 	private int loopslot = -1;  //the current frame number
 	
 	Timer timer;        //the timer animating the images
@@ -51,6 +63,25 @@ public class CtAnimation implements ActionListener, Animation {
 		this.imgsREP = new ImageIcon(CtAnimation.DIR_CT+"ct/ct1.jpg");
 		this.statusLabel = new JLabel(this.imgsREP);
 		this.ct = new Cinta();
+		this.ct.setLayout(null);
+		
+		this.imgPiece = new ImageIcon("imgs/estaticas/cm.jpg");
+		this.piece0 = new JLabel(imgPiece);
+		this.piece0.setBounds(197, 12, this.PIECE_SIZE, this.PIECE_SIZE);
+		this.piece0.setVisible(false);
+		this.piece1 = new JLabel(imgPiece);
+		this.piece1.setBounds(155, 12, this.PIECE_SIZE, this.PIECE_SIZE);
+		this.piece1.setVisible(false);
+		this.pieceN = new JLabel("0", JLabel.CENTER);
+		this.pieceN.setForeground(Color.WHITE);
+		this.pieceN.setFont(new Font(this.pieceN.getFont().getName(), Font.BOLD, 24));
+		this.pieceN.setBounds(89, 12, 66, 30);
+		this.piecePFin = new JLabel(imgPiece);
+		this.piecePFin.setBounds(57, 12, this.PIECE_SIZE, this.PIECE_SIZE);
+		this.piecePFin.setVisible(false);
+		this.pieceFin = new JLabel(imgPiece);
+		this.pieceFin.setBounds(15, 12, this.PIECE_SIZE, this.PIECE_SIZE);
+		this.pieceFin.setVisible(false);
 	}
 	
 	public void init(){
@@ -72,6 +103,11 @@ public class CtAnimation implements ActionListener, Animation {
 		
 		ct.addMouseListener(new ALCT(this));
 		this.ct.add(statusLabel);
+		this.ct.add(piece0);
+        this.ct.add(piece1);
+        this.ct.add(pieceN);
+        this.ct.add(piecePFin);
+        this.ct.add(pieceFin); 
 	}
 	
 	
@@ -178,17 +214,38 @@ public class CtAnimation implements ActionListener, Animation {
 	public class ALCT implements MouseListener{
 		CtAnimation csim;
 		int count = -1;
+		boolean[] element;
 		
 		public ALCT(CtAnimation simu){
 			csim = simu;
+			element = new boolean[8];
 		}
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
-			if(csim.state==csim.STOP){
+			count++;
+			
+			if(count == 0){
+				csim.start(1);
+				element[count]=true;
+			}else if(count>0 && count < element.length){
+				element[count-1] = false;
+				element[count]=true;
+			}else if(count == element.length){
+				element[count-2]=false;
+				element[count-1]=true;
+				csim.start(0);
+			}else{
+				element[element.length-1] =false;
+				count =-1;
+			}
+			csim.updateElements(element);
+			
+			
+			/*if(csim.state==csim.STOP){
 				csim.start(1);
 			}else{
 				csim.start(0);
-			}
+			}*/
 		}
 
 		@Override
@@ -230,5 +287,26 @@ public class CtAnimation implements ActionListener, Animation {
 	public int getState() {
 		return this.state;
 	}
-
+	
+	@Override
+	public void updateElements(boolean[] elements) {
+		if(elements.length > 6){
+			this.piece0.setVisible(elements[0]);
+			this.piece1.setVisible(elements[1]);
+			this.pieceFin.setVisible(elements[elements.length-1]);
+			this.piecePFin.setVisible(elements[elements.length-2]);
+			this.pieceN.setText(this.getElementNumber(elements));
+			
+		}
+	}
+	
+	private String getElementNumber(boolean[] elements){
+		int count=0;
+		for (int i=2; i<elements.length-2;i++){
+			if(elements[i])
+				count++;
+		}
+		return String.valueOf(count);
+	}
+	
 }
