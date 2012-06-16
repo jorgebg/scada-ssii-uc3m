@@ -75,6 +75,8 @@ public class SCADAUserInterface extends JFrame {
 	private JTextField txtArranques;
 	
 	public AnimationController ac;
+	public double parametros[];
+	public JTextArea logConsole;
 	
 	/**
 	 * Launch the application.
@@ -106,7 +108,7 @@ public class SCADAUserInterface extends JFrame {
 		
 		//AnimationController
 		ac = new AnimationController();
-		ac.initAll();
+		ac.init();
 		
 		//----------//
 		
@@ -163,9 +165,13 @@ public class SCADAUserInterface extends JFrame {
 		btnEmergencyStop.setBounds(1078, 138, 144, 49);
 		panel.add(btnEmergencyStop);
 		
-		JTextArea logConsole = new JTextArea();
+		this.logConsole = new JTextArea(1062,173);
+		logConsole.setEditable(false);
 		logConsole.setBounds(6, 19, 1062, 173);
 		panel.add(logConsole);
+		JScrollPane scrollPane = new JScrollPane(logConsole); 
+		scrollPane.setBounds(6, 19, 1062, 173);
+		panel.add(scrollPane);
 		panel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{btnStart, btnStop, btnEmergencyStop}));
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);

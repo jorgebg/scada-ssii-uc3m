@@ -93,7 +93,7 @@ public class Robot1Animation implements ActionListener, Animation {
 		robot1.setBounds(0, 0, with, height);
 		parentPanel.add(robot1);	
 		
-		//robot1.addMouseListener(new ALR(this));
+		robot1.addMouseListener(new ALR(this));
 		robot1.add(statusLabel);
 	}
 	
