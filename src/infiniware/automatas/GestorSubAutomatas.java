@@ -83,14 +83,15 @@ public class GestorSubAutomatas extends HashMap<String, SubAutomata> {
         Map<String, String> nombreEstados = new HashMap<String, String>();
         List<Integer> listaEstado1 = estados.get(estado1);
         List<Integer> listaEstado2 = estados.get(estado2);
-        int id = 0;
-        for (Integer e : listaEstado1) {
-            if (e.equals((listaEstado2.get(id)))) {
+        for (int id = 0; id < listaEstado1.size(); id++) {
+            int subestado1 = listaEstado1.get(id);
+            int subestado2 = listaEstado2.get(id);
+            //System.out.println("\t" + subestado1+":"+ get(id).estados.get(subestado1)+" "+ subestado2+":"+ get(id).estados.get(subestado2));
+            if (subestado1 != subestado2) {
                 String nombreSubAutomata = (String) this.keySet().toArray()[id];
-                String nombreEstado = get(id).estados.get(e);
+                String nombreEstado = get(id).estados.get(subestado2);
                 nombreEstados.put(nombreSubAutomata, nombreEstado);
             }
-            id++;
         }
         return nombreEstados;
     }

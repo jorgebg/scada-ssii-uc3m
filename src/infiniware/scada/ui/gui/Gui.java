@@ -11,6 +11,7 @@ import infiniware.scada.ui.gui.view.animation.Animation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.JTextArea;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -199,6 +200,9 @@ R2
 
     @Override
     public void log(String msg) {
-        frame.logConsole.append(msg+"\n");
+        JTextArea log = frame.logConsole;
+        log.append(msg+"\n");
+        //log.setText(log.getText() + msg+"\n");
+        log.setCaretPosition(log.getDocument().getLength());
     }
 }

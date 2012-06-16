@@ -11,6 +11,7 @@ import infiniware.scada.modelos.ConjuntoParametros;
 import infiniware.scada.simulador.Simulador;
 import infiniware.scada.ui.Ui;
 import infiniware.scada.ui.gui.Gui;
+import infiniware.scada.ui.cli.Cli;
 
 public class Scada implements Ethernet, IProcesable, IScada, infiniware.automatas.maestro.IScada {
 
