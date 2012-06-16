@@ -78,11 +78,11 @@ public class AnimationController {
 		
 	}*/
 
-	public Robot1Animation getRobot1() {
+	public Robot1Animation getR1() {
 		return robot1;
 	}
 
-	public Robot2Animation getRobot2() {
+	public Robot2Animation getR2() {
 		return robot2;
 	}
 

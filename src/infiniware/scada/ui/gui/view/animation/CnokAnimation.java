@@ -55,6 +55,7 @@ public class CnokAnimation implements ActionListener, Animation {
 		//this.normalConteiner =new ImageIcon("imgs/estaticas/cnok0.jpg");
 		this.fullConteiner =new ImageIcon("imgs/estaticas/cnok1.jpg");
 		this.statusLabel = new JLabel(this.emptyConteiner);
+		this.cnok = new Cinta();
 	}
 	
 	public void init(){
@@ -69,7 +70,6 @@ public class CnokAnimation implements ActionListener, Animation {
 	public void createGUI(JPanel parentPanel, int with, int height){
 		parentPanel.setLayout(null); //set layaout to absolute coordenates
 
-		cnok = new Cinta();
 		cnok.setVisible(true);
 		cnok.setOpaque(true);
 		cnok.setBounds(0, 0, with, height);
