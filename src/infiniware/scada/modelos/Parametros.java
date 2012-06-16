@@ -3,7 +3,7 @@ package infiniware.scada.modelos;
 import java.util.HashMap;
 import java.util.Set;
 
-public class Parametros extends HashMap<String, Integer> {
+public class Parametros extends Guardable {
 
     public Parametros(String... parametros) {
         mezclarTodo(parametros);

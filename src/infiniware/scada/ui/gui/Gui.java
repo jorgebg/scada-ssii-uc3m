@@ -5,18 +5,13 @@
 package infiniware.scada.ui.gui;
 
 import infiniware.automatas.Automata;
-import infiniware.scada.Scada;
 import infiniware.scada.ui.Ui;
-import infiniware.scada.ui.cli.Cli;
 import infiniware.scada.ui.gui.view.SCADAUserInterface;
 import infiniware.scada.ui.gui.view.animation.Animation;
-import java.awt.EventQueue;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
-import org.yaml.snakeyaml.Yaml;
 
 /**
  *

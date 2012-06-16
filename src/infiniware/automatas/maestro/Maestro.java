@@ -6,16 +6,11 @@ import infiniware.automatas.esclavos.*;
 import infiniware.automatas.sensores.Sensores;
 import infiniware.automatas.subautomatas.Cinta;
 import infiniware.automatas.subautomatas.Robot2;
-import infiniware.remoto.Profibus;
 import infiniware.scada.Scada;
 import infiniware.scada.modelos.ConjuntoParametros;
 import infiniware.scada.modelos.Parametros;
 import java.rmi.RemoteException;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Maestro extends Automata implements infiniware.scada.IMaestro, infiniware.automatas.esclavos.IMaestro {
 
@@ -120,12 +115,13 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
     }
 
     public void configurarAutomatas(ConjuntoParametros parametros) {
-        for (Map.Entry<Integer, HashMap<String, Parametros>> automata : parametros.entrySet()) {
-            if (automata.getKey() == 0) {
-                configurar(automata.getValue());
+        for (Integer key : parametros.keySet()) {
+            HashMap<String, Parametros> automata = parametros.getParametros(key);
+            if (key == 0) {
+                configurar(automata);
             } else {
                 try {
-                    esclavos.get(automata).configurar(automata.getValue());
+                    esclavos.get(automata).configurar(automata);
                 } catch (RemoteException ex) {
                     System.err.println("Error al configurar el esclavo " + automata + ":");
                     ex.printStackTrace(System.err);
