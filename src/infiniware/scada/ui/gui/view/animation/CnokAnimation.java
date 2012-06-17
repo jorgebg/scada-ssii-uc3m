@@ -75,7 +75,7 @@ public class CnokAnimation implements ActionListener, Animation {
 		cnok.setBounds(0, 0, with, height);
 		parentPanel.add(cnok);	
 		
-		cnok.addMouseListener(new ALCNOK(this));
+		//cnok.addMouseListener(new ALCNOK(this));
 		cnok.add(statusLabel);
 	}
 	

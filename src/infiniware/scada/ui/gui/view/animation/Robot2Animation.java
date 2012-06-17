@@ -98,8 +98,25 @@ public class Robot2Animation implements ActionListener, Animation {
 			robot2.setBounds(0, 0, with, height);
 			parentPanel.add(robot2);	
 			
-			robot2.addMouseListener(new ALR2(this));
+			//robot2.addMouseListener(new ALR2(this));
 			robot2.add(statusLabel, BorderLayout.CENTER);
+		}
+		
+		public void init(double timeR, double timeT1, double timeT2){
+			this.speedREP2CT = ImgLoader.calculateSpeed(timeR, Robot2Animation.FRAMES_REP);
+			this.speedCT2ES = ImgLoader.calculateSpeed(timeT1, (Robot2Animation.FRAMES_ROBOT - Robot2Animation.FRAMES_REP));
+			this.speedES2EV = ImgLoader.calculateSpeed(timeT2, Robot2Animation.FRAMES_ROBOT);
+			this.speedEV2COK = this.speedES2EV;	//no time defined for this action.
+			
+			this.speed = this.changeInitialSpeed(this.state);
+			this.pause = Robot2Animation.PAUSE_TIME;
+
+			if(this.timer == null)
+				this.timer = new Timer(this.speed, this);
+			else
+				this.timer.setDelay(this.speed);
+			
+			this.timer.setInitialDelay(this.pause);
 		}
 		
 		//Background task for loading images

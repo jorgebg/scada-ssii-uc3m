@@ -3,27 +3,46 @@ package infiniware.scada.ui.gui.view;
 
 
 import infiniware.scada.Scada;
-import org.eclipse.wb.swing.FocusTraversalOnArray;
-
 import infiniware.scada.ui.gui.view.animation.AnimationController;
 import infiniware.scada.ui.gui.view.animation.CnokAnimation;
-import infiniware.scada.ui.gui.view.animation.CokAnimation;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.ComponentOrientation;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.swing.*;
-
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+
+import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 public class SCADAUserInterface extends JFrame {
 
@@ -32,44 +51,44 @@ public class SCADAUserInterface extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField txtLongitudCen;
-	private JTextField txtVelocidadCen;
-	private JTextField txtCapacidadCen;
-	private JTextField txtLongitudCej;
-	private JTextField txtVelocidadCej;
-	private JTextField txtCapacidadCej;
-	private JTextField txtTiempoEm;
-	private JTextField txtLongitudCt;
-	private JTextField txtVelocidadCt;
-	private JTextField txtTiempoEs;
-	private JTextField txtLongitudCok;
-	private JTextField txtVelocidadCok;
-	private JTextField txtLongitudCnok;
-	private JTextField txtVelocidadCnok;
-	private JTextField txtTiempoEv;
-	private JTextField txtTRecogidaEnej;
-	private JTextField txtTTransporteEnej;
-	private JTextField txtTTransporteCm1;
-	private JTextField txtTRecogidaCm;
-	private JTextField txtTTransporteCm2;
-	private JTextField txtTTransporteCs;
-	private JTextField txtConjuntosOk;
-	private JTextField txtConjuntosNok;
-	private JTextField txtConjuntosOkTotales;
-	private JTextField txtConjuntosNokTotales;
-	private JTextField txtParadasNormales;
-	private JTextField txtParadasEmergencia;
-	private JTextField txtArranques;
+	private JTextField txtLongitudCen;			//CEN_l
+	private JTextField txtVelocidadCen;			//CEN_v
+	private JTextField txtCapacidadCen;			//CEN_c
+	private JTextField txtLongitudCej;			//CEJ_l
+	private JTextField txtVelocidadCej;			//CEJ_v
+	private JTextField txtCapacidadCej;			//CEJ_c
+	private JTextField txtLongitudCt;			//CT_l
+	private JTextField txtVelocidadCt;			//CT_v
+	private JTextField txtLongitudCok;			//COK_l
+	private JTextField txtVelocidadCok;			//COK_v
+	private JTextField txtLongitudCnok;			//CNOK_l
+	private JTextField txtVelocidadCnok;		//CNOK_v
+	private JTextField txtTiempoEm;				//EM_t
+	private JTextField txtTiempoEs;				//ES_t
+	private JTextField txtTiempoEv;				//EV_t
+	private JTextField txtTRecogidaEnej;		//R1_tREn
+	private JTextField txtTTransporteEnej;		//R1_tTEn
+	private JTextField txtTTransporteCm1;		//R1_tTCM
+	private JTextField txtTRecogidaCm;			//R2_tRCM
+	private JTextField txtTTransporteCm2;		//R2_tTCM
+	private JTextField txtTTransporteCs;		//R2_tTCS
+	
+	private JTextField txtConjuntosOk;			//COK
+	private JTextField txtConjuntosNok;			//CNOK
+	private JTextField txtConjuntosOkTotales;	//COKTotal
+	private JTextField txtConjuntosNokTotales;	//CNOKTotal
+	private JTextField txtParadasNormales;		//PN
+	private JTextField txtParadasEmergencia;	//PE
+	private JTextField txtArranques;			//ARR
+	
 	public JTextArea logConsole;
-        
+    public Map<String, Double> mapaParametros;
+    public Map<String, Integer> mapaInformes;
+	
 	public AnimationController ac;
 	public double parametros[];
 	
 	
-	
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -94,12 +113,6 @@ public class SCADAUserInterface extends JFrame {
 		setTitle("SCADA");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1280, 968);
-		
-		//AnimationController
-		ac = new AnimationController();
-		ac.init();
-		
-		//----------//
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -187,71 +200,60 @@ public class SCADAUserInterface extends JFrame {
 		panel_CEN.setBounds(842, 310, 73, 291);
 		panelInstalacion.add(panel_CEN);
 		panel_CEN.setLayout(null);
-		ac.getCen().createGUI(panel_CEN, panel_CEN.getWidth(), panel_CEN.getHeight());
-		
 		//CEJ
 		JPanel panel_CEJ = new JPanel();
 		panel_CEJ.setBackground(Color.LIGHT_GRAY);
 		panel_CEJ.setBounds(966, 310, 73, 291);
 		panelInstalacion.add(panel_CEJ);
-		ac.getCej().createGUI(panel_CEJ, panel_CEJ.getWidth(), panel_CEJ.getHeight());
 		
 		//R1
 		JPanel panel_R1 = new JPanel();
 		panel_R1.setBackground(Color.LIGHT_GRAY);
 		panel_R1.setBounds(691, 75, 371, 232);
 		panelInstalacion.add(panel_R1);
-		ac.getR1().createGUI(panel_R1, panel_R1.getWidth(), panel_R1.getHeight());
 		
 		//EM
 		JPanel panel_EM = new JPanel();
 		panel_EM.setBackground(Color.LIGHT_GRAY);
 		panel_EM.setBounds(814, 6, 210, 70);
 		panelInstalacion.add(panel_EM);
-		ac.getEm().createGUI(panel_EM, panel_EM.getWidth(), panel_EM.getHeight());
 		
+		//TODO chachi
 		//ES
 		JPanel panel_ES = new JPanel();
 		panel_ES.setBackground(Color.LIGHT_GRAY);
 		panel_ES.setBounds(75, 6, 210, 70);
 		panelInstalacion.add(panel_ES);
-		ac.getEs().createGUI(panel_ES, panel_ES.getWidth(), panel_ES.getHeight());
-		
 		
 		//EV
 		JPanel panel_EV = new JPanel();
 		panel_EV.setBackground(Color.LIGHT_GRAY);
 		panel_EV.setBounds(6, 63, 70, 210);
 		panelInstalacion.add(panel_EV);
-		ac.getEv().createGUI(panel_EV, panel_EV.getWidth(), panel_EV.getHeight());
 		
 		//R2
 		JPanel panel_R2 = new JPanel();
 		panel_R2.setBackground(Color.LIGHT_GRAY);
 		panel_R2.setBounds(75, 75, 371, 232);
 		panelInstalacion.add(panel_R2);
-		ac.getR2().createGUI(panel_R2, panel_R2.getWidth(), panel_R2.getHeight());
 		
 		//COK
 		JPanel panel_COK = new JPanel();
 		panel_COK.setBackground(Color.LIGHT_GRAY);
 		panel_COK.setBounds(120, 310, 73, 291);
 		panelInstalacion.add(panel_COK);
-		ac.getCok().createGUI(panel_COK, panel_COK.getWidth(), panel_COK.getHeight());
 		
 		//CNOK
 		JPanel panel_CNOK = new JPanel();
 		panel_CNOK.setBackground(Color.LIGHT_GRAY);
 		panel_CNOK.setBounds(237, 310, 309, 288);
 		panelInstalacion.add(panel_CNOK);
-		ac.getCnok().createGUI(panel_CNOK, panel_CNOK.getWidth(), panel_CNOK.getHeight());
 		
 		//CT
 		JPanel panel_CT = new JPanel();
 		panel_CT.setBackground(Color.LIGHT_GRAY);
 		panel_CT.setBounds(446, 104, 244, 63);
 		panelInstalacion.add(panel_CT);
-		ac.getCt().createGUI(panel_CT, panel_CT.getWidth(), panel_CT.getHeight());
 		
 		JPanel panelControlAutomatas = new JPanel();
 		panelControlAutomatas.setBackground(Color.LIGHT_GRAY);
@@ -361,7 +363,7 @@ public class SCADAUserInterface extends JFrame {
 		lblUds.setBounds(320, 115, 50, 16);
 		panelCej.add(lblUds);
 		
-		JLabel lblMmin = new JLabel("m/min");
+		JLabel lblMmin = new JLabel("m/s");
 		lblMmin.setBounds(320, 75, 50, 16);
 		panelCej.add(lblMmin);
 		
@@ -446,7 +448,7 @@ public class SCADAUserInterface extends JFrame {
 		label_17.setBounds(320, 35, 38, 16);
 		panelCen.add(label_17);
 		
-		JLabel label_18 = new JLabel("m/min");
+		JLabel label_18 = new JLabel("m/s");
 		label_18.setBounds(320, 75, 51, 16);
 		panelCen.add(label_18);
 		
@@ -620,7 +622,7 @@ public class SCADAUserInterface extends JFrame {
 		label_8.setBounds(320, 35, 38, 16);
 		panelCt.add(label_8);
 		
-		JLabel label_9 = new JLabel("m/min");
+		JLabel label_9 = new JLabel("m/s");
 		label_9.setBounds(320, 75, 51, 16);
 		panelCt.add(label_9);
 		
@@ -642,7 +644,7 @@ public class SCADAUserInterface extends JFrame {
 		label_7.setBounds(320, 35, 38, 16);
 		panelCnok.add(label_7);
 		
-		JLabel label_14 = new JLabel("m/min");
+		JLabel label_14 = new JLabel("m/s");
 		label_14.setBounds(320, 75, 51, 16);
 		panelCnok.add(label_14);
 		
@@ -698,11 +700,11 @@ public class SCADAUserInterface extends JFrame {
 		txtVelocidadCok.setBounds(185, 69, 134, 28);
 		panelCok.add(txtVelocidadCok);
 		
-		JLabel label_10 = new JLabel("s");
+		JLabel label_10 = new JLabel("m");
 		label_10.setBounds(320, 35, 38, 16);
 		panelCok.add(label_10);
 		
-		JLabel label_11 = new JLabel("s");
+		JLabel label_11 = new JLabel("m/s");
 		label_11.setBounds(320, 75, 38, 16);
 		panelCok.add(label_11);
 		
@@ -779,14 +781,14 @@ public class SCADAUserInterface extends JFrame {
 		
 		txtConjuntosOkTotales = new JTextField();
 		txtConjuntosOkTotales.setEditable(false);
-		txtConjuntosOkTotales.setText("100");
+		txtConjuntosOkTotales.setText("0");
 		txtConjuntosOkTotales.setHorizontalAlignment(SwingConstants.CENTER);
 		txtConjuntosOkTotales.setColumns(10);
 		txtConjuntosOkTotales.setBounds(550, 44, 134, 28);
 		panelFabricacion.add(txtConjuntosOkTotales);
 		
 		txtConjuntosNokTotales = new JTextField();
-		txtConjuntosNokTotales.setText("10");
+		txtConjuntosNokTotales.setText("0");
 		txtConjuntosNokTotales.setHorizontalAlignment(SwingConstants.CENTER);
 		txtConjuntosNokTotales.setEditable(false);
 		txtConjuntosNokTotales.setColumns(10);
@@ -813,7 +815,7 @@ public class SCADAUserInterface extends JFrame {
 		panelFuncionamiento.add(lblNumeroTotalDe_2);
 		
 		txtParadasNormales = new JTextField();
-		txtParadasNormales.setText("10");
+		txtParadasNormales.setText("0");
 		txtParadasNormales.setHorizontalAlignment(SwingConstants.CENTER);
 		txtParadasNormales.setEditable(false);
 		txtParadasNormales.setColumns(10);
@@ -821,7 +823,7 @@ public class SCADAUserInterface extends JFrame {
 		panelFuncionamiento.add(txtParadasNormales);
 		
 		txtParadasEmergencia = new JTextField();
-		txtParadasEmergencia.setText("10");
+		txtParadasEmergencia.setText("0");
 		txtParadasEmergencia.setHorizontalAlignment(SwingConstants.CENTER);
 		txtParadasEmergencia.setEditable(false);
 		txtParadasEmergencia.setColumns(10);
@@ -829,7 +831,7 @@ public class SCADAUserInterface extends JFrame {
 		panelFuncionamiento.add(txtParadasEmergencia);
 		
 		txtArranques = new JTextField();
-		txtArranques.setText("10");
+		txtArranques.setText("0");
 		txtArranques.setHorizontalAlignment(SwingConstants.CENTER);
 		txtArranques.setEditable(false);
 		txtArranques.setColumns(10);
@@ -844,13 +846,38 @@ public class SCADAUserInterface extends JFrame {
 		verticalStrut_1.setBounds(525, 901, 35, 8);
 		contentPane.add(verticalStrut_1);
 		
-		//Mouse Listeners 
+		//TODO
+		//Parameter Set
+		this.mapaParametros = new HashMap<String, Double>();
+		this.updateParameterMap();
+		this.mapaInformes = new HashMap<String, Integer>();
 		
+		//AnimationController
+		ac = new AnimationController(this.mapaParametros);
+		
+		ac.getCen().createGUI(panel_CEN, panel_CEN.getWidth(), panel_CEN.getHeight());
+		ac.getCej().createGUI(panel_CEJ, panel_CEJ.getWidth(), panel_CEJ.getHeight());
+		ac.getCt().createGUI(panel_CT, panel_CT.getWidth(), panel_CT.getHeight());
+		ac.getCok().createGUI(panel_COK, panel_COK.getWidth(), panel_COK.getHeight());
+		ac.getCnok().createGUI(panel_CNOK, panel_CNOK.getWidth(), panel_CNOK.getHeight());
+
+		ac.getR1().createGUI(panel_R1, panel_R1.getWidth(), panel_R1.getHeight());
+		ac.getR2().createGUI(panel_R2, panel_R2.getWidth(), panel_R2.getHeight());
+		
+		ac.getEv().createGUI(panel_EV, panel_EV.getWidth(), panel_EV.getHeight());
+		ac.getEm().createGUI(panel_EM, panel_EM.getWidth(), panel_EM.getHeight());
+		ac.getEs().createGUI(panel_ES, panel_ES.getWidth(), panel_ES.getHeight());
+		
+		//Mouse Listeners 
 		//Start
 		btnStart.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//ac.startAll();
+				updateParameterMap(); 							//Load the changes in the parameters
+				ac.init(mapaParametros); 						//update the values of the GUI Components
+				editableParameters(false);						//lock the edition of parameters
+				
+				//Starts the system
 				Scada.ui.arrancar();
 			}
 		});
@@ -859,8 +886,11 @@ public class SCADAUserInterface extends JFrame {
 		btnStop.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//ac.startAll();
+				//stops the system
 				Scada.ui.parada();
+				
+				editableParameters(true); 	//unlock the edition of paramaters
+				updateReportMap();			//updates the reports in the GUI	
 			}
 		});
 		
@@ -870,6 +900,8 @@ public class SCADAUserInterface extends JFrame {
 			public void mouseClicked(MouseEvent arg0) {
 				//ac.emergencyStopAll();
 				Scada.ui.emergencia();
+				
+				logConsole.append("GUI: Activada la parada de emergencia\n");
 			}
 		});
 		
@@ -878,6 +910,8 @@ public class SCADAUserInterface extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				ac.getCnok().start(CnokAnimation.EMTPY);
 				Scada.ui.limpiarCPD();
+				
+				logConsole.append("GUI: Vaciado el contenedor de conjuntos no v‡lidos\n");
 			}
 		});
 		
@@ -885,12 +919,151 @@ public class SCADAUserInterface extends JFrame {
 		falloEsclavo1.addMouseListener(new ChangeAdapter(falloEsclavo1,1));
 		
 		//Fallo Automata2
-		//falloEsclavo2.addChangeListener(new ChangeAdapter(falloEsclavo2,2));
 		falloEsclavo2.addMouseListener(new ChangeAdapter(falloEsclavo2,2));
 		
 		//Fallo Automata2
-		//falloEsclavo3.addChangeListener(new ChangeAdapter(falloEsclavo3,3));
 		falloEsclavo3.addMouseListener(new ChangeAdapter(falloEsclavo3,3));
+	}
+	
+	public void setMapaInformes(Map<String, Integer> map){
+		this.mapaInformes = map;
+		this.setGUIReport(mapaInformes);
+	}
+	
+	public Map<String, Integer> getMapaInformes(){
+		return this.mapaInformes;
+	}
+	
+	private void updateReportMap(){
+		mapaInformes.put("COK", Integer.valueOf(this.txtConjuntosOk.getText()));
+		mapaInformes.put("CNOK", Integer.valueOf(this.txtConjuntosNok.getText()));
+		mapaInformes.put("COKTotal", Integer.valueOf(this.txtConjuntosOkTotales.getText()));
+		mapaInformes.put("CNOKTotal", Integer.valueOf(this.txtConjuntosNokTotales.getText()));
+		mapaInformes.put("PN", Integer.valueOf(this.txtParadasNormales.getText()));
+		mapaInformes.put("PE", Integer.valueOf(this.txtParadasEmergencia.getText()));
+		mapaInformes.put("ARR", Integer.valueOf(this.txtArranques.getText()));
+		
+		logConsole.append("GUI: Los informes han sido actualizados\n");
+	}
+	
+
+	private void setGUIReport(Map<String, Integer> map){
+		this.txtConjuntosOk.setText(map.get("COK").toString());
+		this.txtConjuntosNok.setText(map.get("CNOK").toString());
+		this.txtConjuntosOkTotales.setText(map.get("COKTotal").toString());
+		this.txtConjuntosNokTotales.setText(map.get("CNOKTotal").toString());
+		this.txtParadasNormales.setText(map.get("PN").toString());
+		this.txtParadasEmergencia.setText(map.get("PE").toString());
+		this.txtArranques.setText(map.get("ARR").toString());
+	}
+	
+	public Map<String, Double> getMapaParametros(){
+		return this.mapaParametros;
+	}
+	
+	public void setMapaParametros(Map<String, Double> map){
+		this.mapaParametros = map;
+		this.setGUIParameters(mapaParametros);
+	}
+	
+	private void setGUIParameters(Map<String, Double> map){
+		//Cintas
+		
+		this.txtLongitudCen.setText(map.get("CEN_l").toString());
+		this.txtVelocidadCen.setText(map.get("CEN_l").toString());
+		this.txtCapacidadCen.setText(map.get("CEN_l").toString());
+
+		this.txtLongitudCej.setText(map.get("CEJ_l").toString());
+		this.txtVelocidadCej.setText(map.get("CEJ_v").toString());
+		this.txtCapacidadCej.setText(map.get("CEJ_c").toString());
+
+		this.txtLongitudCt.setText(map.get("CT_l").toString());
+		this.txtVelocidadCt.setText(map.get("CT_v").toString());
+
+		this.txtLongitudCok.setText(map.get("COK_l").toString());
+		this.txtVelocidadCok.setText(map.get("COk_v").toString());
+
+		this.txtLongitudCnok.setText(map.get("CNOK_l").toString());
+		this.txtVelocidadCnok.setText(map.get("CNOK_v").toString());
+
+		//Estaciones
+		this.txtTiempoEm.setText(map.get("EM_t").toString());
+		this.txtTiempoEs.setText(map.get("ES_t").toString());
+		this.txtTiempoEv.setText(map.get("EV_t").toString());
+
+		//Robot1
+		this.txtTRecogidaEnej.setText(map.get("R1_tREn").toString());
+		this.txtTTransporteEnej.setText(map.get("R1_tTEn").toString());
+		this.txtTTransporteCm1.setText(map.get("R1_tTCM").toString());
+
+		//Robot2
+		this.txtTRecogidaCm.setText(map.get("R2_tRCM").toString());
+		this.txtTTransporteCm2.setText(map.get("R2_tTCM").toString());
+		this.txtTTransporteCs.setText(map.get("CR2_tTCSEN_l").toString());
+	}
+	
+	private void updateParameterMap(){
+		//Cintas
+		mapaParametros.put("CEN_l", Double.valueOf(this.txtLongitudCen.getText()));
+		mapaParametros.put("CEN_v", Double.valueOf(this.txtVelocidadCen.getText()));
+		mapaParametros.put("CEN_c", Double.valueOf(this.txtCapacidadCen.getText()));
+		mapaParametros.put("CEJ_l", Double.valueOf(this.txtLongitudCej.getText()));
+		mapaParametros.put("CEJ_v", Double.valueOf(this.txtVelocidadCej.getText()));
+		mapaParametros.put("CEJ_c", Double.valueOf(this.txtCapacidadCej.getText()));
+		mapaParametros.put("CT_l", Double.valueOf(this.txtLongitudCt.getText()));
+		mapaParametros.put("CT_v", Double.valueOf(this.txtVelocidadCt.getText()));
+		mapaParametros.put("COK_l", Double.valueOf(this.txtLongitudCok.getText()));
+		mapaParametros.put("COK_v", Double.valueOf(this.txtVelocidadCok.getText()));
+		mapaParametros.put("CNOK_l", Double.valueOf(this.txtLongitudCnok.getText()));
+		mapaParametros.put("CNOK_v", Double.valueOf(this.txtVelocidadCnok.getText()));
+		
+		//Estaciones
+		mapaParametros.put("EM_t", Double.valueOf(this.txtTiempoEm.getText()));
+		mapaParametros.put("ES_t", Double.valueOf(this.txtTiempoEs.getText()));
+		mapaParametros.put("EV_t", Double.valueOf(this.txtTiempoEv.getText()));
+		
+		//Robot1
+		mapaParametros.put("R1_tREn", Double.valueOf(this.txtTRecogidaEnej.getText()));
+		mapaParametros.put("R1_tTEn", Double.valueOf(this.txtTTransporteEnej.getText()));
+		mapaParametros.put("R1_tTCM", Double.valueOf(this.txtTTransporteCm1.getText()));
+		
+		//Robot2
+		mapaParametros.put("R2_tRCM", Double.valueOf(this.txtTRecogidaCm.getText()));
+		mapaParametros.put("R2_tTCM", Double.valueOf(this.txtTTransporteCm2.getText()));
+		mapaParametros.put("R2_tTCS", Double.valueOf(this.txtTTransporteCs.getText()));
+		
+		logConsole.append("GUI: Los par‡metros han sido actualizados\n");
+
+	}
+	
+	
+	private void editableParameters(boolean editable){
+		txtLongitudCen.setEditable(editable);
+		txtVelocidadCen.setEditable(editable);
+		txtCapacidadCen.setEditable(editable);
+		txtLongitudCej.setEditable(editable);
+		txtVelocidadCej.setEditable(editable);
+		txtCapacidadCej.setEditable(editable);
+		txtLongitudCt.setEditable(editable);
+		txtVelocidadCt.setEditable(editable);
+		txtLongitudCok.setEditable(editable);
+		txtVelocidadCok.setEditable(editable);
+		txtLongitudCnok.setEditable(editable);
+		txtVelocidadCnok.setEditable(editable);
+		txtTiempoEm.setEditable(editable);
+		txtTiempoEs.setEditable(editable);
+		txtTiempoEv.setEditable(editable);
+		txtTRecogidaEnej.setEditable(editable);
+		txtTTransporteEnej.setEditable(editable);
+		txtTTransporteCm1.setEditable(editable);
+		txtTRecogidaCm.setEditable(editable);
+		txtTTransporteCm2.setEditable(editable);
+		txtTTransporteCs.setEditable(editable);
+		
+		if(!editable)
+			logConsole.append("GUI: La edici—n de par‡metros de entrada ha sido deshabilitada\n");
+		else
+			logConsole.append("GUI: La edici—n de par‡metros de entrada ha sido habilitada\n");
 	}
 	
 	public class ChangeAdapter implements MouseListener{
@@ -948,25 +1121,21 @@ public class SCADAUserInterface extends JFrame {
 
 		@Override
 		public void mouseEntered(MouseEvent arg0) {
-			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
 		public void mouseExited(MouseEvent arg0) {
-			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
 		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
+		
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
 			
 		}
 

@@ -92,6 +92,18 @@ public class CejAnimation implements Animation, ActionListener, SlideAnimation {
         this.slideWorker.execute();
 	}
 	
+	public void init(double time){
+		this.speed = ImgLoader.calculateSpeed(time, CejAnimation.FRAMES_CEJ);
+		this.pause = CejAnimation.PAUSE_TIME;
+
+		if(this.timer == null)
+			this.timer = new Timer(this.speed, this);
+		else
+			this.timer.setDelay(this.speed);
+		
+		this.timer.setInitialDelay(this.pause);
+	}
+	
 	public void createGUI(JPanel parentPanel, int with, int height){
 		parentPanel.setLayout(null); //set layaout to absolute coordenates
 

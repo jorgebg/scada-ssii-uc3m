@@ -85,6 +85,22 @@ public class Robot1Animation implements ActionListener, Animation {
         this.robotWorker.execute();
 	}
 	
+	public void init(double timeR, double timeT1, double timeT2){
+		this.speedREP2CEN = ImgLoader.calculateSpeed(timeR, Robot1Animation.FRAMES_REP);
+		this.speedCEN2EM = ImgLoader.calculateSpeed(timeT1, (Robot1Animation.FRAMES_ROBOT - Robot1Animation.FRAMES_REP));
+		this.speedEM2CT = ImgLoader.calculateSpeed(timeT2, Robot1Animation.FRAMES_ROBOT);
+		
+		this.speed = this.changeInitialSpeed(this.state);
+		this.pause = Robot1Animation.PAUSE_TIME;
+
+		if(this.timer == null)
+			this.timer = new Timer(this.speed, this);
+		else
+			this.timer.setDelay(this.speed);
+		
+		this.timer.setInitialDelay(this.pause);
+	}
+	
 	public void createGUI(JPanel parentPanel, int with, int height){
 		parentPanel.setLayout(null); //set layaout to absolute coordenates
 
@@ -93,7 +109,7 @@ public class Robot1Animation implements ActionListener, Animation {
 		robot1.setBounds(0, 0, with, height);
 		parentPanel.add(robot1);	
 		
-		robot1.addMouseListener(new ALR(this));
+		//robot1.seListener(new ALR(this));
 		robot1.add(statusLabel);
 	}
 	

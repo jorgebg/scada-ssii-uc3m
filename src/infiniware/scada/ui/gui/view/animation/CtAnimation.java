@@ -93,6 +93,18 @@ public class CtAnimation implements ActionListener, Animation, SlideAnimation {
         this.slideWorker.execute();
 	}
 	
+	public void init(double time){
+		this.speed = ImgLoader.calculateSpeed(time, CtAnimation.FRAMES_CT);
+		this.pause = CtAnimation.PAUSE_TIME;
+
+		if(this.timer == null)
+			this.timer = new Timer(this.speed, this);
+		else
+			this.timer.setDelay(this.speed);
+		
+		this.timer.setInitialDelay(this.pause);
+	}
+	
 	public void createGUI(JPanel parentPanel, int with, int height){
 		parentPanel.setLayout(null); //set layaout to absolute coordenates
 
@@ -101,7 +113,7 @@ public class CtAnimation implements ActionListener, Animation, SlideAnimation {
 		ct.setBounds(0, 0, with, height);
 		parentPanel.add(ct);	
 		
-		ct.addMouseListener(new ALCT(this));
+		//ct.addMouseListener(new ALCT(this));
 		this.ct.add(statusLabel);
 		this.ct.add(piece0);
         this.ct.add(piece1);

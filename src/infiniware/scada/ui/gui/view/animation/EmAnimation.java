@@ -25,7 +25,7 @@ public class EmAnimation implements Animation {
 		eBusy = new ImageIcon(this.DIR_BUSY);
 		
 		this.state = this.FREE;
-		statusLabel = new JLabel(this.eFree);
+		//statusLabel = new JLabel(this.eFree);
 	}
 	
 	@Override
