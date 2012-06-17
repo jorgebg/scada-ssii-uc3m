@@ -7,17 +7,23 @@ import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import infiniware.scada.ui.gui.view.animation.AnimationController;
 import infiniware.scada.ui.gui.view.animation.CnokAnimation;
+import infiniware.scada.ui.gui.view.animation.CokAnimation;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import javax.swing.*;
 
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class SCADAUserInterface extends JFrame {
 
@@ -58,6 +64,8 @@ public class SCADAUserInterface extends JFrame {
         
 	public AnimationController ac;
 	public double parametros[];
+	
+	
 	
 	/**
 	 * Launch the application.
@@ -149,6 +157,9 @@ public class SCADAUserInterface extends JFrame {
 		this.logConsole = new JTextArea(1062,173);
 		logConsole.setEditable(false);
 		logConsole.setBounds(6, 19, 1062, 173);
+		logConsole.setLineWrap(true);
+		logConsole.setWrapStyleWord(true);
+		logConsole.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 		panel.add(logConsole);
 		JScrollPane scrollPane = new JScrollPane(logConsole); 
 		scrollPane.setBounds(6, 19, 1062, 173);
@@ -253,20 +264,23 @@ public class SCADAUserInterface extends JFrame {
 		btnVaciarConjuntosDefectuosos.setBounds(10, 537, 122, 38);
 		panelControlAutomatas.add(btnVaciarConjuntosDefectuosos);
 		
+		//Fallo Esclavo1
 		JSlider falloEsclavo1 = new JSlider();
 		falloEsclavo1.setMaximum(1);
 		falloEsclavo1.setBounds(10, 85, 122, 23);
 		panelControlAutomatas.add(falloEsclavo1);
 		
+		//Fallo Esclavo 2
 		JSlider falloEsclavo2 = new JSlider();
 		falloEsclavo2.setMaximum(1);
 		falloEsclavo2.setBounds(10, 183, 122, 23);
 		panelControlAutomatas.add(falloEsclavo2);
 		
-		JSlider slider = new JSlider();
-		slider.setMaximum(1);
-		slider.setBounds(10, 291, 122, 23);
-		panelControlAutomatas.add(slider);
+		//Fallo Esclavo 3
+		JSlider falloEsclavo3 = new JSlider();
+		falloEsclavo3.setMaximum(1);
+		falloEsclavo3.setBounds(10, 291, 122, 23);
+		panelControlAutomatas.add(falloEsclavo3);
 		
 		JLabel lblEsclavo = new JLabel("Esclavo 1");
 		lblEsclavo.setBounds(44, 60, 62, 14);
@@ -866,5 +880,95 @@ public class SCADAUserInterface extends JFrame {
 				Scada.ui.limpiarCPD();
 			}
 		});
+		
+		//Fallo Automata1
+		falloEsclavo1.addMouseListener(new ChangeAdapter(falloEsclavo1,1));
+		
+		//Fallo Automata2
+		//falloEsclavo2.addChangeListener(new ChangeAdapter(falloEsclavo2,2));
+		falloEsclavo2.addMouseListener(new ChangeAdapter(falloEsclavo2,2));
+		
+		//Fallo Automata2
+		//falloEsclavo3.addChangeListener(new ChangeAdapter(falloEsclavo3,3));
+		falloEsclavo3.addMouseListener(new ChangeAdapter(falloEsclavo3,3));
+	}
+	
+	public class ChangeAdapter implements MouseListener{
+		JSlider falloAutomata;
+		int automata;
+		public ChangeAdapter(JSlider falloEsclavo, int esclavo){
+			this.falloAutomata = falloEsclavo;
+			this.automata = esclavo;
+		}
+		
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+			switch(automata){
+			case(1):
+				if(this.isActive()){
+					Scada.ui.recuperarFalloEsclavo1();
+					logConsole.append("GUI: Activada la recuperaci—n del fallo del aut—mata esclavo 1\n");
+				}else{
+					Scada.ui.provocarFalloEsclavo1();
+					logConsole.append("GUI: Activado el fallo del aut—mata esclavo 1\n");					
+				}
+				break;
+			case(2):
+				if(this.isActive()){
+					Scada.ui.recuperarFalloEsclavo2();
+					logConsole.append("GUI: Activada la recuperaci—n del fallo del aut—mata esclavo 2\n");
+				}else{
+					Scada.ui.provocarFalloEsclavo2();
+					logConsole.append("GUI: Activado el fallo del aut—mata esclavo 2\n");					
+				}
+				break;
+			case(3):
+				if(this.isActive()){
+					Scada.ui.recuperarFalloEsclavo3();
+					logConsole.append("GUI: Activada la recuperaci—n del fallo del aut—mata esclavo 3\n");
+				}else{
+					Scada.ui.provocarFalloEsclavo3();
+					logConsole.append("GUI: Activado el fallo del aut—mata esclavo 3\n");					
+				}
+				break;
+			default:
+				logConsole.append("ERROR-GUI: Error en el Fallo de los Automatas.Aut—mata recibido no v‡lido\n");
+				System.err.println("Invalid Slave given in ChangeAdapter(JSlider falloEsclavo,int esclavo) - SCADAUserInterface");
+				break;
+			
+			}
+		}
+		
+		private boolean isActive(){
+			if(this.falloAutomata.getValue() == 0)
+				return false;
+			else
+				return true;			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
 	}
 }

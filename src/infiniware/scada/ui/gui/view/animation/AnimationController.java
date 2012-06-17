@@ -60,6 +60,11 @@ public class AnimationController {
 	13 lCnok;
 	*/
 	
+	public AnimationController(double param[]){
+		this.parametros = param;
+		
+	}
+	
 	public AnimationController(){
 		this.parametros = new double[14];
 		
