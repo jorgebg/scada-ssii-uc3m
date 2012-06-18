@@ -984,18 +984,27 @@ public class SCADAUserInterface extends JFrame {
 	}
 	
 	public void cargarInformes(){
-		Informes informes = new Informes();
-		Produccion produccion = new Produccion();
-		produccion.cargar(informes);
-		HashMap<String, Integer> mapa = new HashMap<String, Integer>();
-		mapa.put("COK", informes.getFabricacion().getCorrectos());
-		mapa.put("CNOK", informes.getFabricacion().getIncorrectos());
-		mapa.put("COKTotal", informes.getFabricacion().getCorrectos());
-		mapa.put("CNOKTotal", informes.getFabricacion().getIncorrectos());
-		mapa.put("PN", informes.getFuncionamiento().getNormales());
-		mapa.put("PE", informes.getFuncionamiento().getEmergencia());
-		mapa.put("ARR", informes.getFuncionamiento().getArranques());
-		setMapaInformes(mapa);
+		try{
+			Informes informes = new Informes();
+			Produccion produccion = new Produccion();
+			produccion.cargar(informes);
+			HashMap<String, Integer> mapa = new HashMap<String, Integer>();
+			mapa.put("COK", informes.getFabricacion().getCorrectos());
+			mapa.put("CNOK", informes.getFabricacion().getIncorrectos());
+			mapa.put("COKTotal", informes.getFabricacion().getCorrectos());
+			mapa.put("CNOKTotal", informes.getFabricacion().getIncorrectos());
+			mapa.put("PN", informes.getFuncionamiento().getNormales());
+			mapa.put("PE", informes.getFuncionamiento().getEmergencia());
+			mapa.put("ARR", informes.getFuncionamiento().getArranques());
+			setMapaInformes(mapa);
+		}catch(Exception e){
+			Scada.log("GUI: Error al cargar informe, informe autogenerado");
+			Informes  informes = new Informes(new Fabricacion(), new Funcionamiento());
+			Produccion produccion = new Produccion();
+			produccion.guardar(informes);
+			cargarInformes();
+		}
+		
 	}
 	
 
