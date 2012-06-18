@@ -5,6 +5,8 @@ package infiniware.scada.ui.gui.view;
 import infiniware.almacenamiento.Produccion;
 import infiniware.scada.Scada;
 import infiniware.scada.informes.Informes;
+import infiniware.scada.informes.modelos.Fabricacion;
+import infiniware.scada.informes.modelos.Funcionamiento;
 import infiniware.scada.ui.gui.view.animation.AnimationController;
 import infiniware.scada.ui.gui.view.animation.CnokAnimation;
 
@@ -227,7 +229,6 @@ public class SCADAUserInterface extends JFrame {
 		panel_EM.setBounds(814, 6, 210, 70);
 		panelInstalacion.add(panel_EM);
 		
-		//TODO chachi
 		//ES
 		JPanel panel_ES = new JPanel();
 		panel_ES.setBackground(Color.LIGHT_GRAY);
@@ -861,6 +862,8 @@ public class SCADAUserInterface extends JFrame {
 		this.updateParameterMap();
 		this.mapaInformes = new HashMap<String, Integer>();
 		
+		cargarInformes();
+		
 		//AnimationController
 		ac = new AnimationController(this.mapaParametros);
 		
@@ -955,7 +958,9 @@ public class SCADAUserInterface extends JFrame {
 		//Guardar
 		mntmGuardarParametros.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO
+				updateReportMap();
+				guardarInformes();
+				logConsole.append("GUI: Guardando informes");
 			}
 		});
 		
@@ -991,6 +996,16 @@ public class SCADAUserInterface extends JFrame {
 		mapa.put("PE", informes.getFuncionamiento().getEmergencia());
 		mapa.put("ARR", informes.getFuncionamiento().getArranques());
 		setMapaInformes(mapa);
+	}
+	
+
+	public void guardarInformes() {
+		Informes informes = new Informes();
+		Produccion produccion = new Produccion();
+		HashMap<String, Integer> mapa = (HashMap<String, Integer>) getMapaInformes();
+		informes.setFabricacion(new Fabricacion(mapa.get("COKTotal"), mapa.get("CNOKTotal")));
+		informes.setFuncionamiento(new Funcionamiento(mapa.get("PN"), mapa.get("PE"), mapa.get("ARR")));
+		produccion.guardar(informes);
 	}
 	
 	/**
