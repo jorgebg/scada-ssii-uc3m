@@ -5,6 +5,8 @@ package infiniware.scada.ui.gui.view;
 import infiniware.almacenamiento.Produccion;
 import infiniware.scada.Scada;
 import infiniware.scada.informes.Informes;
+import infiniware.scada.informes.modelos.Fabricacion;
+import infiniware.scada.informes.modelos.Funcionamiento;
 import infiniware.scada.ui.gui.view.animation.AnimationController;
 import infiniware.scada.ui.gui.view.animation.CnokAnimation;
 
@@ -228,7 +230,6 @@ public class SCADAUserInterface extends JFrame {
 		panel_EM.setBounds(814, 6, 210, 70);
 		panelInstalacion.add(panel_EM);
 		
-		//TODO chachi
 		//ES
 		JPanel panel_ES = new JPanel();
 		panel_ES.setBackground(Color.LIGHT_GRAY);
@@ -862,6 +863,8 @@ public class SCADAUserInterface extends JFrame {
 		this.updateParameterMap();
 		this.mapaInformes = new HashMap<String, Integer>();
 		
+		cargarInformes();
+		
 		//AnimationController
 		ac = new AnimationController(this.mapaParametros);
 		
@@ -959,7 +962,9 @@ public class SCADAUserInterface extends JFrame {
 		//Guardar
 		mntmGuardarParametros.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO
+				updateReportMap();
+				guardarInformes();
+				logConsole.append("GUI: Guardando informes");
 			}
 		});
 		
@@ -986,18 +991,37 @@ public class SCADAUserInterface extends JFrame {
 	}
 	
 	public void cargarInformes(){
+		try{
+			Informes informes = new Informes();
+			Produccion produccion = new Produccion();
+			produccion.cargar(informes);
+			HashMap<String, Integer> mapa = new HashMap<String, Integer>();
+			mapa.put("COK", informes.getFabricacion().getCorrectos());
+			mapa.put("CNOK", informes.getFabricacion().getIncorrectos());
+			mapa.put("COKTotal", informes.getFabricacion().getCorrectos());
+			mapa.put("CNOKTotal", informes.getFabricacion().getIncorrectos());
+			mapa.put("PN", informes.getFuncionamiento().getNormales());
+			mapa.put("PE", informes.getFuncionamiento().getEmergencia());
+			mapa.put("ARR", informes.getFuncionamiento().getArranques());
+			setMapaInformes(mapa);
+		}catch(Exception e){
+			Scada.log("GUI: Error al cargar informe, informe autogenerado");
+			Informes  informes = new Informes(new Fabricacion(), new Funcionamiento());
+			Produccion produccion = new Produccion();
+			produccion.guardar(informes);
+			cargarInformes();
+		}
+		
+	}
+	
+
+	public void guardarInformes() {
 		Informes informes = new Informes();
 		Produccion produccion = new Produccion();
-		produccion.cargar(informes);
-		HashMap<String, Integer> mapa = new HashMap<String, Integer>();
-		mapa.put("COK", informes.getFabricacion().getCorrectos());
-		mapa.put("CNOK", informes.getFabricacion().getIncorrectos());
-		mapa.put("COKTotal", informes.getFabricacion().getCorrectos());
-		mapa.put("CNOKTotal", informes.getFabricacion().getIncorrectos());
-		mapa.put("PN", informes.getFuncionamiento().getNormales());
-		mapa.put("PE", informes.getFuncionamiento().getEmergencia());
-		mapa.put("ARR", informes.getFuncionamiento().getArranques());
-		setMapaInformes(mapa);
+		HashMap<String, Integer> mapa = (HashMap<String, Integer>) getMapaInformes();
+		informes.setFabricacion(new Fabricacion(mapa.get("COKTotal"), mapa.get("CNOKTotal")));
+		informes.setFuncionamiento(new Funcionamiento(mapa.get("PN"), mapa.get("PE"), mapa.get("ARR")));
+		produccion.guardar(informes);
 	}
 	
 	/**
