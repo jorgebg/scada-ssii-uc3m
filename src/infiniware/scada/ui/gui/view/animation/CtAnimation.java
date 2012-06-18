@@ -87,6 +87,7 @@ public class CtAnimation implements ActionListener, Animation, SlideAnimation {
 		this.pieceN = new JLabel("0", JLabel.CENTER);
 		this.pieceN.setForeground(Color.WHITE);
 		this.pieceN.setFont(new Font(this.pieceN.getFont().getName(), Font.BOLD, 24));
+		this.pieceN.setVisible(false);
 		this.pieceN.setBounds(89, 12, 66, 30);
 		this.piecePFin = new JLabel(imgPiece);
 		this.piecePFin.setBounds(57, 12, this.PIECE_SIZE, this.PIECE_SIZE);
@@ -337,14 +338,9 @@ public class CtAnimation implements ActionListener, Animation, SlideAnimation {
 	
 	@Override
 	public void updateElements(boolean[] elements) {
-		
 		if(elements.length == 2){
 			this.piece0.setVisible(elements[0]);
-			this.piece1.setVisible(elements[1]);
-			this.pieceFin.setVisible(elements[elements.length-1]);
-			this.piecePFin.setVisible(elements[elements.length-2]);
-			this.pieceN.setText(this.getElementNumber(elements));
-			
+			this.pieceFin.setVisible(elements[1]);
 		}
 	}
 	
@@ -356,5 +352,6 @@ public class CtAnimation implements ActionListener, Animation, SlideAnimation {
 		}
 		return String.valueOf(count);
 	}
+	
 	
 }
