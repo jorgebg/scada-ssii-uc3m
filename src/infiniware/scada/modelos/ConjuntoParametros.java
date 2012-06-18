@@ -13,15 +13,20 @@ import java.util.Map.Entry;
 
 
 /**
+ * 
+ * @author Infiniware
+ * 
+ * Clase agregada de Parametros que contiene los distintos parametros con los que trabaja el programa
  *
- * @author jorge
  */
 public class ConjuntoParametros extends ConjuntoGuardable {
-	
-	public ConjuntoParametros(){
-		super();
-	}
 
+	/**
+	 * Metodo que obtiene los parametros correspondientes a la clave "key"
+	 * 
+	 * @param key
+	 * @return 
+	 */
     public HashMap<String, Parametros> getParametros(Integer key) {
         HashMap<String, Guardable> original = get(key);
         HashMap<String, Parametros> nuevo = new HashMap<String, Parametros>();
@@ -29,6 +34,5 @@ public class ConjuntoParametros extends ConjuntoGuardable {
             nuevo.put(entry.getKey(), (Parametros)entry.getValue());
         }
         return nuevo;
-    }
-        
+    }     
 }

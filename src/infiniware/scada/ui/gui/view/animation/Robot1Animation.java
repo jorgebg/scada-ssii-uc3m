@@ -18,6 +18,11 @@ import javax.swing.Timer;
 
 import infiniware.scada.ui.gui.view.ImgLoader;
 
+/**
+ * Esta clase permite la animacion del robot 1
+ * 
+ * @author infiniware
+ */
 public class Robot1Animation implements ActionListener, Animation {
 	
 	//States to be accessed from other classes
@@ -57,6 +62,12 @@ public class Robot1Animation implements ActionListener, Animation {
 	private boolean stop;
 	private boolean emergencyStop;
 	
+	/**
+	 * Crea un objeto Robot1Animation y define los tiempos para cada comportamiento
+	 * @param timeREP2CEN - Tiempo de recogida de ejes y engranajes
+	 * @param timeCEN2EM - Tiempo de transporte de ejes y engranajes
+	 * @param timeEM2CT - Tiempo de transporte de conjutnos montados
+	 */
 	public Robot1Animation(double timeREP2CEN, double timeCEN2EM, double timeEM2CT){
 		this.speedREP2CEN = ImgLoader.calculateSpeed(timeREP2CEN, Robot1Animation.FRAMES_REP);
 		this.speedCEN2EM = ImgLoader.calculateSpeed(timeCEN2EM, (Robot1Animation.FRAMES_ROBOT - Robot1Animation.FRAMES_REP));
@@ -72,6 +83,12 @@ public class Robot1Animation implements ActionListener, Animation {
 		this.robot1 = new Robot1();
 	}
 
+	/**
+	 * Inicializa el temporizador con la velocidad apropiada dependiendo del estado
+	 * en el que se encuentre el robot y carga todas las imagenes en memoria
+	 * Solo debe ser llamado una vez, de no ser asi hay riesgo de saturacion de la memoria
+	 */
+	@Override
 	public void init(){
 		//select and change the speed
 		this.speed = this.changeInitialSpeed(this.state);
@@ -85,6 +102,33 @@ public class Robot1Animation implements ActionListener, Animation {
         this.robotWorker.execute();
 	}
 	
+	/**
+	 * Inicializa el temporizador calculando la velocidad de cada accion con 
+	 * los tiempos recibidos por parametro.
+	 * Si el temporizador no ha sido inicializo se inicializa.
+	 * Este metodo no realiza carga de imagenes por lo que las imagenes
+	 * deben haber sido cargadas antes por medio del metodo init()
+	 * @param timeR - tiempo de recogida de engranajes y ejes
+	 * @param timeT1 - tiempo de transporte de engranajes y ejes
+	 * @param timeT2 - tiempo de transporte de conjuntos montados
+	 */
+	public void init(double timeR, double timeT1, double timeT2){
+		this.speedREP2CEN = ImgLoader.calculateSpeed(timeR, Robot1Animation.FRAMES_REP);
+		this.speedCEN2EM = ImgLoader.calculateSpeed(timeT1, (Robot1Animation.FRAMES_ROBOT - Robot1Animation.FRAMES_REP));
+		this.speedEM2CT = ImgLoader.calculateSpeed(timeT2, Robot1Animation.FRAMES_ROBOT);
+		
+		this.speed = this.changeInitialSpeed(this.state);
+		this.pause = Robot1Animation.PAUSE_TIME;
+
+		if(this.timer == null)
+			this.timer = new Timer(this.speed, this);
+		else
+			this.timer.setDelay(this.speed);
+		
+		this.timer.setInitialDelay(this.pause);
+	}
+	
+	@Override
 	public void createGUI(JPanel parentPanel, int with, int height){
 		parentPanel.setLayout(null); //set layaout to absolute coordenates
 
@@ -93,11 +137,14 @@ public class Robot1Animation implements ActionListener, Animation {
 		robot1.setBounds(0, 0, with, height);
 		parentPanel.add(robot1);	
 		
-		robot1.addMouseListener(new ALR(this));
+		//robot1.addMouseListener(new ALR(this));
 		robot1.add(statusLabel);
 	}
-	
-	//Background task for loading images
+
+	/**
+	 * Tarea en background para la carga de imagenes utilizando
+	 * una clase SwingWorker anonima
+	 */
 	SwingWorker robotWorker = new SwingWorker<List<ImageIcon[]>, Void>(){
 		@Override
 		protected List<ImageIcon[]> doInBackground() throws Exception {
@@ -156,6 +203,10 @@ public class Robot1Animation implements ActionListener, Animation {
 		}
 	};
 	
+	/**
+	 * Clase que extiende de JPanel para representar el robot 1
+	 * @author infiniware
+	 */
 	@SuppressWarnings("serial")
 	public class Robot1 extends JPanel{	
 	
@@ -201,13 +252,17 @@ public class Robot1Animation implements ActionListener, Animation {
 	}
 
 	/**
-	 * Handle timer event. Update the looslost (frame number)
-	 * If it's the last frame, stops until a new action is recieved
+	 * Maneja los eventos de tiempo y actualiza la variable looslots
+	 * que se encarga de actualizar los frames.
+	 * Si se encuentra en el ultimo frame de la animacion espera 
+	 * hasta que se reciva una nueva accion
 	 * 
-	 * Handles also the stop and the emergency stop.
-	 * If the emergencyStop is used, stop in the actual frame
-	 * and continues from that poin the the start event arrives
+	 * Maneja los eventos de parada y parada de emergencia.
+	 * Si se realiza una parada de emergencia se para en el frame
+	 * que se encuentre y continua desde ese punto cuando se 
+	 * vuelva a activar
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (!robotWorker.isDone()) 
 			return; //If still loading, can't animate.

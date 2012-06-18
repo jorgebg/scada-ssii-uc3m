@@ -7,6 +7,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * Esta clase permite la animacion de la estacion de validacion
+ * 
+ * @author infiniware
+ */
 public class EvAnimation implements Animation {
 	private final String DIR_FREE = "imgs/estaticas/evFree.jpg";
 	private final String DIR_BUSY = "imgs/estaticas/evBusy.jpg";
@@ -20,6 +25,9 @@ public class EvAnimation implements Animation {
 	private ImageIcon eBusy;
 	private JLabel statusLabel;
 
+	/**
+	 * Crea un objeto estacion de validacion
+	 */
 	public EvAnimation(){
 		eFree = new ImageIcon(this.DIR_FREE);
 		eBusy = new ImageIcon(this.DIR_BUSY);
@@ -27,9 +35,12 @@ public class EvAnimation implements Animation {
 		this.state = this.FREE;
 		statusLabel = new JLabel(this.eFree);
 		
-		statusLabel.addMouseListener(new ALEV(this));
+		//statusLabel.addMouseListener(new ALEV(this));
 	}
 	
+	/**
+	 * No realiza ninguna accion
+	 */
 	@Override
 	public void init() {
 		//Do Nothing
