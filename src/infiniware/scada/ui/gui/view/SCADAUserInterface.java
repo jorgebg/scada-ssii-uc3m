@@ -2,7 +2,9 @@ package infiniware.scada.ui.gui.view;
 
 
 
+import infiniware.almacenamiento.Produccion;
 import infiniware.scada.Scada;
+import infiniware.scada.informes.Informes;
 import infiniware.scada.ui.gui.view.animation.AnimationController;
 import infiniware.scada.ui.gui.view.animation.CnokAnimation;
 
@@ -960,7 +962,8 @@ public class SCADAUserInterface extends JFrame {
 		//Cargar
 		mntmCargarParametros.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO
+				cargarInformes();
+				logConsole.append("GUI: Cargando informes");
 			}
 		});
 		
@@ -976,7 +979,18 @@ public class SCADAUserInterface extends JFrame {
 	}
 	
 	public void cargarInformes(){
-		
+		Informes informes = new Informes();
+		Produccion produccion = new Produccion();
+		produccion.cargar(informes);
+		HashMap<String, Integer> mapa = new HashMap<String, Integer>();
+		mapa.put("COK", informes.getFabricacion().getCorrectos());
+		mapa.put("CNOK", informes.getFabricacion().getIncorrectos());
+		mapa.put("COKTotal", informes.getFabricacion().getCorrectos());
+		mapa.put("CNOKTotal", informes.getFabricacion().getIncorrectos());
+		mapa.put("PN", informes.getFuncionamiento().getNormales());
+		mapa.put("PE", informes.getFuncionamiento().getEmergencia());
+		mapa.put("ARR", informes.getFuncionamiento().getArranques());
+		setMapaInformes(mapa);
 	}
 	
 	/**
