@@ -24,6 +24,7 @@ import sun.swing.StringUIClientPropertyKey;
 
 public abstract class Automata implements Profibus, IProcesable, IConexion, IRegistrable {
 
+	private String host = "127.0.0.1";
     public final Sensores sensores;
     public GestorSubAutomatas subautomatas;
     public static final GestorInstancias INSTANCIAS = new GestorInstancias() {
@@ -131,7 +132,11 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
     public abstract byte getId();
 
     public String getHost() {
-        return "127.0.0.1";
+        return host;
+    }
+    
+    public void setHost(String host) {
+        this.host = host;
     }
 
     public int getPort() {

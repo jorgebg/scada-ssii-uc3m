@@ -1,5 +1,8 @@
 package infiniware;
 
+import java.util.StringTokenizer;
+
+import infiniware.automatas.Automata;
 import infiniware.automatas.Configurador;
 import infiniware.procesos.Procesos;
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +40,29 @@ public class Sistema {
                     }
                 }
                 break;
+            case 4:
+            	for(int i= 0; i < args.length; i++){
+	            	if (args[i].equals("-h") || args[i].equals("--help")) {
+	                    System.out.println(instrucciones);
+	                    System.exit(0);
+	                } else {
+	                    try {
+	                        Procesos.valueOf(args[i]);
+	                    } catch (IllegalArgumentException e) {
+	                        System.out.println("La proceso \"" + args[0] + "\" no existe.\n");
+	                        e.printStackTrace();
+	                        System.exit(-1);
+	                    }
+	                }
+        		}
+            	for(int i= 1; i < args.length; i++){
+	            	StringTokenizer st = new StringTokenizer(args[i],".");
+	            	if(st.countTokens()!=4){
+	            		System.out.println("La IP \"" + args[i] + "\" no tiene el formato correcto. \"XXXX.XXXX.XXXX.XXXX\"\n");
+                        System.exit(-1);
+	            	}else System.exit(0);
+            	}
+                break;
             default:
                 System.err.println("Sintaxis incorrecta:");
                 System.err.println("\t" + instrucciones);
@@ -46,6 +72,11 @@ public class Sistema {
 
     private static void configurar(String[] args) {
         Configurador.configurar();
+        if(args.length == 4){
+        	for(int i= 1; i < args.length; i++){
+        		Automata.INSTANCIAS.get(i).setHost(args[i]);
+        	}
+    	}
     }
 
     private static void iniciar(String[] args) {

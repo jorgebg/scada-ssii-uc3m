@@ -2,13 +2,16 @@ package infiniware.scada.ui.gui.view;
 
 
 
+import infiniware.almacenamiento.Produccion;
 import infiniware.scada.Scada;
+import infiniware.scada.informes.Informes;
 import infiniware.scada.ui.gui.view.animation.AnimationController;
 import infiniware.scada.ui.gui.view.animation.CnokAnimation;
 
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -16,9 +19,12 @@ import java.awt.Frame;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +47,8 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.MenuDragMouseEvent;
+import javax.swing.event.MenuDragMouseListener;
 
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
@@ -89,7 +97,7 @@ public class SCADAUserInterface extends JFrame {
 	public double parametros[];
 	
 	
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -100,7 +108,7 @@ public class SCADAUserInterface extends JFrame {
 				}
 			}
 		});
-	}*/
+	}
 	
 	/**
 	 * Crea la ventana de la GUI con todos sus componentes
@@ -134,6 +142,7 @@ public class SCADAUserInterface extends JFrame {
 		
 		JMenuItem mntmManual = new JMenuItem("Manual");
 		mnAyuda.add(mntmManual);
+		
 		contentPane = new JPanel();
 		contentPane.setSize(new Dimension(1280, 1024));
 		contentPane.setBackground(new Color(169, 169, 169));
@@ -915,6 +924,49 @@ public class SCADAUserInterface extends JFrame {
 			}
 		});
 		
+		//Manual
+		mntmManual.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					logConsole.append("GUI: Abriendo el manual de usuario\n");
+					File file = new File("resources/manual.pdf");
+					Desktop.getDesktop().open(file);
+				} catch(Exception ex) {
+					logConsole.append("GUI: Error al cargar el fichero del manual de usuario");
+					ex.printStackTrace();
+				}
+			}
+		});
+		
+		//Ayuda
+		mntmAyuda.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					logConsole.append("GUI: Abriendo la ayuda\n");
+					File file = new File("doc/index.html");
+					Desktop.getDesktop().open(file);
+				} catch(Exception ex) {
+					logConsole.append("GUI: Error al cargar el fichero de ayuda");
+					ex.printStackTrace();
+				}
+			}
+		});
+		
+		//Guardar
+		mntmGuardarParametros.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//TODO
+			}
+		});
+		
+		//Cargar
+		mntmCargarParametros.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				cargarInformes();
+				logConsole.append("GUI: Cargando informes");
+			}
+		});
+		
 		//Fallo Automata1
 		falloEsclavo1.addMouseListener(new ChangeAdapter(falloEsclavo1,1));
 		
@@ -923,6 +975,22 @@ public class SCADAUserInterface extends JFrame {
 		
 		//Fallo Automata2
 		falloEsclavo3.addMouseListener(new ChangeAdapter(falloEsclavo3,3));
+		
+	}
+	
+	public void cargarInformes(){
+		Informes informes = new Informes();
+		Produccion produccion = new Produccion();
+		produccion.cargar(informes);
+		HashMap<String, Integer> mapa = new HashMap<String, Integer>();
+		mapa.put("COK", informes.getFabricacion().getCorrectos());
+		mapa.put("CNOK", informes.getFabricacion().getIncorrectos());
+		mapa.put("COKTotal", informes.getFabricacion().getCorrectos());
+		mapa.put("CNOKTotal", informes.getFabricacion().getIncorrectos());
+		mapa.put("PN", informes.getFuncionamiento().getNormales());
+		mapa.put("PE", informes.getFuncionamiento().getEmergencia());
+		mapa.put("ARR", informes.getFuncionamiento().getArranques());
+		setMapaInformes(mapa);
 	}
 	
 	/**
@@ -954,7 +1022,6 @@ public class SCADAUserInterface extends JFrame {
 		logConsole.append("GUI: Los informes han sido actualizados\n");
 	}
 	
-
 	private void setGUIReport(Map<String, Integer> map){
 		this.txtConjuntosOk.setText(map.get("COK").toString());
 		this.txtConjuntosNok.setText(map.get("CNOK").toString());
@@ -1053,7 +1120,6 @@ public class SCADAUserInterface extends JFrame {
 
 	}
 	
-	
 	private void editableParameters(boolean editable){
 		txtLongitudCen.setEditable(editable);
 		txtVelocidadCen.setEditable(editable);
@@ -1082,6 +1148,23 @@ public class SCADAUserInterface extends JFrame {
 		else
 			logConsole.append("GUI: La edicion de parametros de entrada ha sido habilitada\n");
 	}
+	
+	public class MenuActionAdapter implements ItemListener{
+		public MenuActionAdapter(){
+		}
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			try {
+				logConsole.append("GUI: Abriendo el manual de usuario");
+			    File file = new File("resources/manual.pdf");
+			    Desktop.getDesktop().open(file);
+			} catch(Exception ex) {
+				logConsole.append("GUI: Error al cargar el fichero del manual de usuario");
+			    ex.printStackTrace();
+			}
+		}
+	}
+	
 	
 	/**
 	 * Clase que hereda de MouseListener que permite realizar las paradas
