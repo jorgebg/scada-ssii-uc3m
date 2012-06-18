@@ -31,6 +31,7 @@ import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -47,8 +48,6 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.MenuDragMouseEvent;
-import javax.swing.event.MenuDragMouseListener;
 
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
@@ -88,6 +87,8 @@ public class SCADAUserInterface extends JFrame {
 	private JTextField txtParadasNormales;		//PN
 	private JTextField txtParadasEmergencia;	//PE
 	private JTextField txtArranques;			//ARR
+	
+	private Desktop desktop;
 	
 	public JTextArea logConsole;
     public Map<String, Double> mapaParametros;
@@ -877,6 +878,9 @@ public class SCADAUserInterface extends JFrame {
 		ac.getEm().createGUI(panel_EM, panel_EM.getWidth(), panel_EM.getHeight());
 		ac.getEs().createGUI(panel_ES, panel_ES.getWidth(), panel_ES.getHeight());
 		
+		if(Desktop.isDesktopSupported()){
+		}
+		
 		//Mouse Listeners 
 		//Start
 		btnStart.addMouseListener(new MouseAdapter() {
@@ -975,6 +979,9 @@ public class SCADAUserInterface extends JFrame {
 		
 		//Fallo Automata2
 		falloEsclavo3.addMouseListener(new ChangeAdapter(falloEsclavo3,3));
+		
+	}
+	public void gestorArchivos(){
 		
 	}
 	
@@ -1157,7 +1164,11 @@ public class SCADAUserInterface extends JFrame {
 			try {
 				logConsole.append("GUI: Abriendo el manual de usuario");
 			    File file = new File("resources/manual.pdf");
-			    Desktop.getDesktop().open(file);
+			    if (desktop.isSupported(Desktop.Action.OPEN))
+			    	Desktop.getDesktop().open(file);		            
+		        else
+		        	Scada.log("GUI: El sistema operativo no soporta la apertura de archivos");
+			    
 			} catch(Exception ex) {
 				logConsole.append("GUI: Error al cargar el fichero del manual de usuario");
 			    ex.printStackTrace();
