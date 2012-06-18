@@ -13,15 +13,26 @@ import infiniware.scada.modelos.Parametros;
  */
 public class CintaEntrada extends CintaCapacidad {
 
-    class Movimiento extends CintaCapacidad.Movimiento {
-        
+    boolean parar;
+
+    public void reanudar() {
+        parar = false;
     }
-    
+
+    public void parar() {
+        parar = true;
+    }
+
+    class Movimiento extends CintaCapacidad.Movimiento {
+    }
+
     @Override
     protected void manipular() {
-        contenido[0] = Math.random() < 0.75;
-        if (contenido[0]) {
-            automata.log("Se ha puesto un " + (salida.equals("A") ? "engranaje" : "eje") + " en " + CintaEntrada.this.nombre + ". Hay " + contar() + "/" + contenido.length + " en la cinta.");
+        if (!parar) {
+            contenido[0] = Math.random() < 0.75;
+            if (contenido[0]) {
+                automata.log("Se ha puesto un " + (salida.equals("A") ? "engranaje" : "eje") + " en " + CintaEntrada.this.nombre + ". Hay " + contar() + "/" + contenido.length + " en la cinta.");
+            }
         }
     }
 

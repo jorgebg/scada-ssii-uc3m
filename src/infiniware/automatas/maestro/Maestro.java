@@ -12,9 +12,11 @@ import infiniware.scada.modelos.Parametros;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Maestro extends Automata implements infiniware.scada.IMaestro, infiniware.automatas.esclavos.IMaestro {
-
+    
     GestorEsclavos esclavos;
     char[] estados;
     public final GestorSensores mapaSensores;
@@ -23,11 +25,13 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
     private Map<String, Boolean> entradasEsperadas;
     private Map<String, Boolean> salidasPendientes;
     private int ciclo;
-
+    private Boolean parar = true;
+    private Boolean arrancar = false;
+    
     protected Maestro() {
         super();
         this.subautomatas = new GestorSubAutomatas(this) {
-
+            
             {
                 instalar("CT", new Cinta("G", "F"));
                 instalar("R2", new Robot2());
@@ -47,7 +51,7 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
         this.mapaSensores.actualizar(automata, sensores);
         if (automata > 0) {
             Esclavo esclavo = (Esclavo) Esclavo.INSTANCIAS.get(automata);
-
+            
             if (esclavo.tieneEntrada()) {
                 for (String entrada : esclavo.entradas) {
                     if (entradaEsperada(entrada) && !mapaSensores.get(entrada)) {
@@ -58,7 +62,7 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
             if (esclavo.tieneSalida() && !salidaPendiente(esclavo.salida) && mapaSensores.get(esclavo.salida)) {
                 marcarSalidaPendiente(esclavo.salida);
             }
-
+            
         }
         System.out.println("IN: " + (automata == 0 ? "M" : "E" + automata) + " => M:\n" + this.mapaSensores.automatas.get((int) automata) + "\n");
         this.scada.notificar(automata, sensores);
@@ -66,7 +70,7 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
     /*
      * }}}
      */
-
+    
     private void ejecutarAutomata(int id) {
         Esclavo esclavo = null;
         if (id > 0) {
@@ -81,8 +85,26 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
         //System.out.println("OUT: M => " + nombre + ":\n" + this.mapaSensores.automatas.get(id) + "\n");
         do {
             try {
+                //REANUDAR
+                if(id==1)
+                synchronized (arrancar) {
+                    if (arrancar) {
+                        esclavos.ejecutar(id, REANUDAR);
+                        arrancar = false;
+                    }
+                }
+                
+                //PARAR
+                if(id==1)
+                synchronized (parar) {
+                    if (parar) {
+                        esclavos.ejecutar(id, PARAR);
+                        parar = false;
+                    }
+                }
+                
                 //synchronized (this.mapaSensores) {
-                char codificacion = Character.MAX_VALUE;
+                char codificacion = SIN_NOVEDAD;
                 if (esclavo != null) {
                     if (esclavo.tieneEntrada()) {
                         for (String entrada : esclavo.entradas) {
@@ -99,7 +121,7 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
                 } else {
                     codificacion = this.mapaSensores.codificar(id);
                 }
-
+                
                 System.out.println("OUT: M =>" + nombre + ": " + (int) codificacion);
                 //System.out.println("EEH" + (int)mascara + "\n" + this.mapaSensores.actualizados + "\n" + this.mapaSensores.automatas.get(id).actualizados);
                 //}
@@ -108,6 +130,8 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
                 } else {
                     estados[id] = esclavos.ejecutar(id, codificacion);
                 }
+                
+                
                 exito = true;
             } catch (RemoteException ex) {
                 exito = false;
@@ -115,8 +139,8 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
                 conectarEsclavo(id);
             }
         } while (!exito);
-
-
+        
+        
         if (estadoAnterior != estados[id]) {
             //System.out.println(Automata.INSTANCIAS.get(id).subautomatas.obtenerDiferenciaEstados(estadoAnterior, estados[id]));
             informarScada(id, estadoAnterior);
@@ -142,27 +166,31 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
         ciclo++;
         return estados;
     }
-
+    
     public void inicializar() {
         //esclavos.get(1).i
     }
-
+    
     public void emergencia() {
     }
-
+    
     public void arrancar() {
-        //TODO es necesario? Ahora mismo no se esta llamando de ningun sitio
+        synchronized (arrancar) {
+            arrancar = true;
+        }
     }
-
+    
     public void parada() {
-        //TODO es necesario? Ahora mismo no se esta llamando de ningun sitio
+        synchronized (parar) {
+            parar = true;
+        }
     }
-
+    
     public void desconectar() {
         esclavos = null;
         super.desconectar();
     }
-
+    
     public void conectar() {
         for (Esclavo esclavo : new Esclavo[]{
                     Esclavo1.INSTANCIA,
@@ -173,33 +201,33 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
         }
         System.out.println("Conexion con los esclavos establecida.");
     }
-
+    
     protected IEsclavo conectarEsclavo(int id) {
         return conectarEsclavo(Esclavo.INSTANCIAS.get(id));
     }
-
+    
     protected IEsclavo conectarEsclavo(Automata automata) {
         return conectarEsclavo((Esclavo) automata);
     }
-
+    
     protected IEsclavo conectarEsclavo(Esclavo automata) {
         IEsclavo iesclavo = this.<IEsclavo>conectar(automata);
         esclavos.put(automata.getId(), iesclavo);
         return iesclavo;
     }
-
+    
     public void enlazar() {
         super.<IMaestro>enlazar();
     }
     /*
      * }}}
      */
-
+    
     @Override
     public byte getId() {
         return 0;
     }
-
+    
     public void configurarAutomatas(ConjuntoParametros parametros) {
         for (Integer key : parametros.keySet()) {
             HashMap<String, Parametros> automata = parametros.getParametros(key);
@@ -215,7 +243,7 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
             }
         }
     }
-
+    
     public void provocarFalloEsclavo(byte esclavo) {
         try {
             esclavos.get(esclavo).fallar();
@@ -224,7 +252,7 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
             ex.printStackTrace(System.err);
         }
     }
-
+    
     public void recuperarFalloEsclavo(byte esclavo) {
         try {
             esclavos.get(esclavo).recuperar();
@@ -233,21 +261,21 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
             ex.printStackTrace(System.err);
         }
     }
-
+    
     public void actualizar(Sensores sensores) {
         super.actualizar(sensores);
         actualizar();
     }
-
+    
     public void actualizar(String sensor, boolean estado) {
         super.actualizar(sensor, estado);
         actualizar();
     }
-
+    
     public void actualizar() {
         notificar(getId(), (char) this.sensores.codificar());
     }
-
+    
     public void limpiarCPD() {
         try {
             esclavos.get(3).simular(Esclavo.Simulaciones.LimpiarCPD);
@@ -256,7 +284,7 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
             ex.printStackTrace(System.err);
         }
     }
-
+    
     private void informarScada(int id, char estadoAnterior) {
         Automata automata = Automata.INSTANCIAS.get(id);
         //System.out.println(""+id+"%"+(int)estadoAnterior+" "+(int)estados[id] + " " + automata.subautomatas.obtenerDiferenciaEstados(estadoAnterior, estados[id]));
@@ -269,7 +297,7 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
             log(nombreSubAutomata + " ha pasado de [" + nombreEstadoAnterior + "] a [" + nombreEstadoNuevo + "]");
         }
     }
-
+    
     private boolean entradaEsperada(String entrada) {
         if (entradasEsperadas.containsKey(entrada)) {
             return entradasEsperadas.get(entrada);
@@ -277,7 +305,7 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
             return false;
         }
     }
-
+    
     private boolean salidaPendiente(String salida) {
         if (salidasPendientes.containsKey(salida)) {
             return salidasPendientes.get(salida);
@@ -285,23 +313,23 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
             return false;
         }
     }
-
+    
     private void marcarEsperarEntrada(String entrada) {
         entradasEsperadas.put(entrada, true);
     }
-
+    
     private void marcarSalidaPendiente(String salida) {
         salidasPendientes.put(salida, true);
     }
-
+    
     private void desmarcarEsperarEntrada(String entrada) {
         entradasEsperadas.put(entrada, false);
     }
-
+    
     private void desmarcarSalidaPendiente(String salida) {
         salidasPendientes.put(salida, false);
     }
-
+    
     @Override
     public void log(String msg) {
         Scada.log(msg);

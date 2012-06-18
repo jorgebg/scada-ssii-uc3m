@@ -11,6 +11,8 @@ import infiniware.scada.ui.gui.view.animation.Animation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JTextArea;
 import org.apache.commons.lang3.StringUtils;
 
@@ -24,6 +26,7 @@ public class Gui extends Ui implements Runnable {
     public static final Map<String, Map<String, Integer>> mapaEstadosGui = generarMapaEstadosGui();
     private SCADAUserInterface frame;
     private Thread thread;
+    private boolean iniciada;
 
     private Gui() {
     }
@@ -32,6 +35,7 @@ public class Gui extends Ui implements Runnable {
         try {
             frame = new SCADAUserInterface();
             frame.setVisible(true);
+            iniciada = true;
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
@@ -58,6 +62,16 @@ public class Gui extends Ui implements Runnable {
 
         thread = new Thread(this);
         thread.start();
+        System.out.println("Esperando a que se inicie la GUI...");
+        while(!iniciada)
+        {
+            try {
+                Thread.currentThread().sleep(500);
+            } catch (InterruptedException ex) {
+                System.err.println("Error al esperar la GUI");
+            }
+        }
+        System.out.println("GUI iniciada");
         return thread;
     }
 

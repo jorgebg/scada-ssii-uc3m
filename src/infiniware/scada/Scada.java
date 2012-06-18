@@ -34,16 +34,14 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
     public static final Scada INSTANCIA = new Scada();
     //public static Ui ui = Cli.INSTANCIA;
     public static Ui ui = Gui.INSTANCIA;
-    
     /**
-     * Estados de los automata: id {0..3} => estado {0..9}
-     * Para obtener el nombre de los estados:
-     * 
-     *  for (int id = 0; id < estados.length; id++) {
-     *      char estado = estados[id];
-     *      Automata.INSTANCIAS.get(id).subautomatas.decodificarEstado(estados[id]);
-     *  }
-     * 
+     * Estados de los automata: id {0..3} => estado {0..9} Para obtener el
+     * nombre de los estados:
+     *
+     * for (int id = 0; id < estados.length; id++) { char estado = estados[id];
+     * Automata.INSTANCIAS.get(id).subautomatas.decodificarEstado(estados[id]);
+     * }
+     *
      */
     char[] estados;
 
@@ -90,10 +88,7 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
      */
     @Override
     public void arrancar() {
-        timestamp = System.currentTimeMillis();
-        while (true) {
-            ciclo();
-        }
+        maestro.arrancar();
     }
 
     /**
@@ -103,7 +98,7 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
     public void configurar(ConjuntoParametros parametros) {
         maestro.configurarAutomatas(parametros);
     }
-    
+
     /**
      * @UC 004
      */
@@ -128,20 +123,17 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
         return Informes.generar(this);
     }
 
-
-
-
     /**
      * @UC 008
      */
     @Override
     public void parada() {
-        acciones.add(
-                new Runnable() {
-                    public void run() {
-                        maestro.parada();
-                    }
+        maestro.parada();
+        /*
+         * acciones.add( new Runnable() { public void run() { maestro.parada();
+         * }
                 });
+         */
     }
 
     /**
@@ -152,40 +144,54 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
         this.emergencia = true;
     }
 
-    /* IProceso {{{ */
+    /*
+     * IProceso {{{
+     */
     public Thread iniciarProceso() {
+        ui.mostrar();
         simulador = Simulador.INSTANCIA;
         maestro = Maestro.INSTANCIA;
-        for (Automata automata : Automata.INSTANCIAS.values()) {
-            automata.imprimirTablaSensores();
-        }
+        /*
+         * for (Automata automata : Automata.INSTANCIAS.values()) {
+         * automata.imprimirTablaSensores(); }
         System.out.println();
-        ui.mostrar();
+         */
+        new Thread(new Runnable() {
+
+            public void run() {
+                timestamp = System.currentTimeMillis();
+                while (true) {
+                    ciclo();
+                }
+            }
+        }).start();
         return Registrador.thread;
     }
-    
+
     @Override
     public void detenerProceso() {
         simulador = null;
         maestro = null;
         ui.ocultar();
     }
-    /* }}} */
+    /*
+     * }}}
+     */
 
     public void notificar(byte automata, char sensores) {
         this.mapaSensores.actualizar(automata, sensores);
     }
-
     static BufferedWriter logfile;
+
     public static void log(String msg) {
         ui.log(msg);
         System.out.println(msg);
         try {
-            if(logfile == null) {
-                FileWriter fstream = new FileWriter("log/" + new java.util.Date().getTime()+".log");
+            if (logfile == null) {
+                FileWriter fstream = new FileWriter("log/" + new java.util.Date().getTime() + ".log");
                 logfile = new BufferedWriter(fstream);
             }
-            logfile.write(msg+"\n");
+            logfile.write(msg + "\n");
             logfile.flush();
         } catch (IOException ex) {
             System.err.println("Error al guardar el log");

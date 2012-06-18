@@ -109,4 +109,8 @@ public abstract class Esclavo extends Automata implements IEsclavo {
     public boolean tieneSalida() {
         return salida != null;
     }
+
+    @Override
+    public abstract byte getId();
+
 }

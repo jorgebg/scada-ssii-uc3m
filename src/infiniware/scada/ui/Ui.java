@@ -26,15 +26,7 @@ public abstract class Ui implements IUi {
     }
 
     public void arrancar() {
-        new Thread(){
-
-            @Override
-            public void run() {
-                
-                scada.arrancar();
-            }
-            
-        }.start();
+        scada.arrancar();
     }
 
     public Resultado cargarConfiguracion(String nombre, ConjuntoParametros parametros) {

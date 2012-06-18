@@ -37,6 +37,10 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
     };
     private int ciclo;
 
+    public static final char SIN_NOVEDAD = Character.MAX_VALUE;
+    public static final char PARAR = SIN_NOVEDAD-1; 
+    public static final char REANUDAR = SIN_NOVEDAD-2;
+    
     public abstract void log(String msg);
 
     public void imprimirTablaSensores() {
