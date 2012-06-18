@@ -17,6 +17,11 @@ import javax.swing.Timer;
 
 import infiniware.scada.ui.gui.view.ImgLoader;
 
+/**
+ * Esta clase permite la animaci—n del robot 1
+ * 
+ * @author sohrab farzaneh
+ */
 public class Robot2Animation implements ActionListener, Animation {
 
 	//States to be accessed from other classes
@@ -59,6 +64,14 @@ public class Robot2Animation implements ActionListener, Animation {
 		private boolean stop;
 		private boolean emergencyStop;
 		
+		/**
+		 * Crea un objeto Robot2Animation y define los tiempos para cada comportamiento
+		 * El tiempo de transporte de conjuntos v‡lidos y de conjuntos no v‡lidos ser‡
+		 * el mismo que el definido para el transporte de los conjuntos soldados
+		 * @param timeREP2CT - Tiempo de recogida de conjuntos montados
+		 * @param timeCT2ES - Tiempo de transporte de conjuntos montados
+		 * @param timeES2EV - Tiempo de transporte de conjuntos soldados
+		 */
 		public Robot2Animation(double timeREP2CT, double timeCT2ES, double timeES2EV){
 			this.speedREP2CT = ImgLoader.calculateSpeed(timeREP2CT, Robot2Animation.FRAMES_REP);
 			this.speedCT2ES = ImgLoader.calculateSpeed(timeCT2ES, (Robot2Animation.FRAMES_ROBOT - Robot2Animation.FRAMES_REP));

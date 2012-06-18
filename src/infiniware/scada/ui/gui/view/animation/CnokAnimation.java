@@ -15,6 +15,14 @@ import javax.swing.Timer;
 
 import infiniware.scada.ui.gui.view.ImgLoader;
 
+/**
+ * Esta clase permite la animaci—n de la cinta de conjuntos no validos
+ * Realiza la carga de las im‡genes necesarias en background
+ * 
+ * La velocidad del temporizador de esta clase es constante
+ * 
+ * @author sohrab farzaneh
+ */
 public class CnokAnimation implements ActionListener, Animation {
 
 	private static final int FRAMES_CNOK = 8;		 		//number of frames to load in the slides CNOK
@@ -44,6 +52,12 @@ public class CnokAnimation implements ActionListener, Animation {
 	private boolean stop;
 	private boolean emergencyStop;
 	
+	/**
+	 * Crea un objeto para la animaci—n de la cinta de conjuntos no v‡lidos
+	 * Carga las imagenes y componentes necesarios para la simulaci—n del
+	 * transporte de conjuntos no v‡lidos y sus propiedades
+	 * El tiempo no se puede definir. Esta cinta es autom‡tica (gravedad)
+	 */
 	public CnokAnimation(){
 		this.speed = this.GravitySpeed;
 		this.stop = false;
@@ -58,6 +72,11 @@ public class CnokAnimation implements ActionListener, Animation {
 		this.cnok = new Cinta();
 	}
 	
+	/**
+	 * Inicializa el temporizador con la velocidad definida 
+	 * al crear el objeto y carga las im‡genes en memoria.
+	 * Solo debe ser llamado una vez, de no ser as’ hay riesgo de saturaci—n de la memoria
+	 */
 	public void init(){
 		this.timer = new Timer(this.speed, this);
         this.timer.setInitialDelay(this.pause);
@@ -75,7 +94,7 @@ public class CnokAnimation implements ActionListener, Animation {
 		cnok.setBounds(0, 0, with, height);
 		parentPanel.add(cnok);	
 		
-		//cnok.addMouseListener(new ALCNOK(this));
+		cnok.addMouseListener(new ALCNOK(this));
 		cnok.add(statusLabel);
 	}
 	

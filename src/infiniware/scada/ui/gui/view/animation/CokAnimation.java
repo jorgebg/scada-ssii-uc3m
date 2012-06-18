@@ -17,6 +17,12 @@ import javax.swing.Timer;
 
 import infiniware.scada.ui.gui.view.ImgLoader;
 
+/**
+ * Esta clase permite la animaci—n de la cinta de conjuntos v‡lidos
+ * Realiza la carga de las im‡genes necesarias en background
+ * 
+ * @author sohrab farzaneh
+ */
 public class CokAnimation implements ActionListener, Animation, SlideAnimation {
 
 	private static final int FRAMES_COK = 4;		 	//number of frames to load in the slides (COK)
@@ -52,6 +58,12 @@ public class CokAnimation implements ActionListener, Animation, SlideAnimation {
 	private boolean stop;
 	private boolean emergencyStop;
 	
+	/**
+	 * Crea un objeto para la animaci—n de la cinta de conjuntos v‡lidos
+	 * Carga las imagenes y componentes necesarios para la simulaci—n del
+	 * transporte de conjuntos v‡lidos y sus propiedades
+	 * @param timeCOK - tiempo en el que debe realizarse la animaci—n completa
+	 */
 	public CokAnimation(double timeCOK){
 		this.speed = ImgLoader.calculateSpeed(timeCOK, CokAnimation.FRAMES_COK);
 		this.pause = CokAnimation.PAUSE_TIME;
@@ -85,6 +97,11 @@ public class CokAnimation implements ActionListener, Animation, SlideAnimation {
 		this.pieceFin.setVisible(false);
 	}
 	
+	/**
+	 * Inicializa el temporizador con la velocidad definida 
+	 * al crear el objeto y carga las im‡genes en memoria.
+	 * Solo debe ser llamado una vez, de no ser as’ hay riesgo de saturaci—n de la memoria
+	 */
 	public void init(){
 		this.timer = new Timer(this.speed, this);
         this.timer.setInitialDelay(this.pause);
