@@ -47,6 +47,7 @@ public class Fabricacion extends Informe{
 	 * Metodo que extrae los elementos del informe de acuerdo a un array de claves
 	 * 
 	 */
+	@Override
 	public Guardable extraer(String[] elementos) {
         Fabricacion nuevos = new Fabricacion();
         for(String clave : elementos)
@@ -57,6 +58,7 @@ public class Fabricacion extends Informe{
 	/**
 	 * Metodo que añade un elemento correcto al informe de fabricacion
 	 * 
+	 * @return
 	 */
 	public Resultado addCorrecto(){
 		String key = "correctos"; 
@@ -69,6 +71,7 @@ public class Fabricacion extends Informe{
 	/**
 	 * Metodo que añade un elemento incorrecto al informe de fabricacion
 	 * 
+	 * @return
 	 */
 	public Resultado addIncorrecto(){
 		String key = "incorrectos"; 
