@@ -33,12 +33,12 @@ import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
@@ -953,7 +953,7 @@ public class SCADAUserInterface extends JFrame {
 					File file = new File("doc/index.html");
 					Desktop.getDesktop().open(file);
 				} catch(Exception ex) {
-					logConsole.append("GUI: Error al cargar el fichero de ayuda");
+					logConsole.append("GUI: Error al cargar el fichero de ayuda\n");
 					ex.printStackTrace();
 				}
 			}
@@ -964,7 +964,9 @@ public class SCADAUserInterface extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				updateReportMap();
 				guardarInformes();
-				logConsole.append("GUI: Guardando informes");
+				logConsole.append("GUI: Guardando informes\n");
+
+				String inputValue = JOptionPane.showInputDialog("Por favor, inserte el nombre del archivo");
 			}
 		});
 		
@@ -1005,7 +1007,7 @@ public class SCADAUserInterface extends JFrame {
 			mapa.put("ARR", informes.getFuncionamiento().getArranques());
 			setMapaInformes(mapa);
 		}catch(Exception e){
-			Scada.log("GUI: Error al cargar informe, informe autogenerado");
+			logConsole.append("GUI: Error al cargar informe, informe autogenerado\n");
 			Informes  informes = new Informes(new Fabricacion(), new Funcionamiento());
 			Produccion produccion = new Produccion();
 			produccion.guardar(informes);
@@ -1191,7 +1193,7 @@ public class SCADAUserInterface extends JFrame {
 			    if (desktop.isSupported(Desktop.Action.OPEN))
 			    	Desktop.getDesktop().open(file);		            
 		        else
-		        	Scada.log("GUI: El sistema operativo no soporta la apertura de archivos");
+		        	logConsole.append("GUI: El sistema operativo no soporta la apertura de archivos\n");
 			    
 			} catch(Exception ex) {
 				logConsole.append("GUI: Error al cargar el fichero del manual de usuario");
