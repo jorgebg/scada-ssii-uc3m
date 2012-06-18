@@ -5,6 +5,9 @@
 package infiniware.scada.ui.gui;
 
 import infiniware.automatas.Automata;
+import infiniware.scada.modelos.ConjuntoParametros;
+import infiniware.scada.modelos.Guardable;
+import infiniware.scada.modelos.Parametros;
 import infiniware.scada.ui.Ui;
 import infiniware.scada.ui.gui.view.SCADAUserInterface;
 import infiniware.scada.ui.gui.view.animation.Animation;
@@ -12,6 +15,8 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JTextArea;
+import javax.swing.text.ParagraphView;
+
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -197,7 +202,86 @@ R2
 3: MueveConjuntoValido
 4: MueveConjuntoNoValido
 */
+    /**
+     * Metodo que convierte un mapa de la interfaz a un ConjuntoParametros
+     * 
+     * @param mapa
+     * @return ConjuntoParametros
+     */
+    public static ConjuntoParametros deMapaAConjunto(Map<String, Double> mapa){
+    	Parametros CENparametros = new Parametros();
+    	ConjuntoParametros conjunto = new ConjuntoParametros();
+    	
+    	//Esclavo 1
+    		//Cinta Engranajes
+    	CENparametros.put("velocidad", mapa.get("CEN_v").intValue());
+    	CENparametros.put("longitud", mapa.get("CEN_l").intValue());
+    	CENparametros.put("capacidad", mapa.get("CEN_c").intValue());
+    	HashMap<String, Guardable> es1map = new HashMap<String, Guardable>();
+    	es1map.put("CEN", CENparametros);
+    		//Cinta Ejes
+    	Parametros CEJparametros = new Parametros();
+    	CEJparametros.put("velocidad", mapa.get("CEJ_v").intValue());
+    	CEJparametros.put("longitud", mapa.get("CEJ_l").intValue());
+    	CEJparametros.put("capacidad", mapa.get("CEJ_c").intValue());
+    	es1map.put("CEJ", CEJparametros);
+    		//Robot 1
+    	Parametros R1parametros = new Parametros();
+    	R1parametros.put("TRecogidaEnej", mapa.get("R1_tREn").intValue());
+    	R1parametros.put("TTransporteEnej", mapa.get("R1_tTEn").intValue());
+    	R1parametros.put("TTransporteCm1", mapa.get("R1_tTCM").intValue());
+    	es1map.put("R1", R1parametros);
+    		//Estacion de montaje
+    	Parametros EMparametros = new Parametros();
+    	EMparametros.put("TiempoEm", mapa.get("EM_t").intValue());
+    	es1map.put("EM", EMparametros);
+    	conjunto.put(1, es1map);
 
+    	//Esclavo 2
+    		//Estacion de soldadura
+    	Parametros ESparametros = new Parametros();
+    	ESparametros.put("TiempoEs", mapa.get("ES_t").intValue());
+    	HashMap<String, Guardable> es2map = new HashMap<String, Guardable>();
+    	es2map.put("ES", ESparametros);
+    	conjunto.put(2, es2map);
+    	
+    	//Esclavo 3
+    		//Estacion de evaluacion
+    	Parametros EVparametros = new Parametros();
+    	EVparametros.put("TiempoEv", mapa.get("EV_t").intValue());
+    	HashMap<String, Guardable> es3map = new HashMap<String, Guardable>();
+    	es3map.put("EV", EVparametros);
+    		//Cinta OK
+    	Parametros COKparametros = new Parametros();
+    	COKparametros.put("velocidad", mapa.get("COK_v").intValue());
+    	COKparametros.put("longitud", mapa.get("COK_l").intValue());
+    	es3map.put("COK", COKparametros);
+    		//Cinta no OK
+    	Parametros CNOKparametros = new Parametros();
+    	CNOKparametros.put("velocidad", mapa.get("CNOK_v").intValue());
+    	CNOKparametros.put("longitud", mapa.get("CNOK_l").intValue());
+    	es3map.put("CNOK", CNOKparametros);
+    	conjunto.put(3, es3map);
+    	
+    	//Master
+    		//Cinta transporte
+    	HashMap<String, Guardable> masmap = new HashMap<String, Guardable>();
+    	Parametros CTparametros = new Parametros();
+    	CTparametros.put("velocidad", mapa.get("CT_v").intValue());
+    	CTparametros.put("longitud", mapa.get("CT_l").intValue());
+    	masmap.put("CT", CTparametros);
+    		//Robot 2
+    	Parametros R2parametros = new Parametros();
+    	R2parametros.put("TRecogidaCm", mapa.get("R2_tRCM").intValue());
+    	R2parametros.put("TTransporteCm2", mapa.get("R2_tTCM").intValue());
+    	R2parametros.put("TTransporteCs", mapa.get("R2_tTCS").intValue());
+    	masmap.put("R2", R2parametros);
+    	conjunto.put(0, masmap);
+    	
+    	return conjunto;
+    }
+    
+    
     @Override
     public void log(String msg) {
         JTextArea log = frame.logConsole;

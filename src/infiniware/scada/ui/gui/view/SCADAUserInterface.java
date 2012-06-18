@@ -2,11 +2,15 @@ package infiniware.scada.ui.gui.view;
 
 
 
+import infiniware.almacenamiento.Configuracion;
 import infiniware.almacenamiento.Produccion;
 import infiniware.scada.Scada;
 import infiniware.scada.informes.Informes;
 import infiniware.scada.informes.modelos.Fabricacion;
 import infiniware.scada.informes.modelos.Funcionamiento;
+import infiniware.scada.modelos.ConjuntoGuardable;
+import infiniware.scada.modelos.ConjuntoParametros;
+import infiniware.scada.ui.gui.Gui;
 import infiniware.scada.ui.gui.view.animation.AnimationController;
 import infiniware.scada.ui.gui.view.animation.CnokAnimation;
 
@@ -966,10 +970,9 @@ public class SCADAUserInterface extends JFrame {
 		mntmGuardarParametros.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				updateReportMap();
-				guardarInformes();
-				logConsole.append("GUI: Guardando informes\n");
-
-				String inputValue = JOptionPane.showInputDialog("Por favor, inserte el nombre del archivo si desea guardar los parametros");
+				String inputValue = JOptionPane.showInputDialog("Por favor, inserte el nombre del archivo");
+				guardarInformes(inputValue);
+				logConsole.append("GUI: Guardando informes y parametros\n");
 			}
 		});
 		
@@ -1041,13 +1044,19 @@ public class SCADAUserInterface extends JFrame {
         }
     }//GEN-LAST:event_onLaunchBrowser
 
-	public void guardarInformes() {
+	public void guardarInformes(String nombre) {
+		//Informes
 		Informes informes = new Informes();
 		Produccion produccion = new Produccion();
 		HashMap<String, Integer> mapa = (HashMap<String, Integer>) getMapaInformes();
 		informes.setFabricacion(new Fabricacion(mapa.get("COKTotal"), mapa.get("CNOKTotal")));
 		informes.setFuncionamiento(new Funcionamiento(mapa.get("PN"), mapa.get("PE"), mapa.get("ARR")));
 		produccion.guardar(informes);
+		
+		//Parametros
+		ConjuntoParametros parametros = Gui.deMapaAConjunto(getMapaParametros());
+		Configuracion configuracion = new Configuracion();
+		configuracion.guardar(nombre, parametros);
 	}
 	
 	/**
@@ -1111,8 +1120,8 @@ public class SCADAUserInterface extends JFrame {
 		//Cintas
 		
 		this.txtLongitudCen.setText(map.get("CEN_l").toString());
-		this.txtVelocidadCen.setText(map.get("CEN_l").toString());
-		this.txtCapacidadCen.setText(map.get("CEN_l").toString());
+		this.txtVelocidadCen.setText(map.get("CEN_v").toString());
+		this.txtCapacidadCen.setText(map.get("CEN_c").toString());
 
 		this.txtLongitudCej.setText(map.get("CEJ_l").toString());
 		this.txtVelocidadCej.setText(map.get("CEJ_v").toString());
