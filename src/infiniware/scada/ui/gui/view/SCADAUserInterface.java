@@ -950,6 +950,20 @@ public class SCADAUserInterface extends JFrame {
 			}
 		});
 		
+		//Guardar
+		mntmGuardarParametros.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//TODO
+			}
+		});
+		
+		//Cargar
+		mntmCargarParametros.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//TODO
+			}
+		});
+		
 		//Fallo Automata1
 		falloEsclavo1.addMouseListener(new ChangeAdapter(falloEsclavo1,1));
 		
@@ -958,6 +972,10 @@ public class SCADAUserInterface extends JFrame {
 		
 		//Fallo Automata2
 		falloEsclavo3.addMouseListener(new ChangeAdapter(falloEsclavo3,3));
+		
+	}
+	
+	public void cargarInformes(){
 		
 	}
 	
@@ -990,7 +1008,6 @@ public class SCADAUserInterface extends JFrame {
 		logConsole.append("GUI: Los informes han sido actualizados\n");
 	}
 	
-
 	private void setGUIReport(Map<String, Integer> map){
 		this.txtConjuntosOk.setText(map.get("COK").toString());
 		this.txtConjuntosNok.setText(map.get("CNOK").toString());
@@ -1088,7 +1105,6 @@ public class SCADAUserInterface extends JFrame {
 		logConsole.append("GUI: Los parametros han sido actualizados\n");
 
 	}
-	
 	
 	private void editableParameters(boolean editable){
 		txtLongitudCen.setEditable(editable);
