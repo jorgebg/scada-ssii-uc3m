@@ -27,6 +27,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -966,7 +969,7 @@ public class SCADAUserInterface extends JFrame {
 				guardarInformes();
 				logConsole.append("GUI: Guardando informes\n");
 
-				String inputValue = JOptionPane.showInputDialog("Por favor, inserte el nombre del archivo");
+				String inputValue = JOptionPane.showInputDialog("Por favor, inserte el nombre del archivo si desea guardar los parametros");
 			}
 		});
 		
@@ -975,6 +978,8 @@ public class SCADAUserInterface extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				cargarInformes();
 				logConsole.append("GUI: Cargando informes");
+				
+				String inputValue = JOptionPane.showInputDialog("Por favor, inserte el nombre del archivo si desea cargar los parametros");
 			}
 		});
 		
@@ -1016,6 +1021,25 @@ public class SCADAUserInterface extends JFrame {
 		
 	}
 	
+	/**
+	 * Lanza el buscador por defecto
+     */
+    private void onLaunchBrowser(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onLaunchBrowser
+        URI uri = null;
+        try {
+            uri = new URI("almacenamiento");
+            if(desktop.isSupported(Desktop.Action.BROWSE))
+            	desktop.browse(uri);
+            else
+            	logConsole.append("GUI: El sistema operativo no soporta el lanzamiento del buscador");
+        }
+        catch(IOException ioe) {
+            ioe.printStackTrace();
+        }
+        catch(URISyntaxException use) {
+            use.printStackTrace();
+        }
+    }//GEN-LAST:event_onLaunchBrowser
 
 	public void guardarInformes() {
 		Informes informes = new Informes();
