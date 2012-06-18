@@ -339,7 +339,7 @@ public class CenAnimation implements ActionListener, Animation, SlideAnimation{
 
 	@Override
 	public void updateElements(boolean[] elements) {
-		if(elements.length > 6){
+		if(elements.length >= 6){
 			this.piece0.setVisible(elements[0]);
 			this.piece1.setVisible(elements[1]);
 			this.pieceFin.setVisible(elements[elements.length-1]);

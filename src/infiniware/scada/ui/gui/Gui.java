@@ -5,9 +5,11 @@
 package infiniware.scada.ui.gui;
 
 import infiniware.automatas.Automata;
+import infiniware.automatas.subautomatas.CintaCapacidad;
 import infiniware.scada.ui.Ui;
 import infiniware.scada.ui.gui.view.SCADAUserInterface;
 import infiniware.scada.ui.gui.view.animation.Animation;
+import infiniware.scada.ui.gui.view.animation.SlideAnimation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +51,7 @@ public class Gui extends Ui implements Runnable {
                 String subautomata = entry.getKey();
                 String estadoScada = entry.getValue();
                 int estadoGui = obtenerEstadoGui(subautomata, estadoScada);
-                Animation animacion = obtenerAnimacionSubautomata(subautomata);
+                Animation animacion = obtenerAnimacionSubAutomata(subautomata);
                 if (animacion.getState() != estadoGui) {
                     animacion.start(estadoGui);
                     System.out.println("Llamando Animation " + subautomata + " Estado: " + estadoScada + " " + estadoGui);
@@ -81,8 +83,8 @@ public class Gui extends Ui implements Runnable {
         }
     }
 
-    private Animation obtenerAnimacionSubautomata(String automata) {
-        String methodName = "get" + StringUtils.capitalize(automata.toLowerCase());
+    private Animation obtenerAnimacionSubAutomata(String subautomata) {
+        String methodName = "get" + StringUtils.capitalize(subautomata.toLowerCase());
         Animation animation = null;
         try {
             Method method = frame.ac.getClass().getMethod(methodName);
@@ -219,4 +221,22 @@ R2
         //log.setText(log.getText() + msg+"\n");
         log.setCaretPosition(log.getDocument().getLength());
     }
+
+    @Override
+    public void simularCinta(String nombre, boolean[] posiciones) {
+        System.out.println("Simulando cinta ["+nombre+"]: "+CintaCapacidad.toString(nombre, posiciones, "O"));
+        Animation animation = this.obtenerAnimacionSubAutomata(nombre);
+        //if(animation instanceof SlideAnimation) {
+        //    ((SlideAnimation) animation).updateElements(posiciones);
+        //}
+        //else System.err.println("El Animation de ["+nombre+"] no es una SlideAnimation");
+        try {
+            ((SlideAnimation) animation).updateElements(posiciones);
+        } catch (ClassCastException ex) {
+            System.err.println("El Animation de ["+nombre+"] no es una SlideAnimation");
+        }
+        
+    }
+    
+    
 }

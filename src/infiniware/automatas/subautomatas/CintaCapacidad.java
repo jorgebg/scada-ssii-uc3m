@@ -4,8 +4,13 @@
  */
 package infiniware.automatas.subautomatas;
 
+import infiniware.automatas.esclavos.Esclavo;
+import infiniware.automatas.esclavos.IMaestro;
 import infiniware.automatas.sensores.Sensores;
 import infiniware.scada.modelos.Parametros;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -13,7 +18,7 @@ import infiniware.scada.modelos.Parametros;
  */
 public abstract class CintaCapacidad extends Cinta {
 
-    Boolean[] contenido;
+    boolean[] contenido;
 
     class Movimiento extends Cinta.Movimiento {
 
@@ -44,11 +49,12 @@ public abstract class CintaCapacidad extends Cinta {
                     sensores.insertar(salida, contenido[contenido.length - 1]);
                     if (entrada != null) {
                         sensores.insertar(entrada, false);
-                    }                        
+                    }
                     automata.actualizar(sensores);
                     break;
                 case MANIPULAR:
                     manipular();
+                    simularCinta(contenido);
                     break;
             }
         }
@@ -80,11 +86,12 @@ public abstract class CintaCapacidad extends Cinta {
             {
                 put("velocidad", 10000);
                 put("longitud", 50);
-                put("capacidad", 5);
+                put("capacidad", 6);
             }
         });
         //parametros = new Parametros("velocidad", "longitud", "capacidad");
     }
+
     public CintaCapacidad(String salida) {
         this(salida, null);
     }
@@ -92,7 +99,7 @@ public abstract class CintaCapacidad extends Cinta {
     public void configurar(Parametros parametros) {
         super.configurar(parametros);
         if (parametros.containsKey("capacidad")) {
-            contenido = new Boolean[parametros.get("capacidad")];
+            contenido = new boolean[parametros.get("capacidad")];
             for (int i = 0; i < contenido.length; i++) {
                 contenido[i] = false;
             }
@@ -101,11 +108,21 @@ public abstract class CintaCapacidad extends Cinta {
 
     @Override
     public String toString() {
-        String s = super.toString() + ": |";
+        return toString(this);
+    }
+    
+    public static String toString(CintaCapacidad cinta) {
+        return toString(cinta.nombre, cinta.contenido, cinta.salida);
+    }
+    
+    public static String toString(String nombre, boolean[] contenido, String sensor) {
+        
+        String s = nombre + ": |";
         for (int i = 0; i < contenido.length; i++) {
-            s += contenido[i] ? salida : " ";
+            s += contenido[i] ? sensor : " ";
         }
         s += "|";
         return s;
     }
+    
 }

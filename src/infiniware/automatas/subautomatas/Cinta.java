@@ -5,9 +5,11 @@
 package infiniware.automatas.subautomatas;
 
 import infiniware.automatas.Automata;
+import infiniware.automatas.esclavos.Esclavo;
 import infiniware.automatas.sensores.Sensores;
 import infiniware.scada.modelos.Parametros;
 import infiniware.scada.simulador.Simulacion;
+import java.rmi.RemoteException;
 
 /**
  *
@@ -15,7 +17,6 @@ import infiniware.scada.simulador.Simulacion;
  */
 public class Cinta extends SubAutomata {
 
-     
     final String salida;
     final String entrada;
 
@@ -30,10 +31,28 @@ public class Cinta extends SubAutomata {
         public void postaccion(int accion) {
             Sensores sensores = new Sensores();
             sensores.insertar(salida, true);
-            if(entrada!=null)
+            if (entrada != null) {
                 sensores.insertar(entrada, false);
+            }
             automata.actualizar(sensores);
-            //automata.log(Cinta.this.nombre + " ha transportado de " + entrada + " a " + salida);
+            automata.log(Cinta.this.nombre + " ha transportado de " + entrada + " a " + salida);
+            
+            //simulacion cinta
+            boolean[] contenido = new boolean[entrada!=null?2:1];
+            int posicion = 0;
+            if(entrada != null)
+                contenido[posicion++] = sensores.get(entrada);
+            contenido[posicion++] = sensores.get(salida);
+            simularCinta(contenido);
+        }
+
+        protected void simularCinta(boolean[] contenido) {
+
+            try {
+                ((Esclavo) automata).maestro.simularCinta(subautomata.nombre, contenido);
+            } catch (RemoteException ex) {
+                System.err.println("Error al comunicar la simulacion de la cinta " + subautomata.nombre);
+            }
         }
     };
 
@@ -42,11 +61,15 @@ public class Cinta extends SubAutomata {
         this.salida = salida;
         this.entrada = entrada;
         //parametros = new Parametros("velocidad", "longitud");
-        configurar(new Parametros() {{
-          put("velocidad", 5000);
-          put("longitud", 10);  
-        }});
+        configurar(new Parametros() {
+
+            {
+                put("velocidad", 5000);
+                put("longitud", 10);
+            }
+        });
     }
+
     public Cinta(String salida) {
         this(salida, null);
     }

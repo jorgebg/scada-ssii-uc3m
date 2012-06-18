@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 public abstract class Esclavo extends Automata implements IEsclavo {
 
-    protected IMaestro maestro;
+    public IMaestro maestro;
     public String[] entradas;
     public String salida;
 

@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.omg.CORBA.portable.RemarshalException;
 
 public class Maestro extends Automata implements infiniware.scada.IMaestro, infiniware.automatas.esclavos.IMaestro {
     
@@ -333,5 +334,9 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
     @Override
     public void log(String msg) {
         Scada.log(msg);
+    }
+
+    public void simularCinta(String nombre, boolean[] posiciones) throws RemoteException {
+        Scada.ui.simularCinta(nombre, posiciones);
     }
 }

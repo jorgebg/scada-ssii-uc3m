@@ -89,4 +89,8 @@ public abstract class Ui implements IUi {
     public abstract void ocultar();
 
     public abstract void log(String msg);
+
+    public void simularCinta(String nombre, boolean[] posiciones) {
+        //Nada por defecto
+    }
 }
