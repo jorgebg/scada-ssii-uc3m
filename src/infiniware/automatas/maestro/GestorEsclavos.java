@@ -16,12 +16,12 @@ class GestorEsclavos extends HashMap<Integer, IEsclavo> {
     }
 
     public char ejecutar(int index, Sensores sensores) throws RemoteException {
-        return ejecutar(index, (char) sensores.codificar(), (char) sensores.actualizados.codificar());
+        return ejecutar(index, (char) sensores.codificar());
     }
-
-    public char ejecutar(int index, char sensores, char mascara) throws RemoteException {
+    
+    public char ejecutar(int index, char sensores) throws RemoteException {
         checkIndex(index);
-        return get(index).ejecutar(sensores, mascara);
+        return get(index).ejecutar(sensores);
     }
 
     public void put(byte index, IEsclavo esclavo) {

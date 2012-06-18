@@ -22,10 +22,6 @@ public class GestorSensores extends Sensores {
         return (char) automatas.get(id).codificar(this);
     }
 
-    public synchronized char codificarMascara(int id) {
-        return (char) automatas.get(id).actualizados.codificar(this);
-    }
-
     public synchronized void instalar() {
         for (Automata automata : Automata.INSTANCIAS.values()) {
             insertar(automata.sensores);
@@ -36,28 +32,24 @@ public class GestorSensores extends Sensores {
     public synchronized void actualizar(int id, char sensores) {
         Sensores automata = this.automatas.get(id);
         automata.actualizar(sensores);
-        automata.actualizados.inicializar();
         this.actualizar(automata);
     }
 
     @Override
     public String toString() {
         String resultado = super.toString();
-        /*for (Sensores automata : this.automatas.values()) {
+
+        for (Sensores automata : this.automatas.values()) {
             resultado += "\n";
             for (String key : elementos.keySet()) {
-
                 String valor = " ";
                 if (automata.elementos.containsKey(key)) {
                     valor = automata.get(key) ? "1" : "0";
-                    if (automata.actualizados != null && automata.actualizados.get(key)) {
-                        valor += "*";
-                    }
                 }
                 resultado += StringUtils.rightPad(valor, 3);
-
             }
-        }*/
+        }
+
         return resultado;
     }
 }

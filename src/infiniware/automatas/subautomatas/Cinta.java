@@ -5,6 +5,7 @@
 package infiniware.automatas.subautomatas;
 
 import infiniware.automatas.Automata;
+import infiniware.automatas.sensores.Sensores;
 import infiniware.scada.modelos.Parametros;
 import infiniware.scada.simulador.Simulacion;
 
@@ -27,9 +28,12 @@ public class Cinta extends SubAutomata {
 
         @Override
         public void postaccion(int accion) {
-            automata.actualizar(salida, true);
+            Sensores sensores = new Sensores();
+            sensores.insertar(salida, true);
             if(entrada!=null)
-                automata.actualizar(entrada, false);
+                sensores.insertar(entrada, false);
+            automata.actualizar(sensores);
+            //automata.log(Cinta.this.nombre + " ha transportado de " + entrada + " a " + salida);
         }
     };
 

@@ -1,8 +1,11 @@
 package infiniware.scada.simulador;
 
+import infiniware.automatas.subautomatas.SubAutomata;
+
 public abstract class Simulacion implements Runnable {
 
     protected int acciones = 1;
+    public SubAutomata subautomata;
 
     public void run() {
         for (int accion = 0; accion < acciones; accion++) {
@@ -23,18 +26,18 @@ public abstract class Simulacion implements Runnable {
     }
 
     public void preaccion(int accion) {
-        
     }
 
-    public void postaccion(int accion){
-        
+    public void postaccion(int accion) {
     }
 
     protected void actuar(int accion) {
         long tiempoSimulado = tiempo(accion);
-        System.out.println("Simulacion ["+this.getClass().getSimpleName()+"] durmiendo: "+tiempoSimulado+"ms");
-        dormir(tiempoSimulado);
-        System.out.println("Simulacion ["+this.getClass().getSimpleName()+"] despertando");
+        if (tiempoSimulado > 0) {
+            System.out.println(subautomata.nombre + ": simulacion [" + this.getClass().getSimpleName() + "] durmiendo: " + tiempoSimulado + "ms");
+            dormir(tiempoSimulado);
+            System.out.println(subautomata.nombre + ": simulacion [" + this.getClass().getSimpleName() + "] despertando");
+        }
     }
 
     protected void dormir(long tiempo) {

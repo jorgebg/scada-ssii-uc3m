@@ -6,17 +6,21 @@ import infiniware.automatas.esclavos.Esclavo3;
 import infiniware.automatas.maestro.Maestro;
 import infiniware.automatas.sensores.Sensores;
 import infiniware.automatas.subautomatas.CintaCapacidad;
+import infiniware.automatas.subautomatas.CintaEntrada;
 import infiniware.automatas.subautomatas.SubAutomata;
 import infiniware.procesos.IProcesable;
 import infiniware.remoto.IConexion;
 import infiniware.remoto.IRegistrable;
 import infiniware.remoto.Profibus;
 import infiniware.remoto.Registrador;
+import infiniware.scada.Scada;
 import infiniware.scada.modelos.Parametros;
 import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
+import sun.swing.StringUIClientPropertyKey;
 
 public abstract class Automata implements Profibus, IProcesable, IConexion, IRegistrable {
 
@@ -31,6 +35,27 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
             put("Esclavo3", Esclavo3.INSTANCIA);
         }
     };
+    private int ciclo;
+
+    public abstract void log(String msg);
+
+    public void imprimirTablaSensores() {
+        Sensores clone = sensores.clone();
+        String cabecera = "     ";
+        for (String sensor : sensores.keySet()) {
+            cabecera += StringUtils.rightPad(sensor, 3);
+        }
+        String filas = "";
+        for (int i = 0; i < Math.pow(sensores.elementos.size(), 2); i++) {
+            clone.actualizar(i);
+            filas += StringUtils.rightPad(""+i, 5);
+            for (boolean sensor : clone.values())
+                filas += StringUtils.rightPad(sensor ? "1" :  "0", 3);
+            filas += "\n";
+        }
+        String resultado = cabecera + "\n" + filas;
+        System.out.println(resultado);
+    }
 
     public enum Simulaciones { /*Fallar, Recuperar,*/ LimpiarCPD };    
     public void simular(Simulaciones simulacion) {
@@ -50,11 +75,6 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
         return ejecutar();
     }
     
-    public char ejecutar(char sensores, char mascara) {
-        this.sensores.actualizar(sensores, mascara);
-        System.out.println("Ejecutando:\n" + this.sensores);
-        return ejecutar();
-    }
 
     public char ejecutar(Sensores sensores) {
         this.sensores.actualizar(sensores);
@@ -62,6 +82,7 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
     }
 
     public char ejecutar() {
+        System.out.println("#"+ ciclo +" Ejecutando:\n" + sensores);
         for (SubAutomata subautomata : subautomatas.values()) {
             subautomata.ejecutar();
             // DEBUG {{{
@@ -69,6 +90,7 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
                 System.out.println(subautomata);
             // }}}
         }
+        ciclo++;
         return subautomatas.codificarEstados();
     }
 

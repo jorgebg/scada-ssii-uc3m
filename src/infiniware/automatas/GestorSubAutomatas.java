@@ -19,7 +19,7 @@ import org.apache.commons.collections.MapUtils;
 public class GestorSubAutomatas extends HashMap<String, SubAutomata> {
 
     final Automata automata;
-    final List<List<Integer>> estados = new ArrayList<List<Integer>>();
+    public final List<List<Integer>> estados = new ArrayList<List<Integer>>();
 
     public GestorSubAutomatas(Automata automata) {
         this.automata = automata;

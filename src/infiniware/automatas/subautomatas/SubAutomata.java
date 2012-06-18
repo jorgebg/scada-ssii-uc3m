@@ -26,6 +26,7 @@ public abstract class SubAutomata {
                 if (!Modifier.isAbstract(cls.getModifiers())
                         && Simulacion.class.isAssignableFrom(cls)) {
                     Simulacion simulacion = (Simulacion) cls.getDeclaredConstructor(new Class[]{subautomata}).newInstance(new Object[]{this});
+                    simulacion.subautomata = this;
                     simulaciones.put(cls.getSimpleName(), simulacion);
                 }
             } catch (Exception ex) {

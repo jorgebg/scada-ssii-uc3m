@@ -1,8 +1,10 @@
 package infiniware.scada;
 
 import infiniware.Resultado;
+import infiniware.automatas.Automata;
 import infiniware.automatas.maestro.GestorSensores;
 import infiniware.automatas.maestro.Maestro;
+import infiniware.automatas.subautomatas.SubAutomata;
 import infiniware.procesos.IProcesable;
 import infiniware.remoto.Ethernet;
 import infiniware.remoto.Registrador;
@@ -12,6 +14,12 @@ import infiniware.scada.simulador.Simulador;
 import infiniware.scada.ui.Ui;
 import infiniware.scada.ui.gui.Gui;
 import infiniware.scada.ui.cli.Cli;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Scada implements Ethernet, IProcesable, IScada, infiniware.automatas.maestro.IScada {
 
@@ -62,7 +70,7 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
                 accion.run();
             }
             simulador.ciclo();
-            estados = maestro.ciclo(mapaSensores.codificar());
+            estados = maestro.ciclo();
             ui.actualizar(estados);
             sincronizar();
         }
@@ -148,6 +156,10 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
     public Thread iniciarProceso() {
         simulador = Simulador.INSTANCIA;
         maestro = Maestro.INSTANCIA;
+        for (Automata automata : Automata.INSTANCIAS.values()) {
+            automata.imprimirTablaSensores();
+        }
+        System.out.println();
         ui.mostrar();
         return Registrador.thread;
     }
@@ -164,8 +176,19 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
         this.mapaSensores.actualizar(automata, sensores);
     }
 
-    
+    static BufferedWriter logfile;
     public static void log(String msg) {
         ui.log(msg);
+        System.out.println(msg);
+        try {
+            if(logfile == null) {
+                FileWriter fstream = new FileWriter("log/" + new java.util.Date().getTime()+".log");
+                logfile = new BufferedWriter(fstream);
+            }
+            logfile.write(msg+"\n");
+            logfile.flush();
+        } catch (IOException ex) {
+            System.err.println("Error al guardar el log");
+        }
     }
 }
