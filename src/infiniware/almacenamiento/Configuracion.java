@@ -18,10 +18,24 @@ import infiniware.scada.modelos.ConjuntoParametros;
 import infiniware.scada.modelos.Guardable;
 import infiniware.scada.modelos.Parametros;
 
+/**
+ * 
+ * @author Infiniware
+ * 
+ * Clase encargada de guardar y cargar los parametros de las ditintas configuraciones
+ *
+ */
 public class Configuracion extends Componente {
 
 	private String carpeta = "almacenamiento";
 	
+	/**
+	 * Metodo que guarda los parametros en un fichero de nombre "nombre"
+	 * 
+	 * @param nombre
+	 * @param parametros
+	 * @return resultado de la operacion
+	 */
     public Resultado guardar(String nombre, ConjuntoParametros parametros){
         try{
         	File folder= new File(carpeta);
@@ -38,6 +52,14 @@ public class Configuracion extends Componente {
         }
     }
 
+    
+    /**
+     * Metodo que carga los parametros de un fichero de nombre "nombre"
+     * 
+     * @param nombre
+     * @param parametros
+     * @return resultado de la operacion
+     */
     public Resultado cargar(String nombre, ConjuntoParametros parametros) {
     	try{
         	File fi = new File(carpeta, nombre);
