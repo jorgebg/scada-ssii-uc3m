@@ -17,6 +17,12 @@ import javax.swing.Timer;
 
 import infiniware.scada.ui.gui.view.ImgLoader;
 
+/**
+ * Esta clase permite la animaci—n de la cinta de ejes
+ * Realiza la carga de las im‡genes necesarias en background
+ * 
+ * @author sohrab farzaneh
+ */
 public class CejAnimation implements Animation, ActionListener, SlideAnimation {
 
 	private static final int FRAMES_CEJ = 4;		 	//number of frames to load in the slides (CEN, CEJ)
@@ -52,6 +58,12 @@ public class CejAnimation implements Animation, ActionListener, SlideAnimation {
 	private boolean stop;
 	private boolean emergencyStop;
 	
+	/**
+	 * Crea un objeto para la animaci—n de la cinta de ejes
+	 * Carga las imagenes y componentes necesarios para la simulaci—n del
+	 * transporte de ejes y sus propiedades
+	 * @param timeCEJ - tiempo en el que debe realizarse la animaci—n completa
+	 */
 	public CejAnimation(double timeCEJ){
 		this.speed = ImgLoader.calculateSpeed(timeCEJ, CejAnimation.FRAMES_CEJ);
 		this.pause = CejAnimation.PAUSE_TIME;
@@ -84,6 +96,11 @@ public class CejAnimation implements Animation, ActionListener, SlideAnimation {
 		this.pieceFin.setVisible(false);
 	}
 	
+	/**
+	 * Inicializa el temporizador con la velocidad definida 
+	 * al crear el objeto y carga las im‡genes en memoria.
+	 * Solo debe ser llamado una vez, de no ser as’ hay riesgo de saturaci—n de la memoria
+	 */
 	public void init(){
 		this.timer = new Timer(this.speed, this);
         this.timer.setInitialDelay(this.pause);

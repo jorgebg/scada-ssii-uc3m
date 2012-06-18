@@ -17,6 +17,12 @@ import javax.swing.Timer;
 
 import infiniware.scada.ui.gui.view.ImgLoader;
 
+/**
+ * Esta clase permite la animaci—n de la cinta de transporte
+ * Realiza la carga de las im‡genes necesarias en background
+ * 
+ * @author sohrab farzaneh
+ */
 public class CtAnimation implements ActionListener, Animation, SlideAnimation {
 
 	private static final int FRAMES_CT = 4;		 	//number of frames to load in the slides (CT)
@@ -52,6 +58,12 @@ public class CtAnimation implements ActionListener, Animation, SlideAnimation {
 	private boolean stop;
 	private boolean emergencyStop;
 	
+	/**
+	 * Crea un objeto para la animaci—n de la cinta de transporte
+	 * Carga las imagenes y componentes necesarios para la simulaci—n del
+	 * transporte de conjuntos montados y sus propiedades
+	 * @param timeCT - tiempo en el que debe realizarse la animaci—n completa
+	 */
 	public CtAnimation(double timeCT){
 		this.speed = ImgLoader.calculateSpeed(timeCT, CtAnimation.FRAMES_CT);
 		this.pause = CtAnimation.PAUSE_TIME;		
@@ -84,6 +96,11 @@ public class CtAnimation implements ActionListener, Animation, SlideAnimation {
 		this.pieceFin.setVisible(false);
 	}
 	
+	/**
+	 * Inicializa el temporizador con la velocidad definida 
+	 * al crear el objeto y carga las im‡genes en memoria.
+	 * Solo debe ser llamado una vez, de no ser as’ hay riesgo de saturaci—n de la memoria
+	 */
 	public void init(){
 		this.timer = new Timer(this.speed, this);
         this.timer.setInitialDelay(this.pause);
