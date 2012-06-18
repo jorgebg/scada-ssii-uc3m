@@ -3,13 +3,22 @@ package infiniware.scada.modelos;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * 
+ * @author Infiniware
+ * 
+ * Clase abstracta que encapsula los 2 tipos de de objetos guardables, Informe y Parametros
+ *
+ */
 public abstract class Guardable extends HashMap<String, Integer>{
 
-    public Guardable extraer(String[] parametros) {
+	/**
+	 * Metodo que extrae los elementos de un objeto guardable a partir de un array de claves
+	 * 
+	 * @param parametros
+	 * @return
+	 */
+    public Guardable extraer(String[] elementos) {
         return null;
-    }
-
-    public Guardable extraer(Set<String> parametros) {
-        return extraer((String[])parametros.toArray(new String[parametros.size()]));
     }
 }

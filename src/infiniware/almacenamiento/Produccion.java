@@ -21,10 +21,24 @@ import java.util.StringTokenizer;
 
 import org.yaml.snakeyaml.Yaml;
 
+/**
+ * 
+ * @author Infiniware
+ * 
+ * Clase encargada de guardar y cargar los informes de produccion
+ *
+ */
 public class Produccion extends Componente {
 	private String carpeta = "almacenamiento";
 	private String fichero = "produccion.ser";
 
+	
+	/**
+	 * Metodo que guarda los informes de produccion
+	 * 
+	 * @param informes
+	 * @return resultado de la operacion
+	 */
     public Resultado guardar(Informes informes){
         try{
         	File folder= new File(carpeta);
@@ -41,6 +55,12 @@ public class Produccion extends Componente {
         }
     }
 
+    /**
+     * Metodo que carga los informes de producion
+     * 
+     * @param informes
+     * @return resultado de la operacion
+     */
     public Resultado cargar(Informes informes) {
     	try{
         	File fi = new File(carpeta, fichero);
