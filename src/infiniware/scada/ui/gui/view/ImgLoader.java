@@ -9,33 +9,36 @@ import javax.swing.ImageIcon;
 
 
 /**
- * The class loads images in memory for later usage
- * @author sohrab
+ * Esta clase carga las imagenes necesarias en memoria
+ * para su uso posterior.
+ * Tambien permite realizar conversiones para el calculo de 
+ * la velocidad de los componentes graficos
+ * @author infiniware
  */
 public class ImgLoader {
 
 	
 	/**
-	 * Calculates the speed needed for timers taking into account
-	 * the time requiered to perform the operation and the number
-	 * of available frames.
+	 * Calcula la velocidad que necesitan los temporizadores 
+	 * teniendo en cuenta el tiempo necesario para realizar una 
+	 * accion y el numero de frames
 	 *  
-	 * @param time
-	 * @param frames
-	 * @return the speed between frames
+	 * @param time - tiempo total requerido
+	 * @param frames - numero total de frames
+	 * @return velocidad entre frames
 	 */
 	public static int calculateSpeed(double time, int frames){
 		return (int) Math.round(time/frames * 1000);
 	}
 	
 	/**
-	 * Loads a dynamic image from the specified directory 
+	 * Carga de forma dinamica imagenes desde un directorio especifico
 	 * 
-	 * @param dir
-	 * @param extension
-	 * @param imageNum
-	 * @param max_size
-	 * @return and ImageIcon to be stored in an array
+	 * @param dir - direccion de las imagenes
+	 * @param extension - extension de la imagen
+	 * @param imageNum - numero de imagen
+	 * @param max_size - tamanyo maximo
+	 * @return un objeto de tipo ImageIcon preparado para ser guardado
 	 */
 	@SuppressWarnings("unused")
 	public static ImageIcon loadImage(String dir, String extension, int imageNum, int max_size){

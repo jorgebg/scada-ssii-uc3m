@@ -8,9 +8,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
- * Esta clase permite la animaci—n de la estaci—n de montaje y de soldadura
+ * Esta clase permite la animacion de la estacion de montaje y de soldadura
  * 
- * @author sohrab farzaneh
+ * @author infiniware
  */
 public class EmAnimation implements Animation {
 	private final String DIR_FREE = "imgs/estaticas/emFree.jpg";
@@ -26,7 +26,7 @@ public class EmAnimation implements Animation {
 	private JLabel statusLabel;
 
 	/**
-	 * Crea un objeto estaci—n de montaje o estaci—n de soldadura
+	 * Crea un objeto estacion de montaje o estacion de soldadura
 	 */
 	public EmAnimation(){
 		eFree = new ImageIcon(this.DIR_FREE);
@@ -37,7 +37,7 @@ public class EmAnimation implements Animation {
 	}
 	
 	/**
-	 * No realiza ninguna acci—n
+	 * No realiza ninguna accion
 	 */
 	@Override
 	public void init() {

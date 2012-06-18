@@ -8,9 +8,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
- * Esta clase permite la animaci—n de la estaci—n de validaci—n
+ * Esta clase permite la animacion de la estacion de validacion
  * 
- * @author sohrab farzaneh
+ * @author infiniware
  */
 public class EvAnimation implements Animation {
 	private final String DIR_FREE = "imgs/estaticas/evFree.jpg";
@@ -26,7 +26,7 @@ public class EvAnimation implements Animation {
 	private JLabel statusLabel;
 
 	/**
-	 * Crea un objeto estaci—n de validaci—n
+	 * Crea un objeto estacion de validacion
 	 */
 	public EvAnimation(){
 		eFree = new ImageIcon(this.DIR_FREE);
@@ -37,8 +37,9 @@ public class EvAnimation implements Animation {
 		
 		//statusLabel.addMouseListener(new ALEV(this));
 	}
+	
 	/**
-	 * No re
+	 * No realiza ninguna accion
 	 */
 	@Override
 	public void init() {

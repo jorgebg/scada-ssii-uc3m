@@ -39,6 +39,13 @@ public class AnimationController {
 	private EmAnimation es;
 	private EvAnimation ev;
 	
+	/**
+	 * Crea un objeto de tipo AnimationController inicializando 
+	 * todos los componentes necesarios para la simulacion grafica
+	 * desde el mapa que se recibe como parametro
+	 * Inicializa la carga de imagenes
+	 * @param map - mapa de parametros
+	 */
 	public AnimationController(Map<String, Double> map){
 		robot1 = new Robot1Animation(map.get("R1_tREn"),map.get("R1_tTEn"), map.get("R1_tTCM"));
 		robot2 = new Robot2Animation(map.get("R2_tRCM"), map.get("R2_tTCM"), map.get("R2_tTCS"));
@@ -63,6 +70,11 @@ public class AnimationController {
 		cnok.init();
 	}
 	
+	/**
+	 * Actualiza los tiempos en los componentes del simulador grafico 
+	 * por medio del mapa que se pasa como parametro
+	 * @param map - mapa de parametros
+	 */
 	public void init(Map<String, Double> map){
 		robot1.init(map.get("R1_tREn"),map.get("R1_tTEn"),map.get("R1_tTCM"));
 		robot2.init(map.get("R2_tRCM"),map.get("R2_tTCM"), map.get("R2_tTCS"));
@@ -74,10 +86,20 @@ public class AnimationController {
 
 	}
 	
+	/**
+	 * Permite calcular el tiempo que tarda una cinta en realizar un ciclo completo
+	 * @param velocidad
+	 * @param longitud
+	 * @return tiempo que tarda la cita en reccorrer un ciclo completo
+	 */
 	public static double convertSlideTime(double velocidad, double longitud){
 		return (velocidad/longitud);
 	}
 
+	/**
+	 * Permite parar todos los elementos del simulador grafico
+	 * por medio de una parada de emergencia
+	 */
 	public void emergencyStopAll(){
 		this.robot1.emergencyStop();
 		this.robot2.emergencyStop();
@@ -89,6 +111,10 @@ public class AnimationController {
 		
 	}
 	
+	/**
+	 * Permite arrancar todos los elemetos del simulad grafico 
+	 * de forma simultanea
+	 */
 	public void startAll(){
 		this.robot1.start(robot1.getState());
 		this.robot2.start(robot1.getState());
@@ -101,42 +127,82 @@ public class AnimationController {
 		this.cnok.start(CnokAnimation.MOVE);
 	}
 
+	/**
+	 * Devuelve un objeto Robot1Animation
+	 * @return robot1
+	 */
 	public Robot1Animation getR1() {
 		return robot1;
 	}
 
+	/**
+	 * Devuelve un objeto Robot2Animation
+	 * @return robot2
+	 */
 	public Robot2Animation getR2() {
 		return robot2;
 	}
 
+	/**
+	 * Devuelve un objeto CenAnimation
+	 * @return cen - cinta de engranajes
+	 */
 	public CenAnimation getCen() {
 		return cen;
 	}
 
+	/**
+	 * Devuelve un objeto CejAnimation
+	 * @return cej - cinta de ejes
+	 */
 	public CejAnimation getCej() {
 		return cej;
 	}
 
+	/**
+	 * Devuelve un objeto CtAnimation
+	 * @return ct - cinta de transporte
+	 */
 	public CtAnimation getCt() {
 		return ct;
 	}
 	
+	/**
+	 * Devuelve un objeto CokAnimation
+	 * @return cok - cinta de conjuntos validos
+	 */
 	public CokAnimation getCok() {
 		return cok;
 	}
 
+	/**
+	 * Devuelve un objeto CnokAnimation
+	 * @return cnok - cinta de conjuntos no validos
+	 */
 	public CnokAnimation getCnok() {
 		return cnok;
 	}
 
+	/**
+	 * Devuelve un objeto EmAnimation
+	 * @return em - estacion de montaje
+	 */
 	public EmAnimation getEm() {
 		return em;
 	}
-
+	
+	/**
+	 * Devuelve un objeto EmAnimation
+	 * @return es - estacion de soldadura
+	 */
 	public EmAnimation getEs() {
 		return es;
 	}
 
+	/**
+	 * Devuelve un objeto EvAnimation
+	 * @return ev - estacion de validacion
+	 */
 	public EvAnimation getEv() {
 		return ev;
 	}

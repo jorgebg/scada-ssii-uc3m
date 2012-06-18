@@ -16,12 +16,12 @@ import javax.swing.Timer;
 import infiniware.scada.ui.gui.view.ImgLoader;
 
 /**
- * Esta clase permite la animaci—n de la cinta de conjuntos no validos
- * Realiza la carga de las im‡genes necesarias en background
+ * Esta clase permite la animacion de la cinta de conjuntos no validos
+ * Realiza la carga de las imagenes necesarias en background
  * 
  * La velocidad del temporizador de esta clase es constante
  * 
- * @author sohrab farzaneh
+ * @author infiniware
  */
 public class CnokAnimation implements ActionListener, Animation {
 
@@ -53,10 +53,10 @@ public class CnokAnimation implements ActionListener, Animation {
 	private boolean emergencyStop;
 	
 	/**
-	 * Crea un objeto para la animaci—n de la cinta de conjuntos no v‡lidos
-	 * Carga las imagenes y componentes necesarios para la simulaci—n del
-	 * transporte de conjuntos no v‡lidos y sus propiedades
-	 * El tiempo no se puede definir. Esta cinta es autom‡tica (gravedad)
+	 * Crea un objeto para la animacion de la cinta de conjuntos no validos
+	 * Carga las imagenes y componentes necesarios para la simulacion del
+	 * transporte de conjuntos no validos y sus propiedades
+	 * El tiempo no se puede definir. Esta cinta es automatica (gravedad)
 	 */
 	public CnokAnimation(){
 		this.speed = this.GravitySpeed;
@@ -74,9 +74,10 @@ public class CnokAnimation implements ActionListener, Animation {
 	
 	/**
 	 * Inicializa el temporizador con la velocidad definida 
-	 * al crear el objeto y carga las im‡genes en memoria.
-	 * Solo debe ser llamado una vez, de no ser as’ hay riesgo de saturaci—n de la memoria
+	 * al crear el objeto y carga las imagenes en memoria.
+	 * Solo debe ser llamado una vez, de no ser asi hay riesgo de saturacion de la memoria
 	 */
+	@Override
 	public void init(){
 		this.timer = new Timer(this.speed, this);
         this.timer.setInitialDelay(this.pause);
@@ -86,6 +87,7 @@ public class CnokAnimation implements ActionListener, Animation {
         this.slideWorker.execute();
 	}
 	
+	@Override
 	public void createGUI(JPanel parentPanel, int with, int height){
 		parentPanel.setLayout(null); //set layaout to absolute coordenates
 
@@ -98,8 +100,10 @@ public class CnokAnimation implements ActionListener, Animation {
 		cnok.add(statusLabel);
 	}
 	
-	
-	//Background task for loading images
+	/**
+	 * Tarea en background para la carga de imagenes utilizando
+	 * una clase SwingWorker anonima
+	 */	
 	SwingWorker slideWorker = new SwingWorker<ImageIcon[], Void>(){
 		@Override
 		protected ImageIcon[] doInBackground() throws Exception {
@@ -132,6 +136,11 @@ public class CnokAnimation implements ActionListener, Animation {
 		}
 	};
 	
+	/**
+	 * Clase que extiende de JPanel para representar la cinta de 
+	 * conjuntos no validos
+	 * @author infiniware
+	 */
 	@SuppressWarnings("serial")
 	public class Cinta extends JPanel{	
 	
@@ -139,6 +148,7 @@ public class CnokAnimation implements ActionListener, Animation {
 			super(new BorderLayout());
 		}
 		
+		@Override
 		protected void paintComponent(Graphics g){
 			super.paintComponent(g);
 	
@@ -166,12 +176,15 @@ public class CnokAnimation implements ActionListener, Animation {
 	}
 
 	/**
-	 * Handle timer event. Update the looslost (frame number)
-	 * If it's the last frame, stops until a new action is recieved
+	 * Maneja los eventos de tiempo y actualiza la variable looslots
+	 * que se encarga de actualizar los frames.
+	 * Si se encuentra en el ultimo frame de la animacion espera 
+	 * hasta que se reciva una nueva accion
 	 * 
-	 * Handles also the stop and the emergency stop.
-	 * If the emergencyStop is used, stop in the actual frame
-	 * and continues from that poin the the start event arrives
+	 * Maneja los eventos de parada y parada de emergencia.
+	 * Si se realiza una parada de emergencia se para en el frame
+	 * que se encuentre y continua desde ese punto cuando se 
+	 * vuelva a activar
 	 */
 	public void actionPerformed(ActionEvent e) {
 		if (!slideWorker.isDone()) 

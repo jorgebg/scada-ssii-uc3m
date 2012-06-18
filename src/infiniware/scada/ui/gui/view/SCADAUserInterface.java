@@ -89,7 +89,7 @@ public class SCADAUserInterface extends JFrame {
 	public double parametros[];
 	
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -100,10 +100,10 @@ public class SCADAUserInterface extends JFrame {
 				}
 			}
 		});
-	}
+	}*/
 	
 	/**
-	 * Create the frame.
+	 * Crea la ventana de la GUI con todos sus componentes
 	 */
 	public SCADAUserInterface() {
 		setExtendedState(Frame.MAXIMIZED_BOTH);
@@ -911,7 +911,7 @@ public class SCADAUserInterface extends JFrame {
 				ac.getCnok().start(CnokAnimation.EMTPY);
 				Scada.ui.limpiarCPD();
 				
-				logConsole.append("GUI: Vaciado el contenedor de conjuntos no v‡lidos\n");
+				logConsole.append("GUI: Vaciado el contenedor de conjuntos no validos\n");
 			}
 		});
 		
@@ -925,11 +925,19 @@ public class SCADAUserInterface extends JFrame {
 		falloEsclavo3.addMouseListener(new ChangeAdapter(falloEsclavo3,3));
 	}
 	
+	/**
+	 * Permite modificar los valores de los informes y mostrarlos graficamente
+	 * @param map Map<String, Integer>
+	 */
 	public void setMapaInformes(Map<String, Integer> map){
 		this.mapaInformes = map;
 		this.setGUIReport(mapaInformes);
 	}
 	
+	/**
+	 * Permite obtener los valores de los informes
+	 * @return Map<String, Integer> mapa de informes
+	 */
 	public Map<String, Integer> getMapaInformes(){
 		return this.mapaInformes;
 	}
@@ -957,10 +965,19 @@ public class SCADAUserInterface extends JFrame {
 		this.txtArranques.setText(map.get("ARR").toString());
 	}
 	
+	/**
+	 * Permite obtener el mapa con los parametros
+	 * @return Map<String, Double> mapa de parametros
+	 */
 	public Map<String, Double> getMapaParametros(){
 		return this.mapaParametros;
 	}
 	
+	/**
+	 * Permite modificar el mapa de parametros y mostrar
+	 * los valores graficamente
+	 * @param map Map<String, Double>
+	 */
 	public void setMapaParametros(Map<String, Double> map){
 		this.mapaParametros = map;
 		this.setGUIParameters(mapaParametros);
@@ -1032,7 +1049,7 @@ public class SCADAUserInterface extends JFrame {
 		mapaParametros.put("R2_tTCM", Double.valueOf(this.txtTTransporteCm2.getText()));
 		mapaParametros.put("R2_tTCS", Double.valueOf(this.txtTTransporteCs.getText()));
 		
-		logConsole.append("GUI: Los par‡metros han sido actualizados\n");
+		logConsole.append("GUI: Los parametros han sido actualizados\n");
 
 	}
 	
@@ -1061,14 +1078,27 @@ public class SCADAUserInterface extends JFrame {
 		txtTTransporteCs.setEditable(editable);
 		
 		if(!editable)
-			logConsole.append("GUI: La edici—n de par‡metros de entrada ha sido deshabilitada\n");
+			logConsole.append("GUI: La edicion de parametros de entrada ha sido deshabilitada\n");
 		else
-			logConsole.append("GUI: La edici—n de par‡metros de entrada ha sido habilitada\n");
+			logConsole.append("GUI: La edicion de parametros de entrada ha sido habilitada\n");
 	}
 	
+	/**
+	 * Clase que hereda de MouseListener que permite realizar las paradas
+	 * de los automatas y sus recuperaciones desde el simulador grafico
+	 * haciendo click.
+	 * 
+	 * @author infiniware
+	 *
+	 */
 	public class ChangeAdapter implements MouseListener{
 		JSlider falloAutomata;
 		int automata;
+		/**
+		 * Crea un objeto ChangeAdapter
+		 * @param falloEsclavo JSlider
+		 * @param esclavo int
+		 */
 		public ChangeAdapter(JSlider falloEsclavo, int esclavo){
 			this.falloAutomata = falloEsclavo;
 			this.automata = esclavo;
@@ -1080,32 +1110,32 @@ public class SCADAUserInterface extends JFrame {
 			case(1):
 				if(this.isActive()){
 					Scada.ui.recuperarFalloEsclavo1();
-					logConsole.append("GUI: Activada la recuperaci—n del fallo del aut—mata esclavo 1\n");
+					logConsole.append("GUI: Activada la recuperacion del fallo del automata esclavo 1\n");
 				}else{
 					Scada.ui.provocarFalloEsclavo1();
-					logConsole.append("GUI: Activado el fallo del aut—mata esclavo 1\n");					
+					logConsole.append("GUI: Activado el fallo del automata esclavo 1\n");					
 				}
 				break;
 			case(2):
 				if(this.isActive()){
 					Scada.ui.recuperarFalloEsclavo2();
-					logConsole.append("GUI: Activada la recuperaci—n del fallo del aut—mata esclavo 2\n");
+					logConsole.append("GUI: Activada la recuperacion del fallo del automata esclavo 2\n");
 				}else{
 					Scada.ui.provocarFalloEsclavo2();
-					logConsole.append("GUI: Activado el fallo del aut—mata esclavo 2\n");					
+					logConsole.append("GUI: Activado el fallo del automata esclavo 2\n");					
 				}
 				break;
 			case(3):
 				if(this.isActive()){
 					Scada.ui.recuperarFalloEsclavo3();
-					logConsole.append("GUI: Activada la recuperaci—n del fallo del aut—mata esclavo 3\n");
+					logConsole.append("GUI: Activada la recuperacion del fallo del automata esclavo 3\n");
 				}else{
 					Scada.ui.provocarFalloEsclavo3();
-					logConsole.append("GUI: Activado el fallo del aut—mata esclavo 3\n");					
+					logConsole.append("GUI: Activado el fallo del automata esclavo 3\n");					
 				}
 				break;
 			default:
-				logConsole.append("ERROR-GUI: Error en el Fallo de los Automatas.Aut—mata recibido no v‡lido\n");
+				logConsole.append("ERROR-GUI: Error en el Fallo de los Automatas.Automata recibido no valido\n");
 				System.err.println("Invalid Slave given in ChangeAdapter(JSlider falloEsclavo,int esclavo) - SCADAUserInterface");
 				break;
 			

@@ -18,10 +18,10 @@ import javax.swing.Timer;
 import infiniware.scada.ui.gui.view.ImgLoader;
 
 /**
- * Esta clase permite la animaci—n de la cinta de engranajes
- * Realiza la carga de las im‡genes necesarias en background
+ * Esta clase permite la animacion de la cinta de engranajes
+ * Realiza la carga de las imagenes necesarias en background
  * 
- * @author sohrab farzaneh
+ * @author infiniware
  */
 public class CenAnimation implements ActionListener, Animation, SlideAnimation{
 
@@ -59,10 +59,10 @@ public class CenAnimation implements ActionListener, Animation, SlideAnimation{
 	private boolean emergencyStop;
 	
 	/**
-	 * Crea un objeto para la animaci—n de la cinta de engranajes
-	 * Carga las imagenes y componentes necesarios para la simulaci—n del
+	 * Crea un objeto para la animacion de la cinta de engranajes
+	 * Carga las imagenes y componentes necesarios para la simulacion del
 	 * transporte de engranajes y sus propiedades
-	 * @param timeCEN - tiempo en el que debe realizarse la animaci—n completa
+	 * @param timeCEN - tiempo en el que debe realizarse la animacion completa
 	 */
 	public CenAnimation(double timeCEN){
 		this.speed = ImgLoader.calculateSpeed(timeCEN, CenAnimation.FRAMES_CEN);
@@ -77,7 +77,7 @@ public class CenAnimation implements ActionListener, Animation, SlideAnimation{
 		this.cen = new Cinta();
 		this.cen.setLayout(null);
 		
-		this.imgPiece = new ImageIcon("imgs/estaticas/eng.jpg");
+		this.imgPiece = new ImageIcon("imgs/estaticas/eng.png");
 		this.piece0 = new JLabel(imgPiece);
 		this.piece0.setBounds(17, 232, this.PIECE_SIZE, this.PIECE_SIZE);
 		this.piece0.setVisible(false);
@@ -98,9 +98,10 @@ public class CenAnimation implements ActionListener, Animation, SlideAnimation{
 	
 	/**
 	 * Inicializa el temporizador con la velocidad definida 
-	 * al crear el objeto y carga las im‡genes en memoria.
-	 * Solo debe ser llamado una vez, de no ser as’ hay riesgo de saturaci—n de la memoria
+	 * al crear el objeto y carga las imagenes en memoria.
+	 * Solo debe ser llamado una vez, de no ser asi hay riesgo de saturacion de la memoria
 	 */
+	@Override
 	public void init(){
 		this.timer = new Timer(this.speed, this);
         this.timer.setInitialDelay(this.pause);
@@ -109,6 +110,13 @@ public class CenAnimation implements ActionListener, Animation, SlideAnimation{
         this.slideWorker.execute();
 	}
 	
+	/**
+	 * Inicializa el temporizador calculando la velocidad el tiempos recibido por parametro.
+	 * Si el temporizador no ha sido inicializo se inicializa.
+	 * Este metodo no realiza carga de imagenes por lo que las imagenes
+	 * deben haber sido cargadas antes por medio del metodo init()
+	 * @param time - tiempo total del recorrido
+	 */
 	public void init(double time){
 		this.speed = ImgLoader.calculateSpeed(time, CenAnimation.FRAMES_CEN);
 		this.pause = CenAnimation.PAUSE_TIME;
@@ -120,7 +128,8 @@ public class CenAnimation implements ActionListener, Animation, SlideAnimation{
 		
 		this.timer.setInitialDelay(this.pause);
 	}
-	
+
+	@Override
 	public void createGUI(JPanel parentPanel, int with, int height){
 		parentPanel.setLayout(null); //set layaout to absolute coordenates
 
@@ -129,7 +138,7 @@ public class CenAnimation implements ActionListener, Animation, SlideAnimation{
 		cen.setBounds(0, 0, with, height);
 		parentPanel.add(cen);	
 		
-		//cen.addMouseListener(new ALCEN(this));
+		cen.addMouseListener(new ALCEN(this));
         this.cen.add(statusLabel);
         this.cen.add(piece0);
         this.cen.add(piece1);
@@ -138,8 +147,10 @@ public class CenAnimation implements ActionListener, Animation, SlideAnimation{
         this.cen.add(pieceFin);        
 	}
 	
-	
-	//Background task for loading images
+	/**
+	 * Tarea en background para la carga de imagenes utilizando
+	 * una clase SwingWorker anonima
+	 */
 	SwingWorker slideWorker = new SwingWorker<ImageIcon[], Void>(){
 		@Override
 		protected ImageIcon[] doInBackground() throws Exception {
@@ -172,13 +183,17 @@ public class CenAnimation implements ActionListener, Animation, SlideAnimation{
 		}
 	};
 	
+	/**
+	 * Clase que extiende de JPanel para representar la cinta de engranajes
+	 * @author infiniware
+	 */
 	@SuppressWarnings("serial")
 	public class Cinta extends JPanel{	
 	
 		public Cinta(){
 			super(new BorderLayout());
 		}
-		
+		@Override
 		protected void paintComponent(Graphics g){
 			super.paintComponent(g);
 			
@@ -194,13 +209,17 @@ public class CenAnimation implements ActionListener, Animation, SlideAnimation{
 	}
 
 	/**
-	 * Handle timer event. Update the looslost (frame number)
-	 * If it's the last frame, stops until a new action is recieved
+	 * Maneja los eventos de tiempo y actualiza la variable looslots
+	 * que se encarga de actualizar los frames.
+	 * Si se encuentra en el ultimo frame de la animacion espera 
+	 * hasta que se reciva una nueva accion
 	 * 
-	 * Handles also the stop and the emergency stop.
-	 * If the emergencyStop is used, stop in the actual frame
-	 * and continues from that poin the the start event arrives
+	 * Maneja los eventos de parada y parada de emergencia.
+	 * Si se realiza una parada de emergencia se para en el frame
+	 * que se encuentre y continua desde ese punto cuando se 
+	 * vuelva a activar
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (!slideWorker.isDone()) 
 			return; //If still loading, can't animate.

@@ -18,10 +18,10 @@ import javax.swing.Timer;
 import infiniware.scada.ui.gui.view.ImgLoader;
 
 /**
- * Esta clase permite la animaci—n de la cinta de transporte
- * Realiza la carga de las im‡genes necesarias en background
+ * Esta clase permite la animacion de la cinta de transporte
+ * Realiza la carga de las imagenes necesarias en background
  * 
- * @author sohrab farzaneh
+ * @author infiniware
  */
 public class CtAnimation implements ActionListener, Animation, SlideAnimation {
 
@@ -59,10 +59,10 @@ public class CtAnimation implements ActionListener, Animation, SlideAnimation {
 	private boolean emergencyStop;
 	
 	/**
-	 * Crea un objeto para la animaci—n de la cinta de transporte
-	 * Carga las imagenes y componentes necesarios para la simulaci—n del
+	 * Crea un objeto para la animacion de la cinta de transporte
+	 * Carga las imagenes y componentes necesarios para la simulacion del
 	 * transporte de conjuntos montados y sus propiedades
-	 * @param timeCT - tiempo en el que debe realizarse la animaci—n completa
+	 * @param timeCT - tiempo en el que debe realizarse la animacion completa
 	 */
 	public CtAnimation(double timeCT){
 		this.speed = ImgLoader.calculateSpeed(timeCT, CtAnimation.FRAMES_CT);
@@ -77,7 +77,7 @@ public class CtAnimation implements ActionListener, Animation, SlideAnimation {
 		this.ct = new Cinta();
 		this.ct.setLayout(null);
 		
-		this.imgPiece = new ImageIcon("imgs/estaticas/cm.jpg");
+		this.imgPiece = new ImageIcon("imgs/estaticas/cm.png");
 		this.piece0 = new JLabel(imgPiece);
 		this.piece0.setBounds(197, 12, this.PIECE_SIZE, this.PIECE_SIZE);
 		this.piece0.setVisible(false);
@@ -98,9 +98,10 @@ public class CtAnimation implements ActionListener, Animation, SlideAnimation {
 	
 	/**
 	 * Inicializa el temporizador con la velocidad definida 
-	 * al crear el objeto y carga las im‡genes en memoria.
-	 * Solo debe ser llamado una vez, de no ser as’ hay riesgo de saturaci—n de la memoria
+	 * al crear el objeto y carga las imagenes en memoria.
+	 * Solo debe ser llamado una vez, de no ser asi hay riesgo de saturacion de la memoria
 	 */
+	@Override
 	public void init(){
 		this.timer = new Timer(this.speed, this);
         this.timer.setInitialDelay(this.pause);
@@ -110,6 +111,13 @@ public class CtAnimation implements ActionListener, Animation, SlideAnimation {
         this.slideWorker.execute();
 	}
 	
+	/**
+	 * Inicializa el temporizador calculando la velocidad el tiempos recibido por parametro.
+	 * Si el temporizador no ha sido inicializo se inicializa.
+	 * Este metodo no realiza carga de imagenes por lo que las imagenes
+	 * deben haber sido cargadas antes por medio del metodo init()
+	 * @param time - tiempo total del recorrido
+	 */
 	public void init(double time){
 		this.speed = ImgLoader.calculateSpeed(time, CtAnimation.FRAMES_CT);
 		this.pause = CtAnimation.PAUSE_TIME;
@@ -122,6 +130,7 @@ public class CtAnimation implements ActionListener, Animation, SlideAnimation {
 		this.timer.setInitialDelay(this.pause);
 	}
 	
+	@Override
 	public void createGUI(JPanel parentPanel, int with, int height){
 		parentPanel.setLayout(null); //set layaout to absolute coordenates
 
@@ -130,7 +139,7 @@ public class CtAnimation implements ActionListener, Animation, SlideAnimation {
 		ct.setBounds(0, 0, with, height);
 		parentPanel.add(ct);	
 		
-		//ct.addMouseListener(new ALCT(this));
+		ct.addMouseListener(new ALCT(this));
 		this.ct.add(statusLabel);
 		this.ct.add(piece0);
         this.ct.add(piece1);
@@ -139,8 +148,10 @@ public class CtAnimation implements ActionListener, Animation, SlideAnimation {
         this.ct.add(pieceFin); 
 	}
 	
-	
-	//Background task for loading images
+	/**
+	 * Tarea en background para la carga de imagenes utilizando
+	 * una clase SwingWorker anonima
+	 */
 	SwingWorker slideWorker = new SwingWorker<ImageIcon[], Void>(){
 		@Override
 		protected ImageIcon[] doInBackground() throws Exception {
@@ -173,6 +184,10 @@ public class CtAnimation implements ActionListener, Animation, SlideAnimation {
 		}
 	};
 	
+	/**
+	 * Clase que extiende de JPanel para representar la cinta de transporte
+	 * @author infiniware
+	 */
 	@SuppressWarnings("serial")
 	public class Cinta extends JPanel{	
 	
@@ -194,12 +209,15 @@ public class CtAnimation implements ActionListener, Animation, SlideAnimation {
 	}
 
 	/**
-	 * Handle timer event. Update the looslost (frame number)
-	 * If it's the last frame, stops until a new action is recieved
+	 * Maneja los eventos de tiempo y actualiza la variable looslots
+	 * que se encarga de actualizar los frames.
+	 * Si se encuentra en el ultimo frame de la animacion espera 
+	 * hasta que se reciva una nueva accion
 	 * 
-	 * Handles also the stop and the emergency stop.
-	 * If the emergencyStop is used, stop in the actual frame
-	 * and continues from that poin the the start event arrives
+	 * Maneja los eventos de parada y parada de emergencia.
+	 * Si se realiza una parada de emergencia se para en el frame
+	 * que se encuentre y continua desde ese punto cuando se 
+	 * vuelva a activar
 	 */
 	public void actionPerformed(ActionEvent e) {
 		if (!slideWorker.isDone()) 
