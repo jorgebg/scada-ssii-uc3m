@@ -241,14 +241,6 @@ public class CokAnimation implements ActionListener, Animation, SlideAnimation {
 			cok.repaint();
 		}
 	}
-	
-	private void start() {
-		if (slideWorker.isDone() && CokAnimation.FRAMES_COK > 1){
-			timer.restart();
-			this.stop = false;
-			this.emergencyStop = false;
-		}
-	}
 
 	@Override
 	public void emergencyStop() {
@@ -330,7 +322,15 @@ public class CokAnimation implements ActionListener, Animation, SlideAnimation {
 		if(state == CokAnimation.STOP)
 			this.stop();
 		else
-			this.start();
+			if (slideWorker.isDone() && CokAnimation.FRAMES_COK > 1){
+				timer.restart();
+				this.stop = false;
+				this.emergencyStop = false;
+			}
+	}
+	
+	public void start() {
+		this.start(this.state);
 	}
 
 	@Override
@@ -340,7 +340,7 @@ public class CokAnimation implements ActionListener, Animation, SlideAnimation {
 	
 	@Override
 	public void updateElements(boolean[] elements) {
-		if(elements.length > 6){
+		if(elements.length >= 6){
 			this.piece0.setVisible(elements[0]);
 			this.piece1.setVisible(elements[1]);
 			this.pieceFin.setVisible(elements[elements.length-1]);

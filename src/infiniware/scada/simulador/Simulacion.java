@@ -1,8 +1,12 @@
 package infiniware.scada.simulador;
 
+import infiniware.automatas.subautomatas.SubAutomata;
+import infiniware.scada.Scada;
+
 public abstract class Simulacion implements Runnable {
 
     protected int acciones = 1;
+    public SubAutomata subautomata;
 
     public void run() {
         for (int accion = 0; accion < acciones; accion++) {
@@ -23,25 +27,44 @@ public abstract class Simulacion implements Runnable {
     }
 
     public void preaccion(int accion) {
-        
     }
 
-    public void postaccion(int accion){
-        
+    public void postaccion(int accion) {
     }
 
     protected void actuar(int accion) {
         long tiempoSimulado = tiempo(accion);
-        System.out.println("Simulacion ["+this.getClass().getSimpleName()+"] durmiendo: "+tiempoSimulado+"ms");
-        dormir(tiempoSimulado);
-        System.out.println("Simulacion ["+this.getClass().getSimpleName()+"] despertando");
+        if (tiempoSimulado > 0) {
+            System.out.println(subautomata.nombre + ": simulacion [" + this.getClass().getSimpleName() + "] durmiendo: " + tiempoSimulado + "ms");
+            dormir(tiempoSimulado);
+            System.out.println(subautomata.nombre + ": simulacion [" + this.getClass().getSimpleName() + "] despertando");
+        }
     }
 
     protected void dormir(long tiempo) {
-        try {
-            Thread.sleep(tiempo);
-        } catch (InterruptedException ex) {
-            System.err.println("Error al dormir la simulacion: " + ex.getMessage());
+        int tiempoPorIteracion = Scada.CICLO;
+        long inicial, diferencia, tiempoTotal = 0;
+        while (tiempoTotal < tiempo) {
+
+            inicial = System.currentTimeMillis();
+            try {
+                Thread.sleep(tiempoPorIteracion);
+            } catch (InterruptedException ex) {
+                System.err.println("Error al dormir la simulacion: " + ex.getMessage());
+            }
+            if (!subautomata.emergencia) {
+                diferencia = System.currentTimeMillis() - inicial;
+                tiempoTotal += diferencia;
+            } else {
+                //inicial = System.currentTimeMillis();
+                //System.out.println(this.subautomata.nombre + ".emergencia = " + subautomata.emergencia);
+            }
+
+            //System.out.println(this.subautomata.nombre + "[" + this.getClass().getSimpleName() + "] " + tiempoTotal + "/" + tiempo);
         }
+    }
+
+    public String obtenerNombre() {
+        return this.getClass().getSimpleName();
     }
 }

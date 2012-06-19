@@ -5,8 +5,12 @@
 package infiniware.automatas.subautomatas;
 
 import infiniware.automatas.Automata;
+import infiniware.automatas.esclavos.Esclavo;
+import infiniware.automatas.esclavos.IMaestro;
+import infiniware.automatas.sensores.Sensores;
 import infiniware.scada.modelos.Parametros;
 import infiniware.scada.simulador.Simulacion;
+import java.rmi.RemoteException;
 
 /**
  *
@@ -14,7 +18,6 @@ import infiniware.scada.simulador.Simulacion;
  */
 public class Cinta extends SubAutomata {
 
-     
     final String salida;
     final String entrada;
 
@@ -28,22 +31,76 @@ public class Cinta extends SubAutomata {
         @Override
         public void postaccion(int accion) {
             automata.actualizar(salida, true);
-            if(entrada!=null)
+            if (entrada != null) {
                 automata.actualizar(entrada, false);
+            }
+            automata.log(Cinta.this.nombre + " ha transportado de " + entrada + " a " + salida);
+
+            //simulacion cinta
+            simularCinta(simularContenido());
         }
     };
+
+    class Reposo extends Simulacion {
+
+        @Override
+        public void postaccion(int accion) {
+            simularCinta(simularContenido());
+        }
+    }
+
+    protected void simularCinta(boolean[] contenido) {
+
+        try {
+            if (automata instanceof Esclavo) {
+                ((Esclavo) automata).maestro.simularCinta(nombre, contenido);
+            } else {
+                ((IMaestro) automata).simularCinta(nombre, contenido);
+            }
+        } catch (RemoteException ex) {
+            System.err.println("Error al comunicar la simulacion de la cinta " + nombre);
+        }
+    }
 
     public Cinta(String salida, String entrada) {
         super();
         this.salida = salida;
         this.entrada = entrada;
         //parametros = new Parametros("velocidad", "longitud");
-        configurar(new Parametros() {{
-          put("velocidad", 5000);
-          put("longitud", 10);  
-        }});
+        configurar(new Parametros() {
+
+            {
+                put("velocidad", 5000);
+                put("longitud", 10);
+            }
+        });
     }
+
     public Cinta(String salida) {
         this(salida, null);
+    }
+
+    private boolean[] simularContenido() {
+
+        boolean[] contenido = new boolean[entrada != null ? 2 : 1];
+        int posicion = 0;
+        if (entrada != null) {
+            contenido[posicion++] = automata.sensores.get(entrada);
+        }
+        contenido[posicion++] = automata.sensores.get(salida);
+        return contenido;
+    }
+    
+    
+    public void ponerConjuntoMontado() {
+        //System.out.println("SIMULANDOOOOOOOOOOOOO");
+        boolean[] contenido = new boolean[entrada != null ? 2 : 1];
+        int posicion = 0;
+        if (entrada != null) {
+            contenido[posicion++] = true;
+        }
+        contenido[posicion++] = automata.sensores.get(salida);
+    
+        simularCinta(simularContenido());
     }
 }

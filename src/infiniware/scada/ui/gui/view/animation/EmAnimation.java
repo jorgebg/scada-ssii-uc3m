@@ -51,7 +51,7 @@ public class EmAnimation implements Animation {
 		statusLabel.setBounds(0, 0, with, height);
 		parentPanel.add(statusLabel);
 		
-		//this.statusLabel.addMouseListener(new ALEM(this));
+		this.statusLabel.addMouseListener(new ALEM(this));
 	}
 
 	@Override
@@ -65,6 +65,10 @@ public class EmAnimation implements Animation {
 			statusLabel.setIcon(eFree);
 		
 		this.statusLabel.repaint();
+	}
+	
+	public void start(){
+		this.start(this.state);
 	}
 
 	@Override

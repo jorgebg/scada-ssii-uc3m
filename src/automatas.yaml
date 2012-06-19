@@ -45,9 +45,9 @@ Esclavo2:
 Esclavo3:
   COK:
     Reposo:
-      - Movimiento => !N*R2
+      - Movimiento => !N
     Movimiento:
-      - Reposo => N+!R2
+      - Reposo => N
   EV:
     Reposo:
       - Ocupada => J*!K

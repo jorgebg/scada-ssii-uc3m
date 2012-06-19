@@ -872,6 +872,8 @@ public class SCADAUserInterface extends JFrame {
 		this.mapaInformes = new HashMap<String, Integer>();
 		this.cargarInformes("");
 		
+		//pasa la configuraci�n al scada
+		Scada.ui.configurar(Gui.deMapaAConjunto(this.mapaParametros));
 		
 		//AnimationController
 		ac = new AnimationController(this.mapaParametros);
@@ -889,18 +891,19 @@ public class SCADAUserInterface extends JFrame {
 		ac.getEm().createGUI(panel_EM, panel_EM.getWidth(), panel_EM.getHeight());
 		ac.getEs().createGUI(panel_ES, panel_ES.getWidth(), panel_ES.getHeight());
 		
-		if(Desktop.isDesktopSupported()){
-		}
 		
 		//Mouse Listeners 
 		//Start
 		btnStart.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				//ac.startAll();
 				updateParameterMap(); 							//Load the changes in the parameters
 				ac.init(mapaParametros); 						//update the values of the GUI Components
 				editableParameters(false);						//lock the edition of parameters
 				
+				//pasa la configuraci�n al scada
+				Scada.ui.configurar(Gui.deMapaAConjunto(mapaParametros));
 				//Starts the system
 				Scada.ui.arrancar();
 			}
@@ -1004,7 +1007,7 @@ public class SCADAUserInterface extends JFrame {
 	
 	public void conigurarAutomatas(){
 		ConjuntoParametros cp = Gui.deMapaAConjunto(this.mapaParametros);
-		
+		//TODO
 	}
 	
     /**
@@ -1041,7 +1044,6 @@ public class SCADAUserInterface extends JFrame {
 				Configuracion configuracion = new Configuracion();
 				ConjuntoParametros parametros = new ConjuntoParametros();
 				configuracion.cargar(nombre, parametros);
-				System.out.println(parametros.toString());
 				Map<String, Double> mapa = Gui.deConjuntoAMapa(parametros);
 				setMapaParametros(mapa);
 			}catch(Exception e){

@@ -6,11 +6,14 @@ import infiniware.automatas.GestorSubAutomatas;
 import infiniware.automatas.maestro.Maestro;
 import infiniware.automatas.sensores.Sensores;
 import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class Esclavo extends Automata implements IEsclavo {
 
-    
-    protected IMaestro maestro;
+    public IMaestro maestro;
+    public String[] entradas;
+    public String salida;
 
     public void desconectar() {
         maestro = null;
@@ -21,26 +24,26 @@ public abstract class Esclavo extends Automata implements IEsclavo {
         this.maestro = this.<IMaestro>conectar(Maestro.INSTANCIA);
     }
 
-    public void actualizar(Sensores sensores) {
-        super.actualizar(sensores);
-        notificar();
-    }
-
     public void enlazar() {
         super.<IEsclavo>enlazar();
     }
 
     public void actualizar(String sensor, boolean estado) {
         super.actualizar(sensor, estado);
-        notificar();
+        notificar(sensor, estado);
     }
 
-    private void notificar() {
+    private void notificar(String sensor, boolean estado) {
         boolean exito = true;
         do {
             try {
-                System.out.println("Notificando:\n" + sensores);
-                maestro.notificar(getId(), (char) sensores.codificar());
+                System.out.println("Notificando: " + sensor + "=" + (estado?"1":"0"));
+                char codificacion;
+                synchronized (sensores) {
+                    codificacion = (char) sensores.codificar(sensor, estado);
+                }
+                maestro.notificar(getId(), codificacion);
+
                 exito = true;
             } catch (RemoteException ex) {
                 exito = false;
@@ -51,10 +54,30 @@ public abstract class Esclavo extends Automata implements IEsclavo {
     }
 
     public void fallar() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        emergencia();
     }
 
-    public void recuperar() {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+    @Override
+    public void log(String msg) {
+        System.out.println(msg);
+        try {
+            maestro.log(msg);
+        } catch (RemoteException ex) {
+            System.err.println("Error al comunicar log al maestro");
+        }
     }
+
+
+    public boolean tieneEntrada() {
+        return entradas != null;
+    }
+
+    public boolean tieneSalida() {
+        return salida != null;
+    }
+
+    @Override
+    public abstract byte getId();
+
 }

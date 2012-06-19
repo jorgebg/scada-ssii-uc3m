@@ -30,9 +30,9 @@ public class CnokAnimation implements ActionListener, Animation {
 	private static final int CNOK_MAX = 20632;				//Max size of the images
 	private final int GravitySpeed = 200;			
 	
-	public static final int EMTPY=0;
-	public static final int FULL=1;
-	public static final int MOVE=2;
+	public static final int EMTPY=2;
+	public static final int FULL=0;
+	public static final int MOVE=1;
 	
 	private ImageIcon imgsCNOK[]; 					//the images of the movement from CNOK to NOKContainer
 	private ImageIcon emptyConteiner;
@@ -206,15 +206,6 @@ public class CnokAnimation implements ActionListener, Animation {
 			cnok.repaint();
 		}
 	}
-	
-	private void start() {
-		if (slideWorker.isDone() && CnokAnimation.FRAMES_CNOK > 1){
-			this.loopslot = 0;
-			timer.restart();
-			this.stop = false;
-			this.emergencyStop = false;
-		}
-	}
 
 	@Override
 	public void emergencyStop() {
@@ -281,12 +272,21 @@ public class CnokAnimation implements ActionListener, Animation {
 			this.state=state;
 
 		if(state == CnokAnimation.MOVE)
-			this.start();
+			if (slideWorker.isDone() && CnokAnimation.FRAMES_CNOK > 1){
+				this.loopslot = 0;
+				timer.restart();
+				this.stop = false;
+				this.emergencyStop = false;
+			}
 		else
-			cnok.repaint();
+		 cnok.repaint();
 
 	}
 
+	public void start(){
+		this.start(this.state);
+	}
+	
 	@Override
 	public int getState() {
 		return this.state;

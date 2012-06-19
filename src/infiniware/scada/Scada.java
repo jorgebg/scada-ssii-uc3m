@@ -1,8 +1,10 @@
 package infiniware.scada;
 
 import infiniware.Resultado;
+import infiniware.automatas.Automata;
 import infiniware.automatas.maestro.GestorSensores;
 import infiniware.automatas.maestro.Maestro;
+import infiniware.automatas.subautomatas.SubAutomata;
 import infiniware.procesos.IProcesable;
 import infiniware.remoto.Ethernet;
 import infiniware.remoto.Registrador;
@@ -12,30 +14,33 @@ import infiniware.scada.simulador.Simulador;
 import infiniware.scada.ui.Ui;
 import infiniware.scada.ui.gui.Gui;
 import infiniware.scada.ui.cli.Cli;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Scada implements Ethernet, IProcesable, IScada, infiniware.automatas.maestro.IScada {
 
-    private static final int CICLO = 200;
+    public static final int CICLO = 200;
     Simulador simulador;
     GestorAlmacenamiento almacenamiento;
     public IMaestro maestro;
     long timestamp;
-    boolean emergencia = false;
-    public final Acciones acciones = new Acciones();
+   // public final Acciones acciones = new Acciones();
     public final GestorSensores mapaSensores = new GestorSensores();
     public static final Scada INSTANCIA = new Scada();
     //public static Ui ui = Cli.INSTANCIA;
     public static Ui ui = Gui.INSTANCIA;
-    
     /**
-     * Estados de los automata: id {0..3} => estado {0..9}
-     * Para obtener el nombre de los estados:
-     * 
-     *  for (int id = 0; id < estados.length; id++) {
-     *      char estado = estados[id];
-     *      Automata.INSTANCIAS.get(id).subautomatas.decodificarEstado(estados[id]);
-     *  }
-     * 
+     * Estados de los automata: id {0..3} => estado {0..9} Para obtener el
+     * nombre de los estados:
+     *
+     * for (int id = 0; id < estados.length; id++) { char estado = estados[id];
+     * Automata.INSTANCIAS.get(id).subautomatas.decodificarEstado(estados[id]);
+     * }
+     *
      */
     char[] estados;
 
@@ -54,18 +59,11 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
     }
 
     private void ciclo() {
-        if (emergencia) {
-            maestro.emergencia();
-            this.emergencia = false;
-        } else {
-            for (Runnable accion : acciones) {
-                accion.run();
-            }
-            simulador.ciclo();
-            estados = maestro.ciclo(mapaSensores.codificar());
-            ui.actualizar(estados);
-            sincronizar();
-        }
+        simulador.ciclo();
+        estados = maestro.ciclo();
+        ui.actualizar(estados);
+        sincronizar();
+        
     }
 
     /**
@@ -82,10 +80,8 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
      */
     @Override
     public void arrancar() {
-        timestamp = System.currentTimeMillis();
-        while (true) {
-            ciclo();
-        }
+        maestro.arrancar();
+        Informes.INSTANCIA.getFuncionamiento().addArranques();
     }
 
     /**
@@ -95,7 +91,7 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
     public void configurar(ConjuntoParametros parametros) {
         maestro.configurarAutomatas(parametros);
     }
-    
+
     /**
      * @UC 004
      */
@@ -120,20 +116,18 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
         return Informes.generar(this);
     }
 
-
-
-
     /**
      * @UC 008
      */
     @Override
     public void parada() {
-        acciones.add(
-                new Runnable() {
-                    public void run() {
-                        maestro.parada();
-                    }
+        maestro.parada();
+        Informes.INSTANCIA.getFuncionamiento().addNormales();
+        /*
+         * acciones.add( new Runnable() { public void run() { maestro.parada();
+         * }
                 });
+         */
     }
 
     /**
@@ -141,31 +135,61 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
      */
     @Override
     public void emergencia() {
-        this.emergencia = true;
+        maestro.emergencia();
+           Informes.INSTANCIA.getFuncionamiento().addEmergencia();
     }
 
-    /* IProceso {{{ */
+    /*
+     * IProceso {{{
+     */
     public Thread iniciarProceso() {
+        ui.mostrar();
         simulador = Simulador.INSTANCIA;
         maestro = Maestro.INSTANCIA;
-        ui.mostrar();
+        /*
+         * for (Automata automata : Automata.INSTANCIAS.values()) {
+         * automata.imprimirTablaSensores(); }
+        System.out.println();
+         */
+        new Thread(new Runnable() {
+
+            public void run() {
+                timestamp = System.currentTimeMillis();
+                while (true) {
+                    ciclo();
+                }
+            }
+        }).start();
         return Registrador.thread;
     }
-    
+
     @Override
     public void detenerProceso() {
         simulador = null;
         maestro = null;
         ui.ocultar();
     }
-    /* }}} */
+    /*
+     * }}}
+     */
 
     public void notificar(byte automata, char sensores) {
         this.mapaSensores.actualizar(automata, sensores);
     }
+    static BufferedWriter logfile;
 
-    
     public static void log(String msg) {
         ui.log(msg);
+        System.out.println(msg);
+        try {
+            if (logfile == null) {
+                FileWriter fstream = new FileWriter("log/" + new java.util.Date().getTime() + ".log");
+                logfile = new BufferedWriter(fstream);
+            }
+            logfile.write(msg + "\n");
+            logfile.flush();
+        } catch (IOException ex) {
+            System.err.println("Error al guardar el log");
+        }
     }
 }
