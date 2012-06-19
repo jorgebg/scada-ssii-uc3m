@@ -281,6 +281,70 @@ R2
     	return conjunto;
     }
     
+    /**
+     * Metodo que convierte un mapa de la interfaz a un ConjuntoParametros
+     * 
+     * @param mapa
+     * @return ConjuntoParametros
+     */
+    public static Map<String, Double> deConjuntoAMapa(ConjuntoParametros conjunto){
+    	Map<String, Double> mapa = new HashMap<String, Double>();
+    	
+    	//Esclavo 1
+    		//Cinta Engranajes
+    	HashMap<String, Guardable> es1map = conjunto.get(1);
+    	Parametros CENparametros = (Parametros) es1map.get("CEN");
+    	mapa.put("CEN_v", (double)CENparametros.get("velocidad") );
+    	mapa.put("CEN_l", (double)CENparametros.get("longitud") );
+    	mapa.put("CEN_c", (double)CENparametros.get("capacidad") );
+    		//Cinta Ejes
+    	Parametros CEJparametros = (Parametros) es1map.get("CEN");
+    	mapa.put("CEJ_v", (double)CEJparametros.get("velocidad") );
+    	mapa.put("CEJ_l", (double)CEJparametros.get("longitud") );
+    	mapa.put("CEJ_c", (double)CEJparametros.get("capacidad") );
+    		//Robot 1
+    	Parametros R1parametros = (Parametros) es1map.get("R1");
+    	mapa.put("R1_tREn", (double)R1parametros.get("TRecogidaEnej") );
+    	mapa.put("R1_tTEn", (double)R1parametros.get("TTransporteEnej") );
+    	mapa.put("R1_tTCM", (double)R1parametros.get("TTransporteCm1") );
+    		//Estacion de montaje
+     	Parametros EMparametros = (Parametros) es1map.get("EM");
+    	mapa.put("EM_t", (double)EMparametros.get("TiempoEm") );
+
+    	//Esclavo 2
+    		//Estacion de soldadura
+    	HashMap<String, Guardable> es2map = conjunto.get(2);
+     	Parametros ESparametros = (Parametros) es2map.get("ES");
+    	mapa.put("ES_t", (double)ESparametros.get("TiempoEs") );
+    	
+    	//Esclavo 3
+    		//Estacion de evaluacion
+    	HashMap<String, Guardable> es3map = conjunto.get(3);
+     	Parametros EVparametros = (Parametros) es3map.get("EV");
+    	mapa.put("EV_t", (double)EVparametros.get("TiempoEv") );
+    		//Cinta OK
+    	Parametros COKparametros = (Parametros) es3map.get("COK");
+    	mapa.put("COK_v", (double)COKparametros.get("velocidad") );
+    	mapa.put("COK_l", (double)COKparametros.get("longitud") );
+    		//Cinta no OK
+    	Parametros CNOKparametros = (Parametros) es3map.get("CNOK");
+    	mapa.put("CNOK_v", (double)CNOKparametros.get("velocidad") );
+    	mapa.put("CNOK_l", (double)CNOKparametros.get("longitud") );
+    	
+    	//Master
+    		//Cinta transporte
+    	HashMap<String, Guardable> masmap = conjunto.get(0);
+    	Parametros CTparametros = (Parametros) masmap.get("CT");
+    	mapa.put("CT_v", (double)CTparametros.get("velocidad") );
+    	mapa.put("CT_l", (double)CTparametros.get("longitud") );
+    		//Robot 2
+    	Parametros R2parametros = (Parametros) masmap.get("R2");
+    	mapa.put("R2_tRCM", (double)R2parametros.get("TRecogidaCm") );
+    	mapa.put("R2_tTCM", (double)R2parametros.get("TTransporteCm2") );
+    	mapa.put("R2_tTCS", (double)R2parametros.get("TTransporteCs") );
+    	
+    	return mapa;
+    }
     
     @Override
     public void log(String msg) {

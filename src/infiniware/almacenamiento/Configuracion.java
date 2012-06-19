@@ -97,9 +97,11 @@ public class Configuracion extends Componente {
 		    	String nombr = st1.nextToken().trim();
 		    	String valor = st1.nextToken().substring(1);
 				param.put(nombr, Integer.valueOf(valor));
-				if(keychanged) map = new HashMap<String, Guardable>();
+				if(keychanged){
+					map = new HashMap<String, Guardable>();	
+				}
     			map.put(mapKey, param);
-    			if(!keychanged) parametros.put(intKey, map);
+    			parametros.put(intKey, map);
     			key = br.readLine();
     		}
         }catch (IOException e){

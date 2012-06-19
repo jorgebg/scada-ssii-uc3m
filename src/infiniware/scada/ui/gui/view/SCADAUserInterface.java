@@ -870,7 +870,7 @@ public class SCADAUserInterface extends JFrame {
 		this.updateParameterMap();
 		this.mapaInformes = new HashMap<String, Integer>();
 		
-		cargarInformes();
+		cargarInformes("");
 		
 		//AnimationController
 		ac = new AnimationController(this.mapaParametros);
@@ -969,9 +969,10 @@ public class SCADAUserInterface extends JFrame {
 		//Guardar
 		mntmGuardarParametros.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				updateReportMap();
 				String inputValue = JOptionPane.showInputDialog("Por favor, inserte el nombre del archivo");
 				guardarInformes(inputValue);
+				updateReportMap();
+				updateParameterMap();
 				logConsole.append("GUI: Guardando informes y parametros\n");
 			}
 		});
@@ -979,10 +980,13 @@ public class SCADAUserInterface extends JFrame {
 		//Cargar
 		mntmCargarParametros.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				cargarInformes();
-				logConsole.append("GUI: Cargando informes");
-				
 				String inputValue = JOptionPane.showInputDialog("Por favor, inserte el nombre del archivo si desea cargar los parametros");
+				cargarInformes(inputValue);
+				updateReportMap();
+				updateParameterMap();
+				logConsole.append("GUI: Cargando informes y parametros\n");
+				
+				
 			}
 		});
 		
@@ -1000,7 +1004,13 @@ public class SCADAUserInterface extends JFrame {
 		
 	}
 	
-	public void cargarInformes(){
+    /**
+     * Metodo que carga los informes y parametros de un fichero de nombre "nombre"
+     * 
+     * @param nombre
+     */
+	public void cargarInformes(String nombre){
+		//Informes
 		try{
 			Informes informes = new Informes();
 			Produccion produccion = new Produccion();
@@ -1019,9 +1029,22 @@ public class SCADAUserInterface extends JFrame {
 			Informes  informes = new Informes(new Fabricacion(), new Funcionamiento());
 			Produccion produccion = new Produccion();
 			produccion.guardar(informes);
-			cargarInformes();
+			cargarInformes("");
 		}
 		
+		//Parametros
+		if(!nombre.equals("")){
+			try{
+				Configuracion configuracion = new Configuracion();
+				ConjuntoParametros parametros = new ConjuntoParametros();
+				configuracion.cargar(nombre, parametros);
+				Map<String, Double> mapa = Gui.deConjuntoAMapa(parametros);
+				setMapaParametros(mapa);
+
+			}catch(Exception e){
+				logConsole.append("GUI: Error al cargar parametros, introduzca el nombre de un fichero existente\n");
+			}
+		}
 	}
 	
 	/**
@@ -1044,6 +1067,11 @@ public class SCADAUserInterface extends JFrame {
         }
     }//GEN-LAST:event_onLaunchBrowser
 
+    /**
+     * Metodo que guarda los informes y parametros en un fichero de nombre "nombre"
+     * 
+     * @param nombre
+     */
 	public void guardarInformes(String nombre) {
 		//Informes
 		Informes informes = new Informes();
@@ -1131,7 +1159,7 @@ public class SCADAUserInterface extends JFrame {
 		this.txtVelocidadCt.setText(map.get("CT_v").toString());
 
 		this.txtLongitudCok.setText(map.get("COK_l").toString());
-		this.txtVelocidadCok.setText(map.get("COk_v").toString());
+		this.txtVelocidadCok.setText(map.get("COK_v").toString());
 
 		this.txtLongitudCnok.setText(map.get("CNOK_l").toString());
 		this.txtVelocidadCnok.setText(map.get("CNOK_v").toString());
@@ -1149,7 +1177,7 @@ public class SCADAUserInterface extends JFrame {
 		//Robot2
 		this.txtTRecogidaCm.setText(map.get("R2_tRCM").toString());
 		this.txtTTransporteCm2.setText(map.get("R2_tTCM").toString());
-		this.txtTTransporteCs.setText(map.get("CR2_tTCSEN_l").toString());
+		this.txtTTransporteCs.setText(map.get("R2_tTCS").toString());
 	}
 	
 	private void updateParameterMap(){
