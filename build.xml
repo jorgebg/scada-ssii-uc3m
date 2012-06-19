@@ -75,7 +75,7 @@
 
     <target description="Lanzar proceso base (SCADA y Maestro)" name="base">
         <record name="log/base.log" append="false" emacsmode="true" loglevel="verbose"/>
-        <java classname="infiniware.Sistema" classpath="./build/classes:./lib/commons-lang3-3.1.jar:./lib/snakeyaml-1.10.jar:./lib/commons-collections-3.2.1.jar">
+        <java classname="infiniware.Sistema" classpath="./build/classes:./lib/commons-lang3-3.1.jar:./lib/snakeyaml-1.10.jar:./lib/commons-collections-3.2.1.jar" fork="true">
             <jvmarg value="-Dfile.encoding=UTF-8"/>
             <jvmarg value="-Djava.security.policy=java.security.AllPermission"/>
             <arg value="base"/>
