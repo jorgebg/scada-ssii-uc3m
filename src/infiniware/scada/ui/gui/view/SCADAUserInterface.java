@@ -903,7 +903,7 @@ public class SCADAUserInterface extends JFrame {
 				editableParameters(false);						//lock the edition of parameters
 				
 				//pasa la configuraci—n al scada
-				Scada.ui.configurar(Gui.deMapaAConjunto(this.mapaParametros));
+				Scada.ui.configurar(Gui.deMapaAConjunto(mapaParametros));
 				//Starts the system
 				Scada.ui.arrancar();
 			}
