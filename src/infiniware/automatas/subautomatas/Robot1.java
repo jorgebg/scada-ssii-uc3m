@@ -24,9 +24,11 @@ public class Robot1 extends Robot {
             switch (accion) {
                 case RECOGER:
                     automata.actualizar("A", false);
+                    automata.log("Se ha recogido un engranaje de CEN");
                     break;
                 case TRANSPORTAR:
                     automata.actualizar("D", true);
+                    automata.log("Se ha puesto un engranaje en EM");
                     break;
             }
             super.postaccion(accion);
@@ -40,9 +42,11 @@ public class Robot1 extends Robot {
             switch (accion) {
                 case RECOGER:
                     automata.actualizar("B", false);
+                    automata.log("Se ha recogido un eje de CEJ");
                     break;
                 case TRANSPORTAR:
                     automata.actualizar("C", true);
+                    automata.log("Se ha puesto un eje en EM");
                     break;
             }
             super.postaccion(accion);
@@ -73,9 +77,11 @@ public class Robot1 extends Robot {
             switch (accion) {
                 case RECOGER:
                     automata.actualizar("E", false);
+                    automata.log("Se ha recogido un conjunto montado de EM");
                     break;
                 case TRANSPORTAR:
                     automata.actualizar("F", true);
+                    automata.log("Se ha puesto un conjunto montado en CT");
                     break;
             }
             super.postaccion(accion);

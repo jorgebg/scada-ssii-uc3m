@@ -6,17 +6,21 @@ import infiniware.automatas.esclavos.Esclavo3;
 import infiniware.automatas.maestro.Maestro;
 import infiniware.automatas.sensores.Sensores;
 import infiniware.automatas.subautomatas.CintaCapacidad;
+import infiniware.automatas.subautomatas.CintaEntrada;
 import infiniware.automatas.subautomatas.SubAutomata;
 import infiniware.procesos.IProcesable;
 import infiniware.remoto.IConexion;
 import infiniware.remoto.IRegistrable;
 import infiniware.remoto.Profibus;
 import infiniware.remoto.Registrador;
+import infiniware.scada.Scada;
 import infiniware.scada.modelos.Parametros;
 import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
+import sun.swing.StringUIClientPropertyKey;
 
 public abstract class Automata implements Profibus, IProcesable, IConexion, IRegistrable {
 
@@ -32,11 +36,37 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
             put("Esclavo3", Esclavo3.INSTANCIA);
         }
     };
+    private int ciclo;
 
-    public enum Simulaciones { /*Fallar, Recuperar,*/ LimpiarCPD };    
+    public static final char EJECUTAR = Character.MAX_VALUE;
+    public static final char PARAR = EJECUTAR-1; 
+    public static final char REANUDAR = EJECUTAR-2;
+    protected Boolean emergencia = false;
+    
+    public abstract void log(String msg);
+
+    public void imprimirTablaSensores() {
+        Sensores clone = sensores.clone();
+        String cabecera = "     ";
+        for (String sensor : sensores.keySet()) {
+            cabecera += StringUtils.rightPad(sensor, 3);
+        }
+        String filas = "";
+        for (int i = 0; i < Math.pow(sensores.elementos.size(), 2); i++) {
+            clone.actualizar(i);
+            filas += StringUtils.rightPad(""+i, 5);
+            for (boolean sensor : clone.values())
+                filas += StringUtils.rightPad(sensor ? "1" :  "0", 3);
+            filas += "\n";
+        }
+        String resultado = cabecera + "\n" + filas;
+        System.out.println(resultado);
+    }
+
+    /*public enum Simulaciones { Fallar, Recuperar, LimpiarCPD };    
     public void simular(Simulaciones simulacion) {
         //Nada por defecto
-    }
+    }*/
 
     public Automata() {
         sensores = new Sensores();
@@ -47,22 +77,26 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
     }
 
     public char ejecutar(char sensores) {
-        this.sensores.actualizar(sensores);
-        return ejecutar();
+        
+        if(!emergencia)
+        switch (sensores) {
+            case REANUDAR:
+                recuperar();
+                break;
+            case EJECUTAR:
+                if(!emergencia)
+                ejecutar();
+                break;
+            default:
+                Map.Entry<String, Boolean> decodificado = this.sensores.decodificarYActualizar(sensores);
+                System.out.println("Decodificando: " + decodificado);
+        }
+        return subautomatas.codificarEstados();
     }
     
-    public char ejecutar(char sensores, char mascara) {
-        this.sensores.actualizar(sensores, mascara);
-        System.out.println("Ejecutando:\n" + this.sensores);
-        return ejecutar();
-    }
-
-    public char ejecutar(Sensores sensores) {
-        this.sensores.actualizar(sensores);
-        return ejecutar();
-    }
 
     public char ejecutar() {
+        System.out.println("#"+ ciclo +" Ejecutando:\n" + sensores);
         for (SubAutomata subautomata : subautomatas.values()) {
             subautomata.ejecutar();
             // DEBUG {{{
@@ -70,6 +104,7 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
                 System.out.println(subautomata);
             // }}}
         }
+        ciclo++;
         return subautomatas.codificarEstados();
     }
 
@@ -99,9 +134,6 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
         System.out.println("Automata \"" + getRemoteName() + "\" registrado en " + getHost() + ":" + getPort());
     }
 
-    public void actualizar(Sensores sensores) {
-        this.sensores.actualizar(sensores);
-    }
 
     public abstract byte getId();
 
@@ -170,5 +202,25 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
             this.subautomatas.get(parametros.getKey()).configurar(parametros.getValue());
         }
     }
-    
+
+    public void actualizar(String[] sensores, boolean estado) {
+        for (String e : sensores) {
+            actualizar(e,estado);
+        }
+    }
+
+    public void emergencia() {
+        System.out.println("Emergencia");
+        emergencia = true;
+        for(SubAutomata subautomata : subautomatas.values()) {
+            subautomata.emergencia = true;
+        }
+    }
+    public void recuperar() {
+        System.out.println("Reanudando");
+        for(SubAutomata subautomata : subautomatas.values()) {
+            subautomata.emergencia = false;
+        }
+        emergencia = false;
+    }
 }

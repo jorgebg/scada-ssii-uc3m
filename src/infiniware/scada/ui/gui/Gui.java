@@ -5,17 +5,21 @@
 package infiniware.scada.ui.gui;
 
 import infiniware.automatas.Automata;
+
+import infiniware.automatas.subautomatas.CintaCapacidad;
+
 import infiniware.scada.modelos.ConjuntoParametros;
 import infiniware.scada.modelos.Guardable;
 import infiniware.scada.modelos.Parametros;
 import infiniware.scada.ui.Ui;
 import infiniware.scada.ui.gui.view.SCADAUserInterface;
 import infiniware.scada.ui.gui.view.animation.Animation;
+import infiniware.scada.ui.gui.view.animation.CnokAnimation;
+import infiniware.scada.ui.gui.view.animation.SlideAnimation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JTextArea;
-import javax.swing.text.ParagraphView;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,14 +33,22 @@ public class Gui extends Ui implements Runnable {
     public static final Map<String, Map<String, Integer>> mapaEstadosGui = generarMapaEstadosGui();
     private SCADAUserInterface frame;
     private Thread thread;
+    private boolean iniciada;
 
     private Gui() {
+    }
+
+    @Override
+    public void arrancar() {
+        super.arrancar();
+        frame.ac.startAll();
     }
 
     public void run() {
         try {
             frame = new SCADAUserInterface();
             frame.setVisible(true);
+            iniciada = true;
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
@@ -50,7 +62,7 @@ public class Gui extends Ui implements Runnable {
                 String subautomata = entry.getKey();
                 String estadoScada = entry.getValue();
                 int estadoGui = obtenerEstadoGui(subautomata, estadoScada);
-                Animation animacion = obtenerAnimacionSubautomata(subautomata);
+                Animation animacion = obtenerAnimacionSubAutomata(subautomata);
                 if (animacion.getState() != estadoGui) {
                     animacion.start(estadoGui);
                     System.out.println("Llamando Animation " + subautomata + " Estado: " + estadoScada + " " + estadoGui);
@@ -63,6 +75,16 @@ public class Gui extends Ui implements Runnable {
 
         thread = new Thread(this);
         thread.start();
+        System.out.println("Esperando a que se inicie la GUI...");
+        while(!iniciada)
+        {
+            try {
+                Thread.currentThread().sleep(500);
+            } catch (InterruptedException ex) {
+                System.err.println("Error al esperar la GUI");
+            }
+        }
+        System.out.println("GUI iniciada");
         return thread;
     }
 
@@ -72,8 +94,8 @@ public class Gui extends Ui implements Runnable {
         }
     }
 
-    private Animation obtenerAnimacionSubautomata(String automata) {
-        String methodName = "get" + StringUtils.capitalize(automata.toLowerCase());
+    private Animation obtenerAnimacionSubAutomata(String subautomata) {
+        String methodName = "get" + StringUtils.capitalize(subautomata.toLowerCase());
         Animation animation = null;
         try {
             Method method = frame.ac.getClass().getMethod(methodName);
@@ -120,6 +142,11 @@ public class Gui extends Ui implements Runnable {
                             "Reposo",
                             "Movimiento"});
 
+                put("CNOK", new String[]{
+                            "Llena",
+                            "Movimiento"});
+
+                
                 put("EV", new String[]{
                             "Reposo",
                             "Ocupada"});
@@ -157,6 +184,58 @@ public class Gui extends Ui implements Runnable {
         }
         return mapa;
     }
+
+    @Override
+    public void emergencia() {
+        super.emergencia();
+        frame.ac.emergencyStopAll();
+    }
+
+    @Override
+    public void provocarFalloEsclavo1() {
+        super.provocarFalloEsclavo1();
+    }
+
+    @Override
+    public void provocarFalloEsclavo2() {
+        super.provocarFalloEsclavo2();
+        frame.ac.getEs().emergencyStop();
+    }
+
+    @Override
+    public void provocarFalloEsclavo3() {
+        super.provocarFalloEsclavo3();
+        frame.ac.getEv().emergencyStop();
+        frame.ac.getCok().emergencyStop();
+        frame.ac.getCnok().emergencyStop();
+    }
+
+    @Override
+    public void recuperarFalloEsclavo1() {
+        super.recuperarFalloEsclavo1();
+        frame.ac.getCej().start();
+        frame.ac.getCen().start();
+        frame.ac.getR1().start();
+        frame.ac.getEm().start();
+    }
+
+    @Override
+    public void recuperarFalloEsclavo2() {
+        super.recuperarFalloEsclavo2();
+        frame.ac.getEs().start();
+    }
+
+    @Override
+    public void recuperarFalloEsclavo3() {
+        super.recuperarFalloEsclavo3();
+        frame.ac.getEv().start();
+        frame.ac.getCok().start();
+        frame.ac.getCnok().start();
+    }
+    
+    
+    
+    
 // mapaEstadosGui
 /*
 CEJ:
@@ -353,4 +432,32 @@ R2
         //log.setText(log.getText() + msg+"\n");
         log.setCaretPosition(log.getDocument().getLength());
     }
+
+    @Override
+    public void simularCinta(String nombre, boolean[] posiciones) {
+        System.out.println("Simulando cinta ["+nombre+"]: "+CintaCapacidad.toString(nombre, posiciones, "O"));
+        Animation animation = this.obtenerAnimacionSubAutomata(nombre);
+        //if(animation instanceof SlideAnimation) {
+        //    ((SlideAnimation) animation).updateElements(posiciones);
+        //}
+        //else System.err.println("El Animation de ["+nombre+"] no es una SlideAnimation");
+        try {
+            ((SlideAnimation) animation).updateElements(posiciones);
+        } catch (ClassCastException ex) {
+            System.err.println("El Animation de ["+nombre+"] no es una SlideAnimation");
+        }
+        
+    }
+
+    @Override
+    public void simularCaidaCPD() {
+        this.obtenerAnimacionSubAutomata("CNOK").start(CnokAnimation.MOVE);
+    }
+    
+    @Override
+    public void simularLlenadoCPD() {
+        this.obtenerAnimacionSubAutomata("CNOK").start(CnokAnimation.FULL);
+    }
+    
+    
 }

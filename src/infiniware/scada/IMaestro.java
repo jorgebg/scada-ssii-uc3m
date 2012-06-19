@@ -16,7 +16,7 @@ public interface IMaestro extends Ethernet {
 
     public void configurarAutomatas(ConjuntoParametros parametros);
 
-    public char[] ciclo(int sensores);
+    public char[] ciclo();
 
     public void parada();
 
@@ -28,5 +28,5 @@ public interface IMaestro extends Ethernet {
 
     public void recuperarFalloEsclavo(byte esclavo);
     
-    public void limpiarCPD();
+    public void simularLimpiezaCPD();
 }

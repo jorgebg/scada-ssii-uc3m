@@ -11,6 +11,7 @@ import infiniware.scada.modelos.ConjuntoParametros;
 import infiniware.scada.simulador.ISimulador;
 import infiniware.scada.simulador.Simulador;
 import infiniware.Resultado;
+import infiniware.scada.informes.modelos.Fabricacion;
 
 /**
  *
@@ -26,15 +27,7 @@ public abstract class Ui implements IUi {
     }
 
     public void arrancar() {
-        new Thread(){
-
-            @Override
-            public void run() {
-                
-                scada.arrancar();
-            }
-            
-        }.start();
+        scada.arrancar();
     }
 
     public Resultado cargarConfiguracion(String nombre, ConjuntoParametros parametros) {
@@ -66,7 +59,7 @@ public abstract class Ui implements IUi {
     }
 
     public void provocarFalloEsclavo1() {
-        simulador.provocarFalloEsclavo((byte)2);
+        simulador.provocarFalloEsclavo((byte)1);
     }
 
     public void provocarFalloEsclavo2() {
@@ -97,4 +90,16 @@ public abstract class Ui implements IUi {
     public abstract void ocultar();
 
     public abstract void log(String msg);
+
+    public void simularCinta(String nombre, boolean[] posiciones) {
+        //Nada por defecto
+    }
+
+    public void simularCaidaCPD() {
+        //Nada por defecto
+    }
+
+    public void simularLlenadoCPD() {
+        //Nada por defecto
+    }
 }

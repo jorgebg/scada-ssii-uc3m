@@ -20,6 +20,8 @@ import infiniware.scada.modelos.Guardable;
  */
 public class Informes extends ConjuntoGuardable{
 	
+        public static Informes INSTANCIA = new Informes(new Fabricacion(), new Funcionamiento());
+    
 	/**
 	 * Constructor al que se le pasan un informe de fabricacion y otro de funcionamiento
 	 * 

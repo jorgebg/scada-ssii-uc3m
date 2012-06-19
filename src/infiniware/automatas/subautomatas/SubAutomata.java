@@ -18,6 +18,7 @@ public abstract class SubAutomata {
     public Automata automata;
     public String nombre;
     Thread simulacion;
+    public Boolean emergencia = false;
 
     public SubAutomata() {
         Class subautomata = this.getClass();
@@ -26,6 +27,7 @@ public abstract class SubAutomata {
                 if (!Modifier.isAbstract(cls.getModifiers())
                         && Simulacion.class.isAssignableFrom(cls)) {
                     Simulacion simulacion = (Simulacion) cls.getDeclaredConstructor(new Class[]{subautomata}).newInstance(new Object[]{this});
+                    simulacion.subautomata = this;
                     simulaciones.put(cls.getSimpleName(), simulacion);
                 }
             } catch (Exception ex) {
@@ -37,28 +39,31 @@ public abstract class SubAutomata {
 
     public int ejecutar() {
         //System.out.println(nombre + ": Estoy en [" + estados.get(estado) + "]");
-        for (Transicion transicion : transiciones) {
-            if (transicion.cumple()) {
-                System.out.println(nombre + ": Transitando de [" + estados.get(estado) + "]" + " a [" + estados.get(transicion.destino) + "] cumpliendose " + transicion.codicion);
-                estado = transicion.destino;
-                break;
-            } else {
-                //System.out.println(nombre + ": No se cumple la transicion de [" + estados.get(transicion.origen) + "]" + " a [" + estados.get(transicion.destino) + "] siendo " + transicion.codicion + " falso (" + automata.sensores + ")");
+        if (noEstaSimulando()) {
+            for (Transicion transicion : transiciones) {
+                if (transicion.cumple()) {
+                    System.out.println(nombre + ": Transitando de [" + estados.get(estado) + "]" + " a [" + estados.get(transicion.destino) + "] cumpliendose " + transicion.codicion);
+                    estado = transicion.destino;
+                    break;
+                } else {
+                    //System.out.println(nombre + ": No se cumple la transicion de [" + estados.get(transicion.origen) + "]" + " a [" + estados.get(transicion.destino) + "] siendo " + transicion.codicion + " falso (" + automata.sensores + ")");
+                }
             }
+            simular();
         }
-        simular();
         return estado;
     }
 
     public void configurar(Parametros parametros) {
         //System.out.println("Configurando: " + parametros);
-        if(this.parametros == null)
+        if (this.parametros == null) {
             this.parametros = new Parametros();
+        }
         this.parametros = parametros.mezclar(parametros.keySet());
     }
 
     public void simular() {
-        if (this.simulacion == null || !this.simulacion.isAlive() || this.simulacion.isInterrupted()) {
+        if (noEstaSimulando()) {
             String estado = this.estados.get(this.estado);
             Simulacion simulacion = simulaciones.get(estado);
             if (simulacion != null) {
@@ -72,5 +77,8 @@ public abstract class SubAutomata {
     public String toString() {
         return this.nombre;
     }
-    
+
+    public boolean noEstaSimulando() {
+        return this.simulacion == null || !this.simulacion.isAlive() || this.simulacion.isInterrupted();
+    }
 }

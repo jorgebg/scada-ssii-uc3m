@@ -27,15 +27,13 @@ public class Estacion extends SubAutomata {
             return parametros.get("tiempo");
         }
 
-        @Override
-        public void preaccion(int accion) {
-            Sensores sensores = new Sensores(entrada, false);
-            automata.actualizar(sensores);
-        }
 
         @Override
         public void postaccion(int accion) {
+            Sensores sensores = new Sensores(entrada, false);
             automata.actualizar(salida, true);
+            automata.actualizar(entrada, false);
+            automata.log(Estacion.this.nombre + " ha terminado.");
         }
     };
 

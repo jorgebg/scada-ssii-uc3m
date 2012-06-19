@@ -4,21 +4,26 @@
  */
 package infiniware.automatas.subautomatas;
 
+import infiniware.automatas.esclavos.Esclavo;
+import infiniware.automatas.esclavos.IMaestro;
+import infiniware.automatas.sensores.Sensores;
 import infiniware.scada.modelos.Parametros;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author jorge
  */
-public class CintaCapacidad extends Cinta {
+public abstract class CintaCapacidad extends Cinta {
 
-    
-    Boolean[] contenido;
+    boolean[] contenido;
 
     class Movimiento extends Cinta.Movimiento {
 
         static final int MOVER = 0;
-        static final int CARGAR = 1;
+        static final int MANIPULAR = 1;
 
         public Movimiento() {
             acciones = 2;
@@ -29,8 +34,8 @@ public class CintaCapacidad extends Cinta {
             switch (accion) {
                 case MOVER:
                     return super.tiempo(accion);
-                case CARGAR:
-                    return 2000; //TODO nuevo parametro?
+                case MANIPULAR:
+                    return 0; //TODO nuevo parametro?
             }
             return -1;
         }
@@ -40,52 +45,83 @@ public class CintaCapacidad extends Cinta {
             switch (accion) {
                 case MOVER:
                     desplazar();
-                    if(contenido[contenido.length-1])
-                        automata.actualizar(salida, true);
-                        if(entrada!=null)
-                            automata.actualizar(entrada, false);
+                    automata.actualizar(salida, contenido[contenido.length - 1]);
+                    if (entrada != null) {
+                        automata.actualizar(entrada, false);
+
+                    }
                     break;
-                case CARGAR:
-                    contenido[0] = Math.random() > 0.75;
+                case MANIPULAR:
+                    manipular();
+                    simularCinta(contenido);
                     break;
             }
         }
 
         private void desplazar() {
-            for (int i = contenido.length-1; i > 0; i--) {
-                contenido[i] = contenido[i-1];
+            for (int i = contenido.length - 1; i > 0; i--) {
+                contenido[i] = contenido[i - 1];
             }
             contenido[0] = false;
         }
     }
 
-    public CintaCapacidad(String salida) {
-        super( salida);
-        configurar(new Parametros() {{
-          put("velocidad", 10000);
-          put("longitud", 5000);  
-          put("capacidad", 5);  
-        }});
+    protected int contar() {
+        int n = 0;
+        for (int i = 0; i < contenido.length; i++) {
+            if (contenido[i]) {
+                n++;
+            }
+        }
+        return n;
+    }
+
+    protected abstract void manipular();
+
+    public CintaCapacidad(String salida, String entrada) {
+        super(salida, entrada);
+        configurar(new Parametros() {
+
+            {
+                put("velocidad", 10000);
+                put("longitud", 50);
+                put("capacidad", 6);
+            }
+        });
         //parametros = new Parametros("velocidad", "longitud", "capacidad");
+    }
+
+    public CintaCapacidad(String salida) {
+        this(salida, null);
     }
 
     public void configurar(Parametros parametros) {
         super.configurar(parametros);
-        if(parametros.containsKey("capacidad")) {
-            contenido = new Boolean[parametros.get("capacidad")];
+        if (parametros.containsKey("capacidad")) {
+            contenido = new boolean[parametros.get("capacidad")];
             for (int i = 0; i < contenido.length; i++) {
-                contenido[i] = true;
+                contenido[i] = false;
             }
         }
     }
-    
+
     @Override
     public String toString() {
-        String s = super.toString() + ": |";
+        return toString(this);
+    }
+    
+    public static String toString(CintaCapacidad cinta) {
+        return toString(cinta.nombre, cinta.contenido, cinta.salida);
+    }
+    
+    public static String toString(String nombre, boolean[] contenido, String sensor) {
+        
+        String s = nombre + ": |";
         for (int i = 0; i < contenido.length; i++) {
-                s += contenido[i] ? salida : " ";
+            s += contenido[i] ? sensor : " ";
         }
         s += "|";
         return s;
     }
+    
 }

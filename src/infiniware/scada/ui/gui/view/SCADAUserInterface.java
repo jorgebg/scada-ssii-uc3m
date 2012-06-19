@@ -872,7 +872,7 @@ public class SCADAUserInterface extends JFrame {
 		this.mapaInformes = new HashMap<String, Integer>();
 		this.cargarInformes("");
 		
-		//pasa la configuraci—n al scada
+		//pasa la configuraciï¿½n al scada
 		Scada.ui.configurar(Gui.deMapaAConjunto(this.mapaParametros));
 		
 		//AnimationController
@@ -901,8 +901,8 @@ public class SCADAUserInterface extends JFrame {
 				updateParameterMap(); 							//Load the changes in the parameters
 				ac.init(mapaParametros); 						//update the values of the GUI Components
 				editableParameters(false);						//lock the edition of parameters
-				
-				//pasa la configuraci—n al scada
+
+				//pasa la configuracion al scada
 				Scada.ui.configurar(Gui.deMapaAConjunto(mapaParametros));
 				//Starts the system
 				Scada.ui.arrancar();
