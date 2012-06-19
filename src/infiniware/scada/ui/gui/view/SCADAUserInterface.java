@@ -867,6 +867,7 @@ public class SCADAUserInterface extends JFrame {
 		
 		//TODO
 		//Parameter Set
+		this.historico= new Fabricacion();
 		this.mapaParametros = new HashMap<String, Double>();
 		this.updateParameterMap();
 		this.mapaInformes = new HashMap<String, Integer>();
@@ -1035,9 +1036,9 @@ public class SCADAUserInterface extends JFrame {
 			Informes.INSTANCIA.setFabricacion(new Fabricacion());
 		}catch(Exception e){
 			logConsole.append("GUI: Error al cargar informe, informe autogenerado\n");
-			Informes  informes = new Informes(new Fabricacion(), new Funcionamiento());
-			Produccion produccion = new Produccion();
-			produccion.guardar(informes);
+			Informes  informe = new Informes(new Fabricacion(), new Funcionamiento());
+			Produccion produccione = new Produccion();
+			produccione.guardar(informe);
 			cargarInformes("");
 		}
 		
