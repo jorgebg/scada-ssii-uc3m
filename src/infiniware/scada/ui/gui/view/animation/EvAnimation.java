@@ -35,7 +35,7 @@ public class EvAnimation implements Animation {
 		this.state = this.FREE;
 		statusLabel = new JLabel(this.eFree);
 		
-		//statusLabel.addMouseListener(new ALEV(this));
+		statusLabel.addMouseListener(new ALEV(this));
 	}
 	
 	/**
@@ -67,6 +67,10 @@ public class EvAnimation implements Animation {
 		this.statusLabel.repaint();
 	}
 
+	public void start(){
+		this.start(this.state);
+	}
+	
 	@Override
 	public int getState() {
 		return this.state;

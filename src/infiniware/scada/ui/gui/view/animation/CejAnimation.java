@@ -238,12 +238,8 @@ public class CejAnimation implements Animation, ActionListener, SlideAnimation {
 		}
 	}
 	
-	private void start() {
-		if (slideWorker.isDone() && CejAnimation.FRAMES_CEJ > 1){
-			timer.restart();
-			this.stop = false;
-			this.emergencyStop = false;
-		}
+	public void start() {
+		this.start(this.state);
 	}
 
 	@Override
@@ -327,7 +323,11 @@ public class CejAnimation implements Animation, ActionListener, SlideAnimation {
 		if(state == CejAnimation.STOP)
 			this.stop();
 		else
-			this.start();
+			if (slideWorker.isDone() && CejAnimation.FRAMES_CEJ > 1){
+				timer.restart();
+				this.stop = false;
+				this.emergencyStop = false;
+			}
 		
 	}
 

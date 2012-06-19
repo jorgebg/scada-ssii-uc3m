@@ -116,15 +116,14 @@ public class AnimationController {
 	 * de forma simultanea
 	 */
 	public void startAll(){
-		this.robot1.start(robot1.getState());
-		this.robot2.start(robot1.getState());
+		this.robot1.start();
+		this.robot2.start();
 		
-		this.cen.start(CenAnimation.STOP);
-		this.cej.start(CejAnimation.STOP);
-		this.ct.start(CtAnimation.STOP);
+		this.cen.start();
+		this.cej.start();
+		this.ct.start();
 		
-		this.cok.start(CokAnimation.STOP);
-		this.cnok.start(CnokAnimation.MOVE);
+		this.cok.start();
 	}
 
 	/**

@@ -43,13 +43,7 @@ public class ConfiguracionTest {
 		Configuracion configuracion = new Configuracion();
 		String nombre = "Configuracion 1";
 		parametros.put(1 , mapa);
-		param = new Parametros();
-		param.put("Parametro 1", 1);
-		param.put("Parametro 2", 7);
-		param.put("Parametro 3", 5);
-		param.put("Parametro 4", 8);
 		mapa = new HashMap<String, Guardable>();
-		mapa.put("Automata 1", param);
 		parame = new Parametros();
 		parame.put("Parametro 1", 1);
 		mapa.put("Automata 2", parame);

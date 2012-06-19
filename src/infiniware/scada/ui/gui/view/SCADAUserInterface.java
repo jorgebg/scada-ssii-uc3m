@@ -2,9 +2,15 @@ package infiniware.scada.ui.gui.view;
 
 
 
+import infiniware.almacenamiento.Configuracion;
 import infiniware.almacenamiento.Produccion;
 import infiniware.scada.Scada;
 import infiniware.scada.informes.Informes;
+import infiniware.scada.informes.modelos.Fabricacion;
+import infiniware.scada.informes.modelos.Funcionamiento;
+import infiniware.scada.modelos.ConjuntoGuardable;
+import infiniware.scada.modelos.ConjuntoParametros;
+import infiniware.scada.ui.gui.Gui;
 import infiniware.scada.ui.gui.view.animation.AnimationController;
 import infiniware.scada.ui.gui.view.animation.CnokAnimation;
 
@@ -25,6 +31,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +45,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
@@ -47,8 +57,6 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.MenuDragMouseEvent;
-import javax.swing.event.MenuDragMouseListener;
 
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
@@ -88,6 +96,8 @@ public class SCADAUserInterface extends JFrame {
 	private JTextField txtParadasNormales;		//PN
 	private JTextField txtParadasEmergencia;	//PE
 	private JTextField txtArranques;			//ARR
+	
+	private Desktop desktop;
 	
 	public JTextArea logConsole;
     public Map<String, Double> mapaParametros;
@@ -227,7 +237,6 @@ public class SCADAUserInterface extends JFrame {
 		panel_EM.setBounds(814, 6, 210, 70);
 		panelInstalacion.add(panel_EM);
 		
-		//TODO chachi
 		//ES
 		JPanel panel_ES = new JPanel();
 		panel_ES.setBackground(Color.LIGHT_GRAY);
@@ -669,6 +678,7 @@ public class SCADAUserInterface extends JFrame {
 		txtLongitudCnok.setBounds(185, 29, 134, 28);
 		panelCnok.add(txtLongitudCnok);
 		txtLongitudCnok.setText("10");
+		txtLongitudCnok.setEditable(false);
 		txtLongitudCnok.setHorizontalAlignment(SwingConstants.CENTER);
 		txtLongitudCnok.setColumns(10);
 		
@@ -860,6 +870,10 @@ public class SCADAUserInterface extends JFrame {
 		this.mapaParametros = new HashMap<String, Double>();
 		this.updateParameterMap();
 		this.mapaInformes = new HashMap<String, Integer>();
+		this.cargarInformes("");
+		
+		//pasa la configuraci�n al scada
+		Scada.ui.configurar(Gui.deMapaAConjunto(this.mapaParametros));
 		
 		//AnimationController
 		ac = new AnimationController(this.mapaParametros);
@@ -877,15 +891,19 @@ public class SCADAUserInterface extends JFrame {
 		ac.getEm().createGUI(panel_EM, panel_EM.getWidth(), panel_EM.getHeight());
 		ac.getEs().createGUI(panel_ES, panel_ES.getWidth(), panel_ES.getHeight());
 		
+		
 		//Mouse Listeners 
 		//Start
 		btnStart.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				//ac.startAll();
 				updateParameterMap(); 							//Load the changes in the parameters
 				ac.init(mapaParametros); 						//update the values of the GUI Components
 				editableParameters(false);						//lock the edition of parameters
 				
+				//pasa la configuraci�n al scada
+				Scada.ui.configurar(Gui.deMapaAConjunto(mapaParametros));
 				//Starts the system
 				Scada.ui.arrancar();
 			}
@@ -946,7 +964,7 @@ public class SCADAUserInterface extends JFrame {
 					File file = new File("doc/index.html");
 					Desktop.getDesktop().open(file);
 				} catch(Exception ex) {
-					logConsole.append("GUI: Error al cargar el fichero de ayuda");
+					logConsole.append("GUI: Error al cargar el fichero de ayuda\n");
 					ex.printStackTrace();
 				}
 			}
@@ -955,15 +973,24 @@ public class SCADAUserInterface extends JFrame {
 		//Guardar
 		mntmGuardarParametros.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO
+				String inputValue = JOptionPane.showInputDialog("Por favor, inserte el nombre del archivo");
+				updateReportMap();
+				updateParameterMap();
+				guardarInformes(inputValue);
+				logConsole.append("GUI: Guardando informes y parametros\n");
 			}
 		});
 		
 		//Cargar
 		mntmCargarParametros.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				cargarInformes();
-				logConsole.append("GUI: Cargando informes");
+				String inputValue = JOptionPane.showInputDialog("Por favor, inserte el nombre del archivo si desea cargar los parametros");
+				cargarInformes(inputValue);
+				updateReportMap();
+				//updateParameterMap();
+				logConsole.append("GUI: Cargando informes y parametros\n");
+				
+				
 			}
 		});
 		
@@ -978,19 +1005,91 @@ public class SCADAUserInterface extends JFrame {
 		
 	}
 	
-	public void cargarInformes(){
+	public void conigurarAutomatas(){
+		ConjuntoParametros cp = Gui.deMapaAConjunto(this.mapaParametros);
+		//TODO
+	}
+	
+    /**
+     * Metodo que carga los informes y parametros de un fichero de nombre "nombre"
+     * 
+     * @param nombre
+     */
+	public void cargarInformes(String nombre){
+		//Informes
+		try{
+			Informes informes = new Informes();
+			Produccion produccion = new Produccion();
+			produccion.cargar(informes);
+			HashMap<String, Integer> mapa = new HashMap<String, Integer>();
+			mapa.put("COK", informes.getFabricacion().getCorrectos());
+			mapa.put("CNOK", informes.getFabricacion().getIncorrectos());
+			mapa.put("COKTotal", informes.getFabricacion().getCorrectos());
+			mapa.put("CNOKTotal", informes.getFabricacion().getIncorrectos());
+			mapa.put("PN", informes.getFuncionamiento().getNormales());
+			mapa.put("PE", informes.getFuncionamiento().getEmergencia());
+			mapa.put("ARR", informes.getFuncionamiento().getArranques());
+			setMapaInformes(mapa);
+		}catch(Exception e){
+			logConsole.append("GUI: Error al cargar informe, informe autogenerado\n");
+			Informes  informes = new Informes(new Fabricacion(), new Funcionamiento());
+			Produccion produccion = new Produccion();
+			produccion.guardar(informes);
+			cargarInformes("");
+		}
+		
+		//Parametros
+		if(!nombre.equals("")){
+			try{
+				Configuracion configuracion = new Configuracion();
+				ConjuntoParametros parametros = new ConjuntoParametros();
+				configuracion.cargar(nombre, parametros);
+				Map<String, Double> mapa = Gui.deConjuntoAMapa(parametros);
+				setMapaParametros(mapa);
+			}catch(Exception e){
+				logConsole.append("GUI: Error al cargar parametros, introduzca el nombre de un fichero existente\n");
+			}
+		}
+	}
+	
+	/**
+	 * Lanza el buscador por defecto
+     */
+    private void onLaunchBrowser(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onLaunchBrowser
+        URI uri = null;
+        try {
+            uri = new URI("almacenamiento");
+            if(desktop.isSupported(Desktop.Action.BROWSE))
+            	desktop.browse(uri);
+            else
+            	logConsole.append("GUI: El sistema operativo no soporta el lanzamiento del buscador");
+        }
+        catch(IOException ioe) {
+            ioe.printStackTrace();
+        }
+        catch(URISyntaxException use) {
+            use.printStackTrace();
+        }
+    }//GEN-LAST:event_onLaunchBrowser
+
+    /**
+     * Metodo que guarda los informes y parametros en un fichero de nombre "nombre"
+     * 
+     * @param nombre
+     */
+	public void guardarInformes(String nombre) {
+		//Informes
 		Informes informes = new Informes();
 		Produccion produccion = new Produccion();
-		produccion.cargar(informes);
-		HashMap<String, Integer> mapa = new HashMap<String, Integer>();
-		mapa.put("COK", informes.getFabricacion().getCorrectos());
-		mapa.put("CNOK", informes.getFabricacion().getIncorrectos());
-		mapa.put("COKTotal", informes.getFabricacion().getCorrectos());
-		mapa.put("CNOKTotal", informes.getFabricacion().getIncorrectos());
-		mapa.put("PN", informes.getFuncionamiento().getNormales());
-		mapa.put("PE", informes.getFuncionamiento().getEmergencia());
-		mapa.put("ARR", informes.getFuncionamiento().getArranques());
-		setMapaInformes(mapa);
+		HashMap<String, Integer> mapa = (HashMap<String, Integer>) getMapaInformes();
+		informes.setFabricacion(new Fabricacion(mapa.get("COKTotal"), mapa.get("CNOKTotal")));
+		informes.setFuncionamiento(new Funcionamiento(mapa.get("PN"), mapa.get("PE"), mapa.get("ARR")));
+		produccion.guardar(informes);
+		
+		//Parametros
+		ConjuntoParametros parametros = Gui.deMapaAConjunto(getMapaParametros());
+		Configuracion configuracion = new Configuracion();
+		configuracion.guardar(nombre, parametros);
 	}
 	
 	/**
@@ -1054,8 +1153,8 @@ public class SCADAUserInterface extends JFrame {
 		//Cintas
 		
 		this.txtLongitudCen.setText(map.get("CEN_l").toString());
-		this.txtVelocidadCen.setText(map.get("CEN_l").toString());
-		this.txtCapacidadCen.setText(map.get("CEN_l").toString());
+		this.txtVelocidadCen.setText(map.get("CEN_v").toString());
+		this.txtCapacidadCen.setText(map.get("CEN_c").toString());
 
 		this.txtLongitudCej.setText(map.get("CEJ_l").toString());
 		this.txtVelocidadCej.setText(map.get("CEJ_v").toString());
@@ -1065,7 +1164,7 @@ public class SCADAUserInterface extends JFrame {
 		this.txtVelocidadCt.setText(map.get("CT_v").toString());
 
 		this.txtLongitudCok.setText(map.get("COK_l").toString());
-		this.txtVelocidadCok.setText(map.get("COk_v").toString());
+		this.txtVelocidadCok.setText(map.get("COK_v").toString());
 
 		this.txtLongitudCnok.setText(map.get("CNOK_l").toString());
 		this.txtVelocidadCnok.setText(map.get("CNOK_v").toString());
@@ -1083,7 +1182,7 @@ public class SCADAUserInterface extends JFrame {
 		//Robot2
 		this.txtTRecogidaCm.setText(map.get("R2_tRCM").toString());
 		this.txtTTransporteCm2.setText(map.get("R2_tTCM").toString());
-		this.txtTTransporteCs.setText(map.get("CR2_tTCSEN_l").toString());
+		this.txtTTransporteCs.setText(map.get("R2_tTCS").toString());
 	}
 	
 	private void updateParameterMap(){
@@ -1131,8 +1230,6 @@ public class SCADAUserInterface extends JFrame {
 		txtVelocidadCt.setEditable(editable);
 		txtLongitudCok.setEditable(editable);
 		txtVelocidadCok.setEditable(editable);
-		txtLongitudCnok.setEditable(editable);
-		txtVelocidadCnok.setEditable(editable);
 		txtTiempoEm.setEditable(editable);
 		txtTiempoEs.setEditable(editable);
 		txtTiempoEv.setEditable(editable);
@@ -1157,7 +1254,11 @@ public class SCADAUserInterface extends JFrame {
 			try {
 				logConsole.append("GUI: Abriendo el manual de usuario");
 			    File file = new File("resources/manual.pdf");
-			    Desktop.getDesktop().open(file);
+			    if (desktop.isSupported(Desktop.Action.OPEN))
+			    	Desktop.getDesktop().open(file);		            
+		        else
+		        	logConsole.append("GUI: El sistema operativo no soporta la apertura de archivos\n");
+			    
 			} catch(Exception ex) {
 				logConsole.append("GUI: Error al cargar el fichero del manual de usuario");
 			    ex.printStackTrace();

@@ -206,15 +206,6 @@ public class CnokAnimation implements ActionListener, Animation {
 			cnok.repaint();
 		}
 	}
-	
-	private void start() {
-		if (slideWorker.isDone() && CnokAnimation.FRAMES_CNOK > 1){
-			this.loopslot = 0;
-			timer.restart();
-			this.stop = false;
-			this.emergencyStop = false;
-		}
-	}
 
 	@Override
 	public void emergencyStop() {
@@ -281,12 +272,21 @@ public class CnokAnimation implements ActionListener, Animation {
 			this.state=state;
 
 		if(state == CnokAnimation.MOVE)
-			this.start();
-		
-                cnok.repaint();
+			if (slideWorker.isDone() && CnokAnimation.FRAMES_CNOK > 1){
+				this.loopslot = 0;
+				timer.restart();
+				this.stop = false;
+				this.emergencyStop = false;
+			}
+		else
+		 cnok.repaint();
 
 	}
 
+	public void start(){
+		this.start(this.state);
+	}
+	
 	@Override
 	public int getState() {
 		return this.state;

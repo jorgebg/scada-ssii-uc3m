@@ -240,13 +240,8 @@ public class CenAnimation implements ActionListener, Animation, SlideAnimation{
 		}
 	}
 	
-	private void start() {		
-		if (slideWorker.isDone() && CenAnimation.FRAMES_CEN > 1){
-			//this.loopslot = 0;
-			timer.restart();
-			this.stop = false;
-			this.emergencyStop = false;
-		}
+	public void start() {		
+		this.start(this.state);
 	}
 
 	@Override
@@ -329,7 +324,12 @@ public class CenAnimation implements ActionListener, Animation, SlideAnimation{
 		if(state == CenAnimation.STOP)
 			this.stop();
 		else
-			this.start();
+			if (slideWorker.isDone() && CenAnimation.FRAMES_CEN > 1){
+				//this.loopslot = 0;
+				timer.restart();
+				this.stop = false;
+				this.emergencyStop = false;
+			}
 	}
 
 	@Override
