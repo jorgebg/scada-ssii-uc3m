@@ -240,12 +240,8 @@ public class CtAnimation implements ActionListener, Animation, SlideAnimation {
 		}
 	}
 	
-	private void start() {
-		if (slideWorker.isDone() && CtAnimation.FRAMES_CT > 1){
-			timer.restart();
-			this.stop = false;
-			this.emergencyStop = false;
-		}
+	public void start(){
+		this.start(this.state);
 	}
 
 	@Override
@@ -266,7 +262,7 @@ public class CtAnimation implements ActionListener, Animation, SlideAnimation {
 		
 		public ALCT(CtAnimation simu){
 			csim = simu;
-			element = new boolean[8];
+			element = new boolean[2];
 		}
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
@@ -328,7 +324,11 @@ public class CtAnimation implements ActionListener, Animation, SlideAnimation {
 		if(state == CtAnimation.STOP)
 			this.stop();
 		else
-			this.start();
+			if (slideWorker.isDone() && CtAnimation.FRAMES_CT > 1){
+				timer.restart();
+				this.stop = false;
+				this.emergencyStop = false;
+			}
 	}
 
 	@Override

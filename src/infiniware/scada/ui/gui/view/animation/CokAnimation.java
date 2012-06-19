@@ -241,14 +241,6 @@ public class CokAnimation implements ActionListener, Animation, SlideAnimation {
 			cok.repaint();
 		}
 	}
-	
-	private void start() {
-		if (slideWorker.isDone() && CokAnimation.FRAMES_COK > 1){
-			timer.restart();
-			this.stop = false;
-			this.emergencyStop = false;
-		}
-	}
 
 	@Override
 	public void emergencyStop() {
@@ -330,7 +322,15 @@ public class CokAnimation implements ActionListener, Animation, SlideAnimation {
 		if(state == CokAnimation.STOP)
 			this.stop();
 		else
-			this.start();
+			if (slideWorker.isDone() && CokAnimation.FRAMES_COK > 1){
+				timer.restart();
+				this.stop = false;
+				this.emergencyStop = false;
+			}
+	}
+	
+	public void start() {
+		this.start(this.state);
 	}
 
 	@Override

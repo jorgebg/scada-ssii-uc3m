@@ -145,7 +145,7 @@ public class Robot2Animation implements ActionListener, Animation {
 			robot2.setBounds(0, 0, with, height);
 			parentPanel.add(robot2);	
 			
-			//robot2.addMouseListener(new ALR2(this));
+			robot2.addMouseListener(new ALR2(this));
 			robot2.add(statusLabel, BorderLayout.CENTER);
 		}
 		
@@ -338,6 +338,10 @@ public class Robot2Animation implements ActionListener, Animation {
 					this.emergencyStop = false;
 				}
 			}
+		}
+		
+		public void start(){
+			this.start(this.state);
 		}
 
 		@Override

@@ -137,7 +137,7 @@ public class Robot1Animation implements ActionListener, Animation {
 		robot1.setBounds(0, 0, with, height);
 		parentPanel.add(robot1);	
 		
-		//robot1.addMouseListener(new ALR(this));
+		robot1.addMouseListener(new ALR(this));
 		robot1.add(statusLabel);
 	}
 
@@ -318,6 +318,9 @@ public class Robot1Animation implements ActionListener, Animation {
 		}
 	}
 
+	public void start(){
+		this.start(this.state);
+	}
 	@Override
 	public void emergencyStop() {
 		timer.stop();
