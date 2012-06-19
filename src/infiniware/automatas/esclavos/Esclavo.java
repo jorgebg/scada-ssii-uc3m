@@ -24,28 +24,23 @@ public abstract class Esclavo extends Automata implements IEsclavo {
         this.maestro = this.<IMaestro>conectar(Maestro.INSTANCIA);
     }
 
-    public void actualizar(Sensores sensores) {
-        super.actualizar(sensores);
-        notificar();
-    }
-
     public void enlazar() {
         super.<IEsclavo>enlazar();
     }
 
     public void actualizar(String sensor, boolean estado) {
         super.actualizar(sensor, estado);
-        notificar();
+        notificar(sensor, estado);
     }
 
-    private void notificar() {
+    private void notificar(String sensor, boolean estado) {
         boolean exito = true;
         do {
             try {
-                System.out.println("Notificando:\n" + sensores);
+                System.out.println("Notificando: " + sensor + "=" + (estado?"1":"0"));
                 char codificacion;
                 synchronized (sensores) {
-                    codificacion = (char) sensores.codificar();
+                    codificacion = (char) sensores.codificar(sensor, estado);
                 }
                 maestro.notificar(getId(), codificacion);
 
@@ -76,31 +71,6 @@ public abstract class Esclavo extends Automata implements IEsclavo {
         }
     }
 
-    @Override
-    public char ejecutar(char sensores) {
-        System.out.println("Recibo: " + (int) sensores);
-        if (sensores != Character.MAX_VALUE) {
-            if (tieneEntrada()) {
-                for (String entrada : entradas) {
-                    if (this.sensores.get(entrada, sensores) && !this.sensores.get(entrada)) {
-                        this.sensores.set(entrada, true);
-                    }
-                }
-
-
-            }
-            if (tieneSalida() && !this.sensores.get(salida, sensores) && this.sensores.get(salida)) {
-                this.sensores.set(salida, false);
-            }
-            /*
-             * Sensores clone = this.sensores.clone();
-             * clone.actualizar(sensores); System.out.println(" Recibo: \n" +
-             * clone);
-             */
-        }
-
-        return ejecutar();
-    }
 
     public boolean tieneEntrada() {
         return entradas != null;

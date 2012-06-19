@@ -7,7 +7,7 @@ import infiniware.automatas.subautomatas.Robot1;
 import java.rmi.RemoteException;
 
 public class Esclavo1 extends Esclavo {
-
+    
     public static final Esclavo1 INSTANCIA = new Esclavo1();
 
     public Esclavo1() {

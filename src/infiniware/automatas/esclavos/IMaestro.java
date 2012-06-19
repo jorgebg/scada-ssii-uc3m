@@ -4,7 +4,7 @@ import java.rmi.RemoteException;
 
 
 public interface IMaestro extends Profibus {
-    public void notificar(byte esclavo, char sensores) throws RemoteException;
+    public void notificar(byte esclavo, char sensor) throws RemoteException;
     public void log(String s) throws RemoteException;
     public void simularCinta(String nombre, boolean[] posiciones) throws RemoteException;
 }

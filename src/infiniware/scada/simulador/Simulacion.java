@@ -47,4 +47,8 @@ public abstract class Simulacion implements Runnable {
             System.err.println("Error al dormir la simulacion: " + ex.getMessage());
         }
     }
+    
+    public String obtenerNombre() {
+        return this.getClass().getSimpleName();
+    }
 }

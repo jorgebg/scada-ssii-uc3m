@@ -5,6 +5,7 @@
 package infiniware.automatas.subautomatas;
 
 import infiniware.automatas.Automata;
+import infiniware.automatas.maestro.Maestro;
 import infiniware.scada.modelos.Parametros;
 
 /**
@@ -17,19 +18,23 @@ public class Robot2 extends Robot {
     class Reposo extends Robot.Reposo {
     }
     
+        private Maestro comoMaestro() {
+            return (Maestro) automata;
+        }
     class MueveConjuntoMontado extends Transporte {
 
         public void postaccion(int accion) {
             switch (accion) {
                 case RECOGER:
-                    automata.actualizar("G", false);
+                    comoMaestro().actualizar("G", false);
                     break;
                 case TRANSPORTAR:
-                    automata.actualizar("H", true);
+                    comoMaestro().actualizar("H", true);
                     break;
             }
             super.postaccion(accion);
         }
+
     };
 
     class MueveConjuntoSoldado extends Transporte {
@@ -49,10 +54,12 @@ public class Robot2 extends Robot {
         public void postaccion(int accion) {
             switch (accion) {
                 case RECOGER:
-                    automata.actualizar("I", false);
+                    comoMaestro().actualizar("I", false);
+                    comoMaestro().log("Se ha recogido un conjunto soldado de ES");
                     break;
                 case TRANSPORTAR:
-                    automata.actualizar("J", true);
+                    comoMaestro().actualizar("J", true);
+                    comoMaestro().log("Se ha puesto un conjunto soldado en EV");
                     break;
             }
             super.postaccion(accion);
@@ -65,10 +72,12 @@ public class Robot2 extends Robot {
         public void postaccion(int accion) {
             switch (accion) {
                 case RECOGER:
-                    automata.actualizar("K", false);
+                    comoMaestro().actualizar("K", false);
+                    comoMaestro().log("Se ha recogido un conjunto valido de EV");
                     break;
                 case TRANSPORTAR:
-                    automata.actualizar("L", true);
+                    comoMaestro().actualizar("L", true);
+                    comoMaestro().log("Se ha depositado un conjunto valido en COK");
                     break;
             }
             super.postaccion(accion);
@@ -81,10 +90,12 @@ public class Robot2 extends Robot {
         public void postaccion(int accion) {
             switch (accion) {
                 case RECOGER:
-                    automata.actualizar("K", false);
+                    comoMaestro().actualizar("K", false);
+                    comoMaestro().log("Se ha recogido un conjunto no valido de EV");
                     break;
                 case TRANSPORTAR:
                     cpd.incrementar();
+                    comoMaestro().log("Se ha despositado un conjunto no valido en CNOK");
                     break;
             }
             super.postaccion(accion);
@@ -102,14 +113,22 @@ public class Robot2 extends Robot {
         int capacidad = 10;
         int invalidos = 0;
         public void incrementar() {
-            if(invalidos < capacidad)
+            if(invalidos < capacidad) {
                 invalidos++;
+                comoMaestro().log("Añadido conjunto al CPD ("+invalidos+"/"+capacidad+")");
+            }
+            if(invalidos >= capacidad) {
+                comoMaestro().actualizar(sensor, true);
+                comoMaestro().log("Se ha llenado el CPD");
+                comoMaestro().simularLlenadoCPD();    
+            }
             else
-                automata.actualizar(sensor, true);
+                comoMaestro().simularCaidaCPD();
         }
         public void limpiar() {
             invalidos = 0;
-            automata.actualizar(sensor, false);
+            comoMaestro().actualizar(sensor, false);
+            comoMaestro().log("Se ha vaciado el CPD");
         }
     }
 }

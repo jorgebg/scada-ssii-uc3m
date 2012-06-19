@@ -35,7 +35,7 @@ public abstract class CintaCapacidad extends Cinta {
                 case MOVER:
                     return super.tiempo(accion);
                 case MANIPULAR:
-                    return 2000; //TODO nuevo parametro?
+                    return 0; //TODO nuevo parametro?
             }
             return -1;
         }
@@ -45,12 +45,11 @@ public abstract class CintaCapacidad extends Cinta {
             switch (accion) {
                 case MOVER:
                     desplazar();
-                    Sensores sensores = new Sensores();
-                    sensores.insertar(salida, contenido[contenido.length - 1]);
+                    automata.actualizar(salida, contenido[contenido.length - 1]);
                     if (entrada != null) {
-                        sensores.insertar(entrada, false);
+                        automata.actualizar(entrada, false);
+
                     }
-                    automata.actualizar(sensores);
                     break;
                 case MANIPULAR:
                     manipular();

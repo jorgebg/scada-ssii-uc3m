@@ -18,9 +18,7 @@ public class Simulador implements ISimulador {
     }
 
     /**
-     * @UC 010
-     * @UC 011
-     * @UC 012
+     * @UC 010 @UC 011 @UC 012
      */
     @Override
     public void provocarFalloEsclavo(byte esclavo) {
@@ -28,9 +26,7 @@ public class Simulador implements ISimulador {
     }
 
     /**
-     * @UC 013
-     * @UC 014
-     * @UC 015
+     * @UC 013 @UC 014 @UC 015
      */
     @Override
     public void recuperarFalloEsclavo(byte esclavo) {
@@ -42,11 +38,6 @@ public class Simulador implements ISimulador {
      */
     @Override
     public void limpiarCPD() {
-        scada.acciones.add(
-                new Runnable() {
-                    public void run() {
-                        scada.maestro.limpiarCPD();
-                    }
-                });
+        scada.maestro.simularLimpiezaCPD();
     }
 }

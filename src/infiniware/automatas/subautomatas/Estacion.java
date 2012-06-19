@@ -31,8 +31,8 @@ public class Estacion extends SubAutomata {
         @Override
         public void postaccion(int accion) {
             Sensores sensores = new Sensores(entrada, false);
-            sensores.insertar(salida, true);
-            automata.actualizar(sensores);
+            automata.actualizar(salida, true);
+            automata.actualizar(entrada, false);
             automata.log(Estacion.this.nombre + " ha terminado.");
         }
     };

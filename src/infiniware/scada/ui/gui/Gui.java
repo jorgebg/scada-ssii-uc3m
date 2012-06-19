@@ -9,6 +9,7 @@ import infiniware.automatas.subautomatas.CintaCapacidad;
 import infiniware.scada.ui.Ui;
 import infiniware.scada.ui.gui.view.SCADAUserInterface;
 import infiniware.scada.ui.gui.view.animation.Animation;
+import infiniware.scada.ui.gui.view.animation.CnokAnimation;
 import infiniware.scada.ui.gui.view.animation.SlideAnimation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -131,6 +132,11 @@ public class Gui extends Ui implements Runnable {
                             "Reposo",
                             "Movimiento"});
 
+                put("CNOK", new String[]{
+                            "Llena",
+                            "Movimiento"});
+
+                
                 put("EV", new String[]{
                             "Reposo",
                             "Ocupada"});
@@ -236,6 +242,16 @@ R2
             System.err.println("El Animation de ["+nombre+"] no es una SlideAnimation");
         }
         
+    }
+
+    @Override
+    public void simularCaidaCPD() {
+        this.obtenerAnimacionSubAutomata("CNOK").start(CnokAnimation.MOVE);
+    }
+    
+    @Override
+    public void simularLlenadoCPD() {
+        this.obtenerAnimacionSubAutomata("CNOK").start(CnokAnimation.FULL);
     }
     
     

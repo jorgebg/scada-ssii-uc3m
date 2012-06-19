@@ -93,4 +93,12 @@ public abstract class Ui implements IUi {
     public void simularCinta(String nombre, boolean[] posiciones) {
         //Nada por defecto
     }
+
+    public void simularCaidaCPD() {
+        //Nada por defecto
+    }
+
+    public void simularLlenadoCPD() {
+        //Nada por defecto
+    }
 }

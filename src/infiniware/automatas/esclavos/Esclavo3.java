@@ -30,19 +30,11 @@ public class Esclavo3 extends Esclavo {
         return 3;
     }
 
-    @Override
-    public void simular(Simulaciones simulacion) {
-        switch (simulacion) {
-            case LimpiarCPD:
-                this.subautomatas.<Robot2>buscar("R2").cpd.limpiar();
-                break;
-        }
-    }
 
     @Override
     public char ejecutar(char sensores) {
 
-        if (sensores != Character.MAX_VALUE) {
+        if (sensores != EJECUTAR) {
             if (this.sensores.get("L", sensores)) {
                 ((CintaSalida) this.subautomatas.get("COK")).ponerConjuntoValido();
             }

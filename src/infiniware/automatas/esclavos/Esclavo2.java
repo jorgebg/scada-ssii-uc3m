@@ -2,6 +2,7 @@ package infiniware.automatas.esclavos;
 
 import infiniware.automatas.GestorSubAutomatas;
 import infiniware.automatas.sensores.Sensores;
+import infiniware.automatas.subautomatas.Cinta;
 import infiniware.automatas.subautomatas.Estacion;
 
 public class Esclavo2 extends Esclavo {
@@ -24,4 +25,5 @@ public class Esclavo2 extends Esclavo {
     public byte getId() {
         return 2;
     }
+    
 }

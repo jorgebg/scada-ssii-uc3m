@@ -29,7 +29,7 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
     public IMaestro maestro;
     long timestamp;
     boolean emergencia = false;
-    public final Acciones acciones = new Acciones();
+   // public final Acciones acciones = new Acciones();
     public final GestorSensores mapaSensores = new GestorSensores();
     public static final Scada INSTANCIA = new Scada();
     //public static Ui ui = Cli.INSTANCIA;
@@ -64,9 +64,9 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
             maestro.emergencia();
             this.emergencia = false;
         } else {
-            for (Runnable accion : acciones) {
+            /*for (Runnable accion : acciones) {
                 accion.run();
-            }
+            }*/
             simulador.ciclo();
             estados = maestro.ciclo();
             ui.actualizar(estados);

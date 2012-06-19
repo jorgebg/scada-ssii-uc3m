@@ -18,11 +18,10 @@ public class EstacionValidacion extends Estacion {
     class Ocupada extends Estacion.Ocupada {
 
         public void postaccion(int accion) {
-            boolean OK = Math.random() > 0.5;
-            Sensores sensores = new Sensores(entrada, false);
-            sensores.insertar(salida, true);
-            sensores.insertar(ok, OK);
-            automata.actualizar(sensores);
+            boolean OK = Math.random() <= 0.9;
+            automata.actualizar(entrada, false);
+            automata.actualizar(salida, true);
+            automata.actualizar(ok, OK);
             automata.log(EstacionValidacion.this.nombre + " ha terminado. Resultado: " + (OK ? "VALIDO" : "NO VALIDO"));
         }
     };

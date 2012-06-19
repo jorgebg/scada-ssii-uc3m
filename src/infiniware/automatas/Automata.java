@@ -38,9 +38,9 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
     };
     private int ciclo;
 
-    public static final char SIN_NOVEDAD = Character.MAX_VALUE;
-    public static final char PARAR = SIN_NOVEDAD-1; 
-    public static final char REANUDAR = SIN_NOVEDAD-2;
+    public static final char EJECUTAR = Character.MAX_VALUE;
+    public static final char PARAR = EJECUTAR-1; 
+    public static final char REANUDAR = EJECUTAR-2;
     
     public abstract void log(String msg);
 
@@ -62,10 +62,10 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
         System.out.println(resultado);
     }
 
-    public enum Simulaciones { /*Fallar, Recuperar,*/ LimpiarCPD };    
+    /*public enum Simulaciones { Fallar, Recuperar, LimpiarCPD };    
     public void simular(Simulaciones simulacion) {
         //Nada por defecto
-    }
+    }*/
 
     public Automata() {
         sensores = new Sensores();
@@ -76,15 +76,17 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
     }
 
     public char ejecutar(char sensores) {
-        this.sensores.actualizar(sensores);
-        return ejecutar();
+        switch(sensores) {
+            case EJECUTAR:
+                ejecutar();
+                break;
+            default:
+                Map.Entry<String, Boolean> decodificado = this.sensores.decodificarYActualizar(sensores);
+                System.out.println("Decodificando: " + decodificado);
+        }
+        return subautomatas.codificarEstados();
     }
     
-
-    public char ejecutar(Sensores sensores) {
-        this.sensores.actualizar(sensores);
-        return ejecutar();
-    }
 
     public char ejecutar() {
         System.out.println("#"+ ciclo +" Ejecutando:\n" + sensores);
@@ -125,9 +127,6 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
         System.out.println("Automata \"" + getRemoteName() + "\" registrado en " + getHost() + ":" + getPort());
     }
 
-    public void actualizar(Sensores sensores) {
-        this.sensores.actualizar(sensores);
-    }
 
     public abstract byte getId();
 
@@ -194,6 +193,12 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
     public void configurar(Map<String,Parametros> parametrosSubautomatas) {
         for (Map.Entry<String, Parametros> parametros : parametrosSubautomatas.entrySet()) {
             this.subautomatas.get(parametros.getKey()).configurar(parametros.getValue());
+        }
+    }
+
+    public void actualizar(String[] sensores, boolean estado) {
+        for (String e : sensores) {
+            actualizar(e,estado);
         }
     }
     

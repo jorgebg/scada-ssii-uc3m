@@ -2,8 +2,11 @@ package infiniware.automatas.sensores;
 
 import infiniware.remoto.Profibus;
 import java.util.*;
+import java.util.Map.Entry;
+import java.util.Set;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 /**
  * Adapter de TreeMap Synchronized
@@ -70,7 +73,7 @@ public class Sensores {
     public synchronized int codificar(Sensores sensores) {
         Sensores clone = clone();
         clone.actualizar(sensores);
-        System.out.println("CODIFICANDO \n" + clone);
+        //System.out.println("CODIFICANDO \n" + clone);
         return clone.codificar();
     }
 
@@ -105,6 +108,20 @@ public class Sensores {
     public synchronized void actualizar(Sensores sensores) {
         for (String sensor : sensores.keySet()) {
             set(sensor, sensores.get(sensor));
+        }
+    }
+
+    public synchronized void actualizar(char sensores, List<String> ignorar) {
+        Map<String, Boolean> valoresIgnorar = new HashMap<String, Boolean>();
+        for (String sensor : ignorar) {
+            if (elementos.containsKey(sensor)) {
+                boolean valor = get(sensor);
+                valoresIgnorar.put(sensor, valor);
+            }
+        }
+        actualizar(sensores);
+        for (Map.Entry<String, Boolean> entry : valoresIgnorar.entrySet()) {
+            set(entry.getKey(), entry.getValue());
         }
     }
 
@@ -173,10 +190,51 @@ public class Sensores {
     }
 
     public boolean get(String sensor, char sensores) {
-        Sensores clone = this.clone();
-        System.out.println(clone.elementos);
-        clone.actualizar(sensores);
-        System.out.println("CLONE " + (int) sensores +"="+Integer.toBinaryString(sensores) +  ": " + clone);
-        return clone.get(sensor);
+        Entry<String, Boolean> estado = this.decodificar(sensores);
+        return estado.getKey().equals(sensor) && estado.getValue();
+    }
+
+    public int codificar(String sensor, boolean estado) {
+        int codigo = -1;
+        if (this.elementos.containsKey(sensor)) {
+            codigo = 0;
+            for (String key : elementos.keySet()) {
+                if (key.equals(sensor)) {
+                    break;
+                } else {
+                    codigo++;
+                }
+            }
+            if (estado) {
+                codigo += this.elementos.keySet().size();
+            }
+        }
+        return codigo;
+    }
+
+    public Map.Entry<String, Boolean> decodificar(int codigo) {
+        String sensor = null;
+        boolean estado = false;
+        if(codigo >= elementos.size() ) {
+            codigo -= elementos.size();
+            estado = true;
+        }
+        
+        int i = 0;
+            for (String key : elementos.keySet()) {
+                if(i==codigo) {
+                    sensor = key;
+                    break;
+                }
+                else i++;
+            }
+        Map.Entry<String, Boolean> result = new ImmutablePair<String, Boolean>(sensor, estado);
+        return result;
+    }
+    
+    public Map.Entry<String, Boolean> decodificarYActualizar(int codigo) {
+        Map.Entry<String, Boolean> decodificado = decodificar(codigo);
+        this.set(decodificado.getKey(), decodificado.getValue());
+        return decodificado;
     }
 };

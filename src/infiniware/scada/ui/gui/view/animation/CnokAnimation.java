@@ -30,9 +30,9 @@ public class CnokAnimation implements ActionListener, Animation {
 	private static final int CNOK_MAX = 20632;				//Max size of the images
 	private final int GravitySpeed = 200;			
 	
-	public static final int EMTPY=0;
-	public static final int FULL=1;
-	public static final int MOVE=2;
+	public static final int EMTPY=2;
+	public static final int FULL=0;
+	public static final int MOVE=1;
 	
 	private ImageIcon imgsCNOK[]; 					//the images of the movement from CNOK to NOKContainer
 	private ImageIcon emptyConteiner;
@@ -282,8 +282,8 @@ public class CnokAnimation implements ActionListener, Animation {
 
 		if(state == CnokAnimation.MOVE)
 			this.start();
-		else
-			cnok.repaint();
+		
+                cnok.repaint();
 
 	}
 
