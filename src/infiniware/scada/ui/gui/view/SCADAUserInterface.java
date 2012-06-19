@@ -1038,10 +1038,9 @@ public class SCADAUserInterface extends JFrame {
 				Configuracion configuracion = new Configuracion();
 				ConjuntoParametros parametros = new ConjuntoParametros();
 				configuracion.cargar(nombre, parametros);
+				System.out.println(parametros.toString());
 				Map<String, Double> mapa = Gui.deConjuntoAMapa(parametros);
 				setMapaParametros(mapa);
-				//logConsole.append(mapa.toString());
-
 			}catch(Exception e){
 				logConsole.append("GUI: Error al cargar parametros, introduzca el nombre de un fichero existente\n");
 			}

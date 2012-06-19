@@ -298,7 +298,7 @@ R2
     	mapa.put("CEN_l", (double)CENparametros.get("longitud") );
     	mapa.put("CEN_c", (double)CENparametros.get("capacidad") );
     		//Cinta Ejes
-    	Parametros CEJparametros = (Parametros) es1map.get("CEN");
+    	Parametros CEJparametros = (Parametros) es1map.get("CEJ");
     	mapa.put("CEJ_v", (double)CEJparametros.get("velocidad") );
     	mapa.put("CEJ_l", (double)CEJparametros.get("longitud") );
     	mapa.put("CEJ_c", (double)CEJparametros.get("capacidad") );
