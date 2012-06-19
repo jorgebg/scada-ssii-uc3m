@@ -8,6 +8,7 @@ import infiniware.automatas.subautomatas.Cinta;
 import infiniware.automatas.subautomatas.Robot2;
 import infiniware.automatas.subautomatas.SubAutomata;
 import infiniware.scada.Scada;
+import infiniware.scada.informes.Informes;
 import infiniware.scada.modelos.ConjuntoParametros;
 import infiniware.scada.modelos.Parametros;
 import infiniware.scada.simulador.Simulacion;
@@ -18,6 +19,16 @@ import java.util.logging.Logger;
 import org.omg.CORBA.portable.RemarshalException;
 
 public class Maestro extends Automata implements infiniware.scada.IMaestro, infiniware.automatas.esclavos.IMaestro {
+
+    public void addIncorrecto() {
+        
+                Informes.INSTANCIA.getFabricacion().addIncorrecto();
+             
+    }
+
+    public void addCorrecto() throws RemoteException {
+           Informes.INSTANCIA.getFabricacion().addCorrecto();
+    }
 
     private static class GestorNotificaciones extends ArrayList<Notificacion> {
 

@@ -6,6 +6,7 @@ package infiniware.automatas.subautomatas;
 
 import infiniware.automatas.Automata;
 import infiniware.automatas.maestro.Maestro;
+import infiniware.scada.informes.Informes;
 import infiniware.scada.modelos.Parametros;
 
 /**
@@ -115,6 +116,7 @@ public class Robot2 extends Robot {
         public void incrementar() {
             if(invalidos < capacidad) {
                 invalidos++;
+                comoMaestro().addIncorrecto();
                 comoMaestro().log("Añadido conjunto al CPD ("+invalidos+"/"+capacidad+")");
             }
             if(invalidos >= capacidad) {

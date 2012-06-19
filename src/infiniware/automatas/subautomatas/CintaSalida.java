@@ -4,8 +4,10 @@
  */
 package infiniware.automatas.subautomatas;
 
-import infiniware.automatas.sensores.Sensores;
-import infiniware.scada.modelos.Parametros;
+import infiniware.automatas.esclavos.Esclavo;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,6 +27,11 @@ public class CintaSalida extends CintaCapacidad {
         if (contenido[contenido.length - 1]) {
             contenido[contenido.length - 1] = Math.random() > 0.75;
             if (!contenido[contenido.length - 1]) {
+                try {
+                    ((Esclavo)automata).maestro.addCorrecto();
+                } catch (RemoteException ex) {
+                    System.err.println("Error al add correcto");
+                }
                 automata.log("Se ha quitado un conjunto valido de " + CintaSalida.this.nombre + ". Hay " + contar() + "/" + contenido.length + " en la cinta.");
             }
         }

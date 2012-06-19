@@ -11,6 +11,7 @@ import infiniware.scada.modelos.ConjuntoParametros;
 import infiniware.scada.simulador.ISimulador;
 import infiniware.scada.simulador.Simulador;
 import infiniware.Resultado;
+import infiniware.scada.informes.modelos.Fabricacion;
 
 /**
  *

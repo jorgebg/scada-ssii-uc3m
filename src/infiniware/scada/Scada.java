@@ -81,6 +81,7 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
     @Override
     public void arrancar() {
         maestro.arrancar();
+        Informes.INSTANCIA.getFuncionamiento().addArranques();
     }
 
     /**
@@ -121,6 +122,7 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
     @Override
     public void parada() {
         maestro.parada();
+        Informes.INSTANCIA.getFuncionamiento().addNormales();
         /*
          * acciones.add( new Runnable() { public void run() { maestro.parada();
          * }
@@ -134,6 +136,7 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
     @Override
     public void emergencia() {
         maestro.emergencia();
+           Informes.INSTANCIA.getFuncionamiento().addEmergencia();
     }
 
     /*
