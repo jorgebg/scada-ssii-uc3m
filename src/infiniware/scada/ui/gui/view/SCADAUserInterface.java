@@ -891,7 +891,6 @@ public class SCADAUserInterface extends JFrame {
 		ac.getEm().createGUI(panel_EM, panel_EM.getWidth(), panel_EM.getHeight());
 		ac.getEs().createGUI(panel_ES, panel_ES.getWidth(), panel_ES.getHeight());
 		
-		
 		//Mouse Listeners 
 		//Start
 		btnStart.addMouseListener(new MouseAdapter() {
@@ -915,6 +914,8 @@ public class SCADAUserInterface extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				//stops the system
 				Scada.ui.parada();
+				//TODO informes = Gui.Informes
+				setMapaInformes(this.convertirInformeAMapa(informes));
 				
 				editableParameters(true); 	//unlock the edition of paramaters
 				updateReportMap();			//updates the reports in the GUI	
@@ -1021,15 +1022,7 @@ public class SCADAUserInterface extends JFrame {
 			Informes informes = new Informes();
 			Produccion produccion = new Produccion();
 			produccion.cargar(informes);
-			HashMap<String, Integer> mapa = new HashMap<String, Integer>();
-			mapa.put("COK", informes.getFabricacion().getCorrectos());
-			mapa.put("CNOK", informes.getFabricacion().getIncorrectos());
-			mapa.put("COKTotal", informes.getFabricacion().getCorrectos());
-			mapa.put("CNOKTotal", informes.getFabricacion().getIncorrectos());
-			mapa.put("PN", informes.getFuncionamiento().getNormales());
-			mapa.put("PE", informes.getFuncionamiento().getEmergencia());
-			mapa.put("ARR", informes.getFuncionamiento().getArranques());
-			setMapaInformes(mapa);
+			setMapaInformes(this.convertirInformeAMapa(informes));
 		}catch(Exception e){
 			logConsole.append("GUI: Error al cargar informe, informe autogenerado\n");
 			Informes  informes = new Informes(new Fabricacion(), new Funcionamiento());
@@ -1050,6 +1043,19 @@ public class SCADAUserInterface extends JFrame {
 				logConsole.append("GUI: Error al cargar parametros, introduzca el nombre de un fichero existente\n");
 			}
 		}
+	}
+	
+	private Map<String, Integer> convertirInformeAMapa(Informes informes){
+		HashMap<String, Integer> mapa = new HashMap<String, Integer>();
+		mapa.put("COK", informes.getFabricacion().getCorrectos());
+		mapa.put("CNOK", informes.getFabricacion().getIncorrectos());
+		mapa.put("COKTotal", informes.getFabricacion().getCorrectos());
+		mapa.put("CNOKTotal", informes.getFabricacion().getIncorrectos());
+		mapa.put("PN", informes.getFuncionamiento().getNormales());
+		mapa.put("PE", informes.getFuncionamiento().getEmergencia());
+		mapa.put("ARR", informes.getFuncionamiento().getArranques());
+		
+		return mapa;
 	}
 	
 	/**
