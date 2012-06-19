@@ -1,6 +1,7 @@
 package infiniware.scada.simulador;
 
 import infiniware.automatas.subautomatas.SubAutomata;
+import infiniware.scada.Scada;
 
 public abstract class Simulacion implements Runnable {
 
@@ -41,13 +42,28 @@ public abstract class Simulacion implements Runnable {
     }
 
     protected void dormir(long tiempo) {
-        try {
-            Thread.sleep(tiempo);
-        } catch (InterruptedException ex) {
-            System.err.println("Error al dormir la simulacion: " + ex.getMessage());
+        int tiempoPorIteracion = Scada.CICLO;
+        long inicial, diferencia, tiempoTotal = 0;
+        while (tiempoTotal < tiempo) {
+
+            inicial = System.currentTimeMillis();
+            try {
+                Thread.sleep(tiempoPorIteracion);
+            } catch (InterruptedException ex) {
+                System.err.println("Error al dormir la simulacion: " + ex.getMessage());
+            }
+            if (!subautomata.emergencia) {
+                diferencia = System.currentTimeMillis() - inicial;
+                tiempoTotal += diferencia;
+            } else {
+                //inicial = System.currentTimeMillis();
+                //System.out.println(this.subautomata.nombre + ".emergencia = " + subautomata.emergencia);
+            }
+
+            //System.out.println(this.subautomata.nombre + "[" + this.getClass().getSimpleName() + "] " + tiempoTotal + "/" + tiempo);
         }
     }
-    
+
     public String obtenerNombre() {
         return this.getClass().getSimpleName();
     }

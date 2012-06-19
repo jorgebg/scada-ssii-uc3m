@@ -18,6 +18,7 @@ public abstract class SubAutomata {
     public Automata automata;
     public String nombre;
     Thread simulacion;
+    public Boolean emergencia = false;
 
     public SubAutomata() {
         Class subautomata = this.getClass();

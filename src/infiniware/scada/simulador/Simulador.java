@@ -7,7 +7,6 @@ import infiniware.scada.Scada;
 public class Simulador implements ISimulador {
 
     public Scada scada = Scada.INSTANCIA;
-    public IMaestro maestro = Maestro.INSTANCIA;
     public static Simulador INSTANCIA = new Simulador();
 
     private Simulador() {
@@ -22,7 +21,7 @@ public class Simulador implements ISimulador {
      */
     @Override
     public void provocarFalloEsclavo(byte esclavo) {
-        maestro.provocarFalloEsclavo(esclavo);
+        scada.maestro.provocarFalloEsclavo(esclavo);
     }
 
     /**
@@ -30,7 +29,7 @@ public class Simulador implements ISimulador {
      */
     @Override
     public void recuperarFalloEsclavo(byte esclavo) {
-        maestro.recuperarFalloEsclavo(esclavo);
+        scada.maestro.recuperarFalloEsclavo(esclavo);
     }
 
     /**

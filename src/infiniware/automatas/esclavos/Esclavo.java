@@ -54,12 +54,9 @@ public abstract class Esclavo extends Automata implements IEsclavo {
     }
 
     public void fallar() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        emergencia();
     }
 
-    public void recuperar() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
     @Override
     public void log(String msg) {

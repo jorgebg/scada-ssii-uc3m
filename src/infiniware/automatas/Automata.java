@@ -41,6 +41,7 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
     public static final char EJECUTAR = Character.MAX_VALUE;
     public static final char PARAR = EJECUTAR-1; 
     public static final char REANUDAR = EJECUTAR-2;
+    protected Boolean emergencia = false;
     
     public abstract void log(String msg);
 
@@ -76,8 +77,14 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
     }
 
     public char ejecutar(char sensores) {
-        switch(sensores) {
+        
+        
+        switch (sensores) {
+            case REANUDAR:
+                recuperar();
+                break;
             case EJECUTAR:
+                if(!emergencia)
                 ejecutar();
                 break;
             default:
@@ -201,5 +208,19 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
             actualizar(e,estado);
         }
     }
-    
+
+    public void emergencia() {
+        System.out.println("Emergencia");
+        emergencia = true;
+        for(SubAutomata subautomata : subautomatas.values()) {
+            subautomata.emergencia = true;
+        }
+    }
+    public void recuperar() {
+        System.out.println("Reanudando");
+        for(SubAutomata subautomata : subautomatas.values()) {
+            subautomata.emergencia = false;
+        }
+        emergencia = false;
+    }
 }

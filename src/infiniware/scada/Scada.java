@@ -23,12 +23,11 @@ import java.util.logging.Logger;
 
 public class Scada implements Ethernet, IProcesable, IScada, infiniware.automatas.maestro.IScada {
 
-    private static final int CICLO = 200;
+    public static final int CICLO = 200;
     Simulador simulador;
     GestorAlmacenamiento almacenamiento;
     public IMaestro maestro;
     long timestamp;
-    boolean emergencia = false;
    // public final Acciones acciones = new Acciones();
     public final GestorSensores mapaSensores = new GestorSensores();
     public static final Scada INSTANCIA = new Scada();
@@ -60,18 +59,11 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
     }
 
     private void ciclo() {
-        if (emergencia) {
-            maestro.emergencia();
-            this.emergencia = false;
-        } else {
-            /*for (Runnable accion : acciones) {
-                accion.run();
-            }*/
-            simulador.ciclo();
-            estados = maestro.ciclo();
-            ui.actualizar(estados);
-            sincronizar();
-        }
+        simulador.ciclo();
+        estados = maestro.ciclo();
+        ui.actualizar(estados);
+        sincronizar();
+        
     }
 
     /**
@@ -141,7 +133,7 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
      */
     @Override
     public void emergencia() {
-        this.emergencia = true;
+        maestro.emergencia();
     }
 
     /*

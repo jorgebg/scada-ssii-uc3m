@@ -6,6 +6,7 @@ package infiniware.scada.ui.gui;
 
 import infiniware.automatas.Automata;
 import infiniware.automatas.subautomatas.CintaCapacidad;
+import infiniware.scada.Scada;
 import infiniware.scada.ui.Ui;
 import infiniware.scada.ui.gui.view.SCADAUserInterface;
 import infiniware.scada.ui.gui.view.animation.Animation;
@@ -32,6 +33,12 @@ public class Gui extends Ui implements Runnable {
     private boolean iniciada;
 
     private Gui() {
+    }
+
+    @Override
+    public void arrancar() {
+        super.arrancar();
+        frame.ac.startAll();
     }
 
     public void run() {
@@ -174,6 +181,39 @@ public class Gui extends Ui implements Runnable {
         }
         return mapa;
     }
+
+    @Override
+    public void emergencia() {
+        super.emergencia();
+        frame.ac.emergencyStopAll();
+    }
+
+    @Override
+    public void provocarFalloEsclavo1() {
+        super.provocarFalloEsclavo1();
+        frame.ac.getCej().emergencyStop();
+        frame.ac.getCen().emergencyStop();
+        frame.ac.getR1().emergencyStop();
+        frame.ac.getEm().emergencyStop();
+    }
+
+    @Override
+    public void provocarFalloEsclavo2() {
+        super.provocarFalloEsclavo2();
+        frame.ac.getEs().emergencyStop();
+    }
+
+    @Override
+    public void provocarFalloEsclavo3() {
+        super.provocarFalloEsclavo3();
+        frame.ac.getEv().emergencyStop();
+        frame.ac.getCok().emergencyStop();
+        frame.ac.getCnok().emergencyStop();
+    }
+    
+    
+    
+    
 // mapaEstadosGui
 /*
 CEJ:

@@ -128,6 +128,10 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
         //System.out.println("OUT: M => " + nombre + ":\n" + this.mapaSensores.automatas.get(id) + "\n");
         do {
             try {
+
+
+
+
                 //REANUDAR
                 if (id == 1) {
                     synchronized (arrancar) {
@@ -192,7 +196,19 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
      * infiniware.scada.IMaestro {{{
      */
     public char[] ciclo() {
+
+        synchronized (arrancar) {
+            synchronized (emergencia) {
+                if (arrancar && emergencia) {
+                    recuperar();
+                } else if (emergencia) {
+                    return estados;
+                }
+            }
+        }
+
         synchronized (mapaSensores) {
+
             System.out.println("== CICLO #" + ciclo + " ==");
             /*
              * System.out.println("EE: " + entradasEsperadas);
@@ -200,6 +216,8 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
              */
             System.out.println(mapaSensores);
             System.out.println("--------------------------");
+
+
             List<Notificacion> notificaciones;
             synchronized (this.notificaciones) {
                 notificaciones = (List<Notificacion>) this.notificaciones.clone();
@@ -222,6 +240,28 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
     }
 
     public void emergencia() {
+        log("Activada parada de emergencia");
+        super.emergencia();
+        for (IEsclavo esclavo : esclavos.values()) {
+            try {
+                esclavo.fallar();
+            } catch (RemoteException ex) {
+                System.err.println("Error al recuperar el esclavo");
+            }
+        }
+    }
+
+    @Override
+    public void recuperar() {
+        log("Recuperando parada de emergencia");
+        super.recuperar();
+        for (IEsclavo esclavo : esclavos.values()) {
+            try {
+                esclavo.recuperar();
+            } catch (RemoteException ex) {
+                System.err.println("Error al recuperar el esclavo");
+            }
+        }
     }
 
     public void arrancar() {
