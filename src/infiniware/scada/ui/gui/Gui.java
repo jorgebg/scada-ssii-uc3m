@@ -227,20 +227,20 @@ R2
     	es1map.put("CEJ", CEJparametros);
     		//Robot 1
     	Parametros R1parametros = new Parametros();
-    	R1parametros.put("TRecogidaEnej", mapa.get("R1_tREn").intValue());
-    	R1parametros.put("TTransporteEnej", mapa.get("R1_tTEn").intValue());
-    	R1parametros.put("TTransporteCm1", mapa.get("R1_tTCM").intValue());
+    	R1parametros.put("tiempo-recogida", mapa.get("R1_tREn").intValue());
+    	R1parametros.put("tiempo-transporte", mapa.get("R1_tTEn").intValue());
+    	R1parametros.put("tiempo-transporte-montado", mapa.get("R1_tTCM").intValue());
     	es1map.put("R1", R1parametros);
     		//Estacion de montaje
     	Parametros EMparametros = new Parametros();
-    	EMparametros.put("TiempoEm", mapa.get("EM_t").intValue());
+    	EMparametros.put("tiempo", mapa.get("EM_t").intValue());
     	es1map.put("EM", EMparametros);
     	conjunto.put(1, es1map);
 
     	//Esclavo 2
     		//Estacion de soldadura
     	Parametros ESparametros = new Parametros();
-    	ESparametros.put("TiempoEs", mapa.get("ES_t").intValue());
+    	ESparametros.put("tiempo", mapa.get("ES_t").intValue());
     	HashMap<String, Guardable> es2map = new HashMap<String, Guardable>();
     	es2map.put("ES", ESparametros);
     	conjunto.put(2, es2map);
@@ -248,7 +248,7 @@ R2
     	//Esclavo 3
     		//Estacion de evaluacion
     	Parametros EVparametros = new Parametros();
-    	EVparametros.put("TiempoEv", mapa.get("EV_t").intValue());
+    	EVparametros.put("tiempo", mapa.get("EV_t").intValue());
     	HashMap<String, Guardable> es3map = new HashMap<String, Guardable>();
     	es3map.put("EV", EVparametros);
     		//Cinta OK
@@ -272,9 +272,9 @@ R2
     	masmap.put("CT", CTparametros);
     		//Robot 2
     	Parametros R2parametros = new Parametros();
-    	R2parametros.put("TRecogidaCm", mapa.get("R2_tRCM").intValue());
-    	R2parametros.put("TTransporteCm2", mapa.get("R2_tTCM").intValue());
-    	R2parametros.put("TTransporteCs", mapa.get("R2_tTCS").intValue());
+    	R2parametros.put("tiempo-recogida", mapa.get("R2_tRCM").intValue());
+    	R2parametros.put("tiempo-transporte", mapa.get("R2_tTCM").intValue());
+    	R2parametros.put("tiempo-transporte-soldado", mapa.get("R2_tTCS").intValue());
     	masmap.put("R2", R2parametros);
     	conjunto.put(0, masmap);
     	
@@ -304,24 +304,24 @@ R2
     	mapa.put("CEJ_c", (double)CEJparametros.get("capacidad") );
     		//Robot 1
     	Parametros R1parametros = (Parametros) es1map.get("R1");
-    	mapa.put("R1_tREn", (double)R1parametros.get("TRecogidaEnej") );
-    	mapa.put("R1_tTEn", (double)R1parametros.get("TTransporteEnej") );
-    	mapa.put("R1_tTCM", (double)R1parametros.get("TTransporteCm1") );
+    	mapa.put("R1_tREn", (double)R1parametros.get("tiempo-recogida") );
+    	mapa.put("R1_tTEn", (double)R1parametros.get("tiempo-transporte") );
+    	mapa.put("R1_tTCM", (double)R1parametros.get("tiempo-transporte-montado") );
     		//Estacion de montaje
      	Parametros EMparametros = (Parametros) es1map.get("EM");
-    	mapa.put("EM_t", (double)EMparametros.get("TiempoEm") );
+    	mapa.put("EM_t", (double)EMparametros.get("tiempo") );
 
     	//Esclavo 2
     		//Estacion de soldadura
     	HashMap<String, Guardable> es2map = conjunto.get(2);
      	Parametros ESparametros = (Parametros) es2map.get("ES");
-    	mapa.put("ES_t", (double)ESparametros.get("TiempoEs") );
+    	mapa.put("ES_t", (double)ESparametros.get("tiempo") );
     	
     	//Esclavo 3
     		//Estacion de evaluacion
     	HashMap<String, Guardable> es3map = conjunto.get(3);
      	Parametros EVparametros = (Parametros) es3map.get("EV");
-    	mapa.put("EV_t", (double)EVparametros.get("TiempoEv") );
+    	mapa.put("EV_t", (double)EVparametros.get("tiempo") );
     		//Cinta OK
     	Parametros COKparametros = (Parametros) es3map.get("COK");
     	mapa.put("COK_v", (double)COKparametros.get("velocidad") );
@@ -339,9 +339,9 @@ R2
     	mapa.put("CT_l", (double)CTparametros.get("longitud") );
     		//Robot 2
     	Parametros R2parametros = (Parametros) masmap.get("R2");
-    	mapa.put("R2_tRCM", (double)R2parametros.get("TRecogidaCm") );
-    	mapa.put("R2_tTCM", (double)R2parametros.get("TTransporteCm2") );
-    	mapa.put("R2_tTCS", (double)R2parametros.get("TTransporteCs") );
+    	mapa.put("R2_tRCM", (double)R2parametros.get("tiempo-recogida") );
+    	mapa.put("R2_tTCM", (double)R2parametros.get("tiempo-transporte") );
+    	mapa.put("R2_tTCS", (double)R2parametros.get("tiempo-transporte-soldado") );
     	
     	return mapa;
     }
