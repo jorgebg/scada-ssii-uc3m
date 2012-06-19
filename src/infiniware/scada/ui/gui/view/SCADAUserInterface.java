@@ -921,13 +921,14 @@ public class SCADAUserInterface extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				//stops the system
 				Scada.ui.parada();
-				
+
 				//Cargar informes desde el Scada
 				setMapaInformes(convertirInformeAMapa(Informes.INSTANCIA));
-				guardarInformes(); //guarda la nueva informacion en el disco
 				
 				editableParameters(true); 	//unlock the edition of paramaters
 				updateReportMap();			//updates the reports in the GUI	
+
+				guardarInformes(); //guarda la nueva informacion en el disco
 			}
 		});
 		
