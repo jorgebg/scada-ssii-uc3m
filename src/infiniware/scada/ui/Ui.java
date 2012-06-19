@@ -58,7 +58,7 @@ public abstract class Ui implements IUi {
     }
 
     public void provocarFalloEsclavo1() {
-        simulador.provocarFalloEsclavo((byte)2);
+        simulador.provocarFalloEsclavo((byte)1);
     }
 
     public void provocarFalloEsclavo2() {

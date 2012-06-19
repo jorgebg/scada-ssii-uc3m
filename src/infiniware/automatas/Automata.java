@@ -78,7 +78,7 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
 
     public char ejecutar(char sensores) {
         
-        
+        if(!emergencia)
         switch (sensores) {
             case REANUDAR:
                 recuperar();

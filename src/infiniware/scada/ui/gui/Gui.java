@@ -191,10 +191,6 @@ public class Gui extends Ui implements Runnable {
     @Override
     public void provocarFalloEsclavo1() {
         super.provocarFalloEsclavo1();
-        frame.ac.getCej().emergencyStop();
-        frame.ac.getCen().emergencyStop();
-        frame.ac.getR1().emergencyStop();
-        frame.ac.getEm().emergencyStop();
     }
 
     @Override
@@ -209,6 +205,29 @@ public class Gui extends Ui implements Runnable {
         frame.ac.getEv().emergencyStop();
         frame.ac.getCok().emergencyStop();
         frame.ac.getCnok().emergencyStop();
+    }
+
+    @Override
+    public void recuperarFalloEsclavo1() {
+        super.recuperarFalloEsclavo1();
+        frame.ac.getCej().start();
+        frame.ac.getCen().start();
+        frame.ac.getR1().start();
+        frame.ac.getEm().start();
+    }
+
+    @Override
+    public void recuperarFalloEsclavo2() {
+        super.recuperarFalloEsclavo2();
+        frame.ac.getEs().start();
+    }
+
+    @Override
+    public void recuperarFalloEsclavo3() {
+        super.recuperarFalloEsclavo3();
+        frame.ac.getEv().start();
+        frame.ac.getCok().start();
+        frame.ac.getCnok().start();
     }
     
     

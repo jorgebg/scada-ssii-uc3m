@@ -336,7 +336,8 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
 
     public void provocarFalloEsclavo(byte esclavo) {
         try {
-            esclavos.get(esclavo).fallar();
+            log("Provocando fallo en Esclavo"+esclavo);
+            esclavos.get((int)esclavo).fallar();
         } catch (RemoteException ex) {
             System.err.println("Error al comunicar con Esclavo" + esclavo + " para provocar fallo.");
             ex.printStackTrace(System.err);
@@ -345,7 +346,7 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
 
     public void recuperarFalloEsclavo(byte esclavo) {
         try {
-            esclavos.get(esclavo).recuperar();
+            esclavos.get((int)esclavo).recuperar();
         } catch (RemoteException ex) {
             System.err.println("Error al comunicar con Esclavo" + esclavo + " para recuperar fallo.");
             ex.printStackTrace(System.err);
