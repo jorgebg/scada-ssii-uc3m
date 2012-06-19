@@ -1152,8 +1152,8 @@ public class SCADAUserInterface extends JFrame {
 	private void setGUIReport(Map<String, Integer> map){
 		this.txtConjuntosOk.setText(map.get("COK").toString());
 		this.txtConjuntosNok.setText(map.get("CNOK").toString());
-		this.txtConjuntosOkTotales.setText(map.get("COKTotal").toString());
-		this.txtConjuntosNokTotales.setText(map.get("CNOKTotal").toString());
+		this.txtConjuntosOkTotales.setText(String.valueOf(historico.getCorrectos()));
+		this.txtConjuntosNokTotales.setText(String.valueOf(historico.getIncorrectos()));
 		this.txtParadasNormales.setText(map.get("PN").toString());
 		this.txtParadasEmergencia.setText(map.get("PE").toString());
 		this.txtArranques.setText(map.get("ARR").toString());
