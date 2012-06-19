@@ -970,9 +970,9 @@ public class SCADAUserInterface extends JFrame {
 		mntmGuardarParametros.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String inputValue = JOptionPane.showInputDialog("Por favor, inserte el nombre del archivo");
-				guardarInformes(inputValue);
 				updateReportMap();
 				updateParameterMap();
+				guardarInformes(inputValue);
 				logConsole.append("GUI: Guardando informes y parametros\n");
 			}
 		});
@@ -983,7 +983,7 @@ public class SCADAUserInterface extends JFrame {
 				String inputValue = JOptionPane.showInputDialog("Por favor, inserte el nombre del archivo si desea cargar los parametros");
 				cargarInformes(inputValue);
 				updateReportMap();
-				updateParameterMap();
+				//updateParameterMap();
 				logConsole.append("GUI: Cargando informes y parametros\n");
 				
 				
@@ -1040,6 +1040,7 @@ public class SCADAUserInterface extends JFrame {
 				configuracion.cargar(nombre, parametros);
 				Map<String, Double> mapa = Gui.deConjuntoAMapa(parametros);
 				setMapaParametros(mapa);
+				//logConsole.append(mapa.toString());
 
 			}catch(Exception e){
 				logConsole.append("GUI: Error al cargar parametros, introduzca el nombre de un fichero existente\n");
