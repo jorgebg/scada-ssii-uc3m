@@ -872,8 +872,8 @@ public class SCADAUserInterface extends JFrame {
 		this.mapaInformes = new HashMap<String, Integer>();
 		this.cargarInformes("");
 		
-		//pasa la configuraci�n al scada
-		Scada.ui.configurar(Gui.deMapaAConjunto(this.mapaParametros));
+		//pasa la configuracion al scada
+		//Scada.ui.configurar(Gui.deMapaAConjunto(this.mapaParametros));
 		
 		//AnimationController
 		ac = new AnimationController(this.mapaParametros);
