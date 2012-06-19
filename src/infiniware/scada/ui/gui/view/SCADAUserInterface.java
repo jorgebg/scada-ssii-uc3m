@@ -105,7 +105,7 @@ public class SCADAUserInterface extends JFrame {
 	
 	public AnimationController ac;
 	public double parametros[];
-	
+	public Fabricacion historico;
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -872,6 +872,7 @@ public class SCADAUserInterface extends JFrame {
 		this.mapaInformes = new HashMap<String, Integer>();
 		this.cargarInformes("");
 		
+		
 
 		//pasa la configuracion al scada
 
@@ -903,6 +904,9 @@ public class SCADAUserInterface extends JFrame {
 				ac.init(mapaParametros); 						//update the values of the GUI Components
 				editableParameters(false);						//lock the edition of parameters
 
+				//Cargar parametros
+				cargarInformes("");
+				
 				//pasa la configuracion al scada
 				Scada.ui.configurar(Gui.deMapaAConjunto(mapaParametros));
 				//Starts the system
@@ -916,8 +920,10 @@ public class SCADAUserInterface extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				//stops the system
 				Scada.ui.parada();
-				//TODO informes = Gui.Informes
-				setMapaInformes(this.convertirInformeAMapa(informes));
+				
+				//Cargar informes desde el Scada
+				setMapaInformes(convertirInformeAMapa(Informes.INSTANCIA));
+				guardarInformes(); //guarda la nueva informacion en el disco
 				
 				editableParameters(true); 	//unlock the edition of paramaters
 				updateReportMap();			//updates the reports in the GUI	
@@ -1008,10 +1014,9 @@ public class SCADAUserInterface extends JFrame {
 		
 	}
 	
-	public void conigurarAutomatas(){
+	/*public void conigurarAutomatas(){
 		ConjuntoParametros cp = Gui.deMapaAConjunto(this.mapaParametros);
-		//TODO
-	}
+	}*/
 	
     /**
      * Metodo que carga los informes y parametros de un fichero de nombre "nombre"
@@ -1025,6 +1030,9 @@ public class SCADAUserInterface extends JFrame {
 			Produccion produccion = new Produccion();
 			produccion.cargar(informes);
 			setMapaInformes(this.convertirInformeAMapa(informes));
+			Informes.INSTANCIA = informes;
+			this.historico = informes.getFabricacion();
+			Informes.INSTANCIA.setFabricacion(new Fabricacion());
 		}catch(Exception e){
 			logConsole.append("GUI: Error al cargar informe, informe autogenerado\n");
 			Informes  informes = new Informes(new Fabricacion(), new Funcionamiento());
@@ -1051,8 +1059,8 @@ public class SCADAUserInterface extends JFrame {
 		HashMap<String, Integer> mapa = new HashMap<String, Integer>();
 		mapa.put("COK", informes.getFabricacion().getCorrectos());
 		mapa.put("CNOK", informes.getFabricacion().getIncorrectos());
-		mapa.put("COKTotal", informes.getFabricacion().getCorrectos());
-		mapa.put("CNOKTotal", informes.getFabricacion().getIncorrectos());
+		mapa.put("COKTotal", historico.getCorrectos());
+		mapa.put("CNOKTotal", historico.getIncorrectos());
 		mapa.put("PN", informes.getFuncionamiento().getNormales());
 		mapa.put("PE", informes.getFuncionamiento().getEmergencia());
 		mapa.put("ARR", informes.getFuncionamiento().getArranques());
@@ -1080,6 +1088,22 @@ public class SCADAUserInterface extends JFrame {
         }
     }//GEN-LAST:event_onLaunchBrowser
 
+    private void guardarInformes(){
+    	//Informes
+    	int correctos  = historico.getCorrectos();
+    	int incorrectos = historico.getIncorrectos();
+    	
+    	correctos = correctos + Informes.INSTANCIA.getFabricacion().getCorrectos();
+    	incorrectos = incorrectos + Informes.INSTANCIA.getFabricacion().getIncorrectos();
+    	
+    	Informes informes = new Informes();
+    	Produccion produccion = new Produccion();
+    	HashMap<String, Integer> mapa = (HashMap<String, Integer>) getMapaInformes();
+    	informes.setFabricacion(new Fabricacion(correctos,incorrectos));
+    	informes.setFuncionamiento(new Funcionamiento(mapa.get("PN"), mapa.get("PE"), mapa.get("ARR")));
+    	produccion.guardar(informes);
+    }
+    
     /**
      * Metodo que guarda los informes y parametros en un fichero de nombre "nombre"
      * 
@@ -1087,12 +1111,7 @@ public class SCADAUserInterface extends JFrame {
      */
 	public void guardarInformes(String nombre) {
 		//Informes
-		Informes informes = new Informes();
-		Produccion produccion = new Produccion();
-		HashMap<String, Integer> mapa = (HashMap<String, Integer>) getMapaInformes();
-		informes.setFabricacion(new Fabricacion(mapa.get("COKTotal"), mapa.get("CNOKTotal")));
-		informes.setFuncionamiento(new Funcionamiento(mapa.get("PN"), mapa.get("PE"), mapa.get("ARR")));
-		produccion.guardar(informes);
+		this.guardarInformes();
 		
 		//Parametros
 		ConjuntoParametros parametros = Gui.deMapaAConjunto(getMapaParametros());
