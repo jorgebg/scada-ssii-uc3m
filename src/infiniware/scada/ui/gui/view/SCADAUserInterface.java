@@ -678,6 +678,7 @@ public class SCADAUserInterface extends JFrame {
 		txtLongitudCnok.setBounds(185, 29, 134, 28);
 		panelCnok.add(txtLongitudCnok);
 		txtLongitudCnok.setText("10");
+		txtLongitudCnok.setEditable(false);
 		txtLongitudCnok.setHorizontalAlignment(SwingConstants.CENTER);
 		txtLongitudCnok.setColumns(10);
 		
@@ -869,8 +870,8 @@ public class SCADAUserInterface extends JFrame {
 		this.mapaParametros = new HashMap<String, Double>();
 		this.updateParameterMap();
 		this.mapaInformes = new HashMap<String, Integer>();
+		this.cargarInformes("");
 		
-		cargarInformes("");
 		
 		//AnimationController
 		ac = new AnimationController(this.mapaParametros);
@@ -1000,7 +1001,9 @@ public class SCADAUserInterface extends JFrame {
 		falloEsclavo3.addMouseListener(new ChangeAdapter(falloEsclavo3,3));
 		
 	}
-	public void gestorArchivos(){
+	
+	public void conigurarAutomatas(){
+		ConjuntoParametros cp = Gui.deMapaAConjunto(this.mapaParametros);
 		
 	}
 	
@@ -1225,8 +1228,6 @@ public class SCADAUserInterface extends JFrame {
 		txtVelocidadCt.setEditable(editable);
 		txtLongitudCok.setEditable(editable);
 		txtVelocidadCok.setEditable(editable);
-		txtLongitudCnok.setEditable(editable);
-		txtVelocidadCnok.setEditable(editable);
 		txtTiempoEm.setEditable(editable);
 		txtTiempoEs.setEditable(editable);
 		txtTiempoEv.setEditable(editable);
