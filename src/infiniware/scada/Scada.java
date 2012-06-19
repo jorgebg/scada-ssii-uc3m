@@ -89,6 +89,7 @@ public class Scada implements Ethernet, IProcesable, IScada, infiniware.automata
      */
     @Override
     public void configurar(ConjuntoParametros parametros) {
+        //System.out.println(parametros);
         maestro.configurarAutomatas(parametros);
     }
 

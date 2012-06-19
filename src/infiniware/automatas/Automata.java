@@ -199,7 +199,12 @@ public abstract class Automata implements Profibus, IProcesable, IConexion, IReg
     
     public void configurar(Map<String,Parametros> parametrosSubautomatas) {
         for (Map.Entry<String, Parametros> parametros : parametrosSubautomatas.entrySet()) {
+            //System.out.println(parametros.getKey() + " " + this.subautomatas + this.subautomatas.get(parametros.getKey())+ " " + parametros.getValue());
+            try {
             this.subautomatas.get(parametros.getKey()).configurar(parametros.getValue());
+            } catch (Exception ex ) {
+                System.err.println("Error al configurar: " + parametros.getKey() + " " + parametros.getValue());
+            }
         }
     }
 
