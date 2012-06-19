@@ -336,7 +336,7 @@ public class Maestro extends Automata implements infiniware.scada.IMaestro, infi
                 configurar(automata);
             } else {
                 try {
-                    esclavos.get(automata).configurar(automata);
+                    esclavos.get(key).configurar(automata);
                 } catch (RemoteException ex) {
                     System.err.println("Error al configurar el esclavo " + automata + ":");
                     ex.printStackTrace(System.err);

@@ -872,7 +872,9 @@ public class SCADAUserInterface extends JFrame {
 		this.mapaInformes = new HashMap<String, Integer>();
 		this.cargarInformes("");
 		
+
 		//pasa la configuracion al scada
+
 		//Scada.ui.configurar(Gui.deMapaAConjunto(this.mapaParametros));
 		
 		//AnimationController
